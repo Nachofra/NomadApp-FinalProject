@@ -1,13 +1,13 @@
-package com.integrador.grupo2backend;
+package com.integrator.group2backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Grupo2BackendApplication {
+public class Group2BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Grupo2BackendApplication.class, args);
+		SpringApplication.run(Group2BackendApplication.class, args);
 	}
 
 }
