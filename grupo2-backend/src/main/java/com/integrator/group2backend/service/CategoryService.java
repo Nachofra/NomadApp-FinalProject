@@ -13,13 +13,13 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
     public Category addCategory(Category category){
-        return  categoryRepository.save(category);
+        return categoryRepository.save(category);
     }
     public List<Category> listAllCategories(){
-        return  categoryRepository.findAll();
+        return categoryRepository.findAll();
     }
     public Category updateCategory(Category category){
-        return  categoryRepository.save(category);
+        return categoryRepository.save(category);
     }
     public void deleteCategory(Long id){
         categoryRepository.deleteById(id);
