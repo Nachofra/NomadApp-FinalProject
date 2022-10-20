@@ -6,7 +6,7 @@ export const CollapsableMenu = (props) => {
 
     const [isOpen, setIsOpen] = useState(false)
   return (
-    <button
+    <article
       className="flex flex-col text-left w-full p-3 rounded-lg h-auto"
     >
       <div 
@@ -64,6 +64,6 @@ export const CollapsableMenu = (props) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </button>
+    </article>
   )
 }
