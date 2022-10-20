@@ -4,9 +4,10 @@ import './searchNavbar.scss'
 import { MobileNav } from './mobileNav/MobileNav'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MobileNavOpen } from './mobileNav/MobileNavOpen'
+import { useCursorContext } from '../../context/CursorContext'
 export const SearchNavbar = () => {
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
 
   return (
     <AnimatePresence initial={false} mode="wait">
@@ -14,7 +15,7 @@ export const SearchNavbar = () => {
         onClick={() => {if (!open) {setOpen(true)}}}
         className={`transition-all w-[94vw] max-w-[900px]  
         fixed bottom-4 shadow-xl bg-shape-navbar 
-        flex flex-col justify-start items-start p-2
+        flex flex-col justify-start items-start px-2 py-4
         rounded-tl-xl rounded-bl-xl rounded-tr-xl rounded-br-[10rem]`}
       > 
           <AnimatePresence initial={false} mode="wait">
@@ -24,7 +25,7 @@ export const SearchNavbar = () => {
           </AnimatePresence>
           <AnimatePresence initial={false} mode="wait">
             {open &&  
-                <MobileNavOpen /> 
+                <MobileNavOpen  /> 
             }
           </AnimatePresence>
 

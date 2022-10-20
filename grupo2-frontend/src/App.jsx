@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import './app.css'
 import { useCursorContext, CursorProvider } from './context/CursorContext'
 import { SearchNavbar } from './components/searchNavbar/SearchNavbar'
+import { SearchProvider } from './context/SearchContext'
 
 function App() {
 
@@ -13,9 +14,9 @@ function App() {
   const textLeave = () => setCursor('default')
 
   return (
+    
     <div className="flex flex-col items-center">
-      <SearchNavbar />
-
+      <SearchProvider></SearchProvider>
 
     </div>
   )
