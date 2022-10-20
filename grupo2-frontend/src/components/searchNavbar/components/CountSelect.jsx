@@ -9,8 +9,8 @@ export const CountSelect = ({value, setValue}) => {
         <div className="flex space-x-4 snap-x snap-mandatory scrollbar-none">
             <button 
             className={`w-10 py-2 rounded-xl snap-start
-            ${value === 'any' ? 'bg-violet-700 text-white' : 'border border-gray-600 text-gray-600'}`}
-            onClick={()=>setValue('any')}>Any</button>
+            ${value === null ? 'bg-violet-700 text-white' : 'border border-gray-600 text-gray-600'}`}
+            onClick={()=>setValue(null)}>Any</button>
             <button 
             className={`w-10 py-2 rounded-xl snap-start
             ${value === 1 ? 'bg-violet-700 text-white' : 'border border-gray-600 text-gray-600'}`}

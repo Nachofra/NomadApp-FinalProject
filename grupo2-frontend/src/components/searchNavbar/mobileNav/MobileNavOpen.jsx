@@ -123,16 +123,18 @@ export const MobileNavOpen = () => {
             >
                 <h5 className='text-lg font-semibold text-gray-600 mt-5'>Rooms</h5>
                 <CountSelect 
-                    value={filters.guests}
-                    setValue={(value) => setFilters({...filters, guests: value})}
+                    value={filters.rooms}
+                    setValue={(value) => setFilters({...filters, rooms: value})}
                 />
+                <h5 className='text-lg font-semibold text-gray-600 mt-1'>Beds</h5>
                 <CountSelect 
-                    value={filters.guests}
-                    setValue={(value) => setFilters({...filters, guests: value})}
+                    value={filters.beds}
+                    setValue={(value) => setFilters({...filters, beds: value})}
                 />
+                <h5 className='text-lg font-semibold text-gray-600 mt-1'>Bathrooms</h5>
                 <CountSelect 
-                    value={filters.guests}
-                    setValue={(value) => setFilters({...filters, guests: value})}
+                    value={filters.bathrooms}
+                    setValue={(value) => setFilters({...filters, bathrooms: value})}
                 />
             </CollapsableMenu>
             <button

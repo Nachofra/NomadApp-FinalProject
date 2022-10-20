@@ -19,6 +19,9 @@ export const emptyFilters =
             max: '',
         },
         guests: null,
+        bathrooms: null,
+        rooms: null,
+        beds: null,
         category: {
           apartment: null,
           house: null,
