@@ -12,7 +12,7 @@ export const MobileNavOpen = () => {
   
   return (
     <motion.div
-        className='flex flex-col justify-center h-full w-full'
+        className='flex flex-col justify-center h-full w-full overflow-y-auto'
         initial={{
             height: 0,
             opacity: 0,
@@ -77,7 +77,7 @@ export const MobileNavOpen = () => {
                 question='Property type'
             >
                 <div className='flex items-center justify-start
-                pt-4 overflow-auto  snap-x snap-mandatory'>
+                pt-4 overflow-auto  snap-x snap-mandatory  scrollbar-none'>
                     <div className="flex space-x-6 snap-x snap-mandatory">
                         <PropertyTypeSelect
                             name='Apartment'
@@ -140,7 +140,7 @@ export const MobileNavOpen = () => {
             <button
                 onClick={reset}
                 className='px-3 py-1 p-2 rounded-lg 
-                absolute bottom-3 left-2
+                absolute -top-2 right-0 trasform -translate-y-full
                 bg-white text-violet-700 border-2 border-violet-700 font-semibold'
             >
                 Clear all

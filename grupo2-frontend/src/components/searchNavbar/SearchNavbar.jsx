@@ -5,6 +5,7 @@ import { MobileNav } from './mobileNav/MobileNav'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MobileNavOpen } from './mobileNav/MobileNavOpen'
 import { useCursorContext } from '../../context/CursorContext'
+
 export const SearchNavbar = () => {
 
   const [open, setOpen] = useState(true)
@@ -43,7 +44,7 @@ export const SearchNavbar = () => {
           <AnimatePresence initial={false} mode="wait">
             {open &&  
               <h3
-                className='absolute top-0 left-0 -translate-y-full
+                className='absolute -top-2 left-1 -translate-y-full
                 text-gray-800 font-medium text-4xl'
               >
                 Search
