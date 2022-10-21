@@ -2,11 +2,12 @@ import React from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { motion } from 'framer-motion'
 
-export const MobileNav = () => {
+export const MobileNav = ({onClick}) => {
   return (
 
     <motion.div
-        className='flex'
+        onClick={onClick}
+        className='flex items-center w-full'
         initial={{
         height: 0,
         opacity: 0,
@@ -20,14 +21,13 @@ export const MobileNav = () => {
         opacity: 0,
         }}
     >
-    
         <div 
         className="flex flex-row justify-center items-center
-        border border-violet-700 w-12 h-12 rounded-md"
+        border border-violet-700 w-12 h-12 rounded-md ml-2"
         >
             <MagnifyingGlassIcon className="w-6 h-6 text-violet-700" />
         </div>
-        <div className="flex flex-col justify-center ml-4">
+        <div className="flex flex-col justify-center ml-4  px-2 py-4">
             <p className=' font-medium' >Search</p>
             <div className='flex items-center text-sm space-x-1'>   
                 <p className=' text-gray-800 

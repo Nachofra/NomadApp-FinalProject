@@ -2,4 +2,9 @@
     background: url('assets/bubbles/design_shape_4_50.png') no-repeat, #FFFFFF;
     background-position: bottom 50% left calc(50% + 300px);
     background-size: auto 800px;
+    &-open{
+        background: url('assets/bubbles/design_shape_4_25.png') no-repeat, #FFFFFF;
+        background-position: bottom 50% left calc(50% + 250px);
+        background-size: auto 800px;
+    }
 }

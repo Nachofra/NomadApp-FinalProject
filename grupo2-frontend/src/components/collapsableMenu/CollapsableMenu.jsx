@@ -7,7 +7,7 @@ export const CollapsableMenu = (props) => {
     const [isOpen, setIsOpen] = useState(false)
   return (
     <article
-      className="flex flex-col text-left w-full p-3 rounded-lg h-auto"
+      className="flex flex-col text-left w-full p-3 rounded-lg h-auto cursor-pointer"
     >
       <div 
         className="flex justify-between items-center w-full"
