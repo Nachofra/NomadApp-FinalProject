@@ -67,6 +67,37 @@
 					"response": []
 				},
 				{
+					"name": "LIST CATEGORY BY ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/category/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"category",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "EDIT CATEGORY BY ID",
 					"request": {
 						"method": "PUT",
