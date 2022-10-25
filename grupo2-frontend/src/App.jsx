@@ -13,7 +13,7 @@ function App() {
     <RouteNotFound>
       <Route path={PublicRoutes.HOME} element={<Home />} />
       <Route path={PublicRoutes.AUTH} element={<Auth />} />
-
+      
       <Route element={<AuthGuard />}></Route>
   </RouteNotFound>
   )

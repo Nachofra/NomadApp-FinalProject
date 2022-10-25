@@ -1,8 +1,9 @@
 import React from 'react'
-import {motion} from 'framer-motion'
 import { MobileNavModal } from './MobileNavModal'
-import { CollapsableMenu } from '../../../collapsableMenu/CollapsableMenu'
 import { useSearchContext } from '../../../../context/SearchContext'
+import { PropertyTypeSelect } from '../components/PropertyTypeSelect'
+import { CountSelect } from '../components/CountSelect'
+import { CollapsableMenu } from '../../../collapsableMenu/CollapsableMenu'
 
 export const MobileNavFilters = ({open, setOpen}) => {
 
@@ -87,7 +88,7 @@ export const MobileNavFilters = ({open, setOpen}) => {
                     question='Rooms and beds'
                 >
                     <h5 className='text-lg font-semibold text-gray-600 mt-5 px-2'>Rooms</h5>
-                    <CountSelect 
+                    <CountSelect
                         value={filters.rooms}
                         setValue={(value) => setFilters({...filters, rooms: value})}
                     />

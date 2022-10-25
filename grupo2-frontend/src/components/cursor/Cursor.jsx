@@ -37,7 +37,7 @@ const Cursor = ({cursorVariant}) => {
   return(
     <>
       <motion.div
-        className=" top-0 left-0 z-[1000] bg-gradient-to-tr from-pink-400/30 to-violet-500/60 rounded-full pointer-events-none"
+        className="fixed top-0 left-0 z-[1000] bg-gradient-to-tr from-pink-400/30 to-violet-500/60 rounded-full pointer-events-none"
         animate={cursorVariant}
         variants={pointerVariants}
       />

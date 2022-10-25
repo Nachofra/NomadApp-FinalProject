@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 //   );
 // }
 // Hook
-export default function useWindowSize() {
+export default function useWindowDimensions() {
   // Initialize state with undefined width/height so server and client renders match
   // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
   const [windowSize, setWindowSize] = useState({
