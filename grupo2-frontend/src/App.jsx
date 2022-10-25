@@ -1,24 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './app.css'
-import { useCursorContext, CursorProvider } from './context/CursorContext'
-import { SearchNavbar } from './components/searchNavbar/SearchNavbar'
+// import { useState } from 'react'
 import { SearchProvider } from './context/SearchContext'
+import { Auth, Home } from './views'
+import { RouteNotFound } from './utilities/RouteNotFound'
+import { AuthGuard } from './guard/AuthGuard'
+import './app.css'
+import { Route } from 'react-router-dom'
+import { PublicRoutes } from './guard/routes'
 
 function App() {
 
-  // use cursor context
-  const { cursorVariant, setCursor } = useCursorContext()
-  
-  const textEnter = () => setCursor('plus')
-  const textLeave = () => setCursor('default')
-
   return (
-    
-    <div className="flex flex-col items-center">
-      <SearchProvider></SearchProvider>
+    <RouteNotFound>
+      <Route path={PublicRoutes.HOME} element={<Home />} />
+      <Route path={PublicRoutes.AUTH} element={<Auth />} />
 
-    </div>
+      <Route element={<AuthGuard />}></Route>
+  </RouteNotFound>
   )
 }
 

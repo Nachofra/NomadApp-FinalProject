@@ -1,13 +1,12 @@
+
+import React, { useState } from 'react'
 import { AdjustmentsHorizontalIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import { AnimatePresence, motion } from 'framer-motion'
-import React, { useState } from 'react'
 import { MobileNav, MobileNavOpen, MobileNavFilters } from './index'
 
 export const MobileSearchbar = () => {
     const [open, setOpen] = useState(false)
     const [filtersTab, setFiltersTab] = useState(false)
-
-    console.log({open: open, filtersTab: filtersTab})
 
     return (
         <div
@@ -28,12 +27,12 @@ export const MobileSearchbar = () => {
             </AnimatePresence>
             <AnimatePresence initial={false} mode="wait" >
               {open &&  
-                  <MobileNavOpen  /> 
+                  <MobileNavOpen open={open} setOpen={setOpen} /> 
               }
             </AnimatePresence>
             <AnimatePresence initial={false} mode="wait" >
               {filtersTab &&  
-                  <MobileNavFilters />
+                  <MobileNavFilters open={filtersTab} setOpen={setFiltersTab} />
               }
             </AnimatePresence>
   
@@ -46,7 +45,7 @@ export const MobileSearchbar = () => {
                 }}}
               className='w-12 h-12 p-2 rounded-full z-10
               bg-violet-700 shadow-lg shadow-violet-400/20
-              absolute bottom-1 right-0'
+              absolute bottom-0 right-0'
             >
               {open | filtersTab ?
                 <XMarkIcon className='text-white'/> :
