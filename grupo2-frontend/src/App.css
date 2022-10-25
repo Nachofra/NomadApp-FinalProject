@@ -11,6 +11,7 @@
 html{
     background: #EDE9FE;
     scroll-behavior: smooth;
+    overflow: hidden;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

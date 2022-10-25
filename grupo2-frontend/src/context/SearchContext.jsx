@@ -1,7 +1,6 @@
 // context to handle cursor 
 
 import { createContext, useContext, useState } from 'react'
-import { SearchNavbar } from '../components/searchNavbar/SearchNavbar';
 
 export const SearchContext = createContext(null)
 
@@ -18,7 +17,11 @@ export const emptyFilters =
             min: '',
             max: '',
         },
-        guests: null,
+        guests: {
+          adults: undefined,
+          children: undefined,
+          babies: undefined
+        },
         bathrooms: null,
         rooms: null,
         beds: null,
@@ -38,7 +41,6 @@ export const SearchProvider = ({ children }) => {
     return (
         <SearchContext.Provider value={{ filters, setFilters, reset }}>
             {children}
-            <SearchNavbar />
         </SearchContext.Provider>
     )
 }

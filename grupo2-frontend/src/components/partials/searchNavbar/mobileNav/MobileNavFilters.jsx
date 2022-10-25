@@ -1,54 +1,17 @@
 import React from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { CollapsableMenu } from '../../collapsableMenu/CollapsableMenu'
+import { MobileNavModal } from './MobileNavModal'
+import { useSearchContext } from '../../../../context/SearchContext'
 import { PropertyTypeSelect } from '../components/PropertyTypeSelect'
-import { useSearchContext } from '../../../context/SearchContext'
 import { CountSelect } from '../components/CountSelect'
+import { CollapsableMenu } from '../../../collapsableMenu/CollapsableMenu'
 
-export const MobileNavOpen = () => {
+export const MobileNavFilters = ({open, setOpen}) => {
 
     const {filters, setFilters, reset} = useSearchContext()
-    // const {category, price, date, guests, location} = filters
-  
+
   return (
-    
-    <motion.div
-        className='w-full h-full overflow-hidden
-        rounded-tl-xl rounded-bl-xl rounded-tr-xl rounded-br-[10rem]'
-        initial={{
-            height: 0,
-            opacity: 0,
-        }}
-        animate={{
-            height: "auto",
-            opacity: 1,
-            transition: {
-               height: {
-                    duration: 0.4,
-               },
-                opacity: {
-                    duration: 0.25,
-                    delay: 0.15,
-              },
-            },
-        }}
-        exit={{
-            height: 0,
-            opacity: 0,
-            transition: {
-               height: {
-                  duration: 0.4,
-              },
-               opacity: {
-                   duration: 0.25,
-               },
-           },
-        }}
-    >
-        <div className='flex flex-col justify-start items-start w-full overflow-y-auto scrollbar-none h-screen max-h-[70vh]'>
-            <div className=' w-full px-2 py-4'>
-                
-                <CollapsableMenu
+    <MobileNavModal setOpen={setOpen} open={open}>
+            <CollapsableMenu
                     question='Price range'
                 >
                     <div className='flex items-center space-x-2 py-4 ml-0.5'>
@@ -125,7 +88,7 @@ export const MobileNavOpen = () => {
                     question='Rooms and beds'
                 >
                     <h5 className='text-lg font-semibold text-gray-600 mt-5 px-2'>Rooms</h5>
-                    <CountSelect 
+                    <CountSelect
                         value={filters.rooms}
                         setValue={(value) => setFilters({...filters, rooms: value})}
                     />
@@ -135,24 +98,12 @@ export const MobileNavOpen = () => {
                         setValue={(value) => setFilters({...filters, beds: value})}
                     />
                     <h5 className='text-lg font-semibold text-gray-600 mt-1 px-2'>Bathrooms</h5>
-                    <CountSelect 
+                    <CountSelect
                         value={filters.bathrooms}
                         setValue={(value) => setFilters({...filters, bathrooms: value})}
                     />
-                </CollapsableMenu>
-                <button
-                    onClick={reset}
-                    className='px-3 py-1 p-2 rounded-lg 
-                    absolute -top-2 right-0 trasform -translate-y-full
-                    bg-white text-violet-700 border-2 border-violet-700 font-semibold'
-                >
-                    Clear all
-                </button>
-                
-            </div>
-        </div>
-        
-    </motion.div>
+                </CollapsableMenu>            
 
-    )
+    </MobileNavModal>
+  )
 }

@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "img": "./img/house1.jpg",
+    "img": "/mockup/img/house1.jpg",
     "category": {
       "id": 2,
       "title": "House",
@@ -29,7 +29,7 @@
   },
   {
     "id": 2,
-    "img": "./img/building1.jpg",
+    "img": "/mockup/img/building1.jpg",
     "category": {
       "id": 3,
       "title": "Cottage",
@@ -57,7 +57,7 @@
   },
   {
     "id": 3,
-    "img": "./img/house2.jpg",
+    "img": "/mockup/img/house2.jpg",
     "category": {
       "id": 1,
       "title": "Apartment",
@@ -85,7 +85,7 @@
   },
   {
     "id": 4,
-    "img": "./img/house3.jpg",
+    "img": "/mockup/img/house3.jpg",
     "category": {
       "id": 4,
       "title": "Deluxe",
@@ -113,7 +113,7 @@
   },
   {
     "id": 5,
-    "img": "./img/building2.jpg",
+    "img": "/mockup/img/building2.jpg",
     "category": {
       "id": 1,
       "title": "Apartment",
@@ -141,7 +141,7 @@
   },
   {
     "id": 6,
-    "img": "./img/building3.jpg",
+    "img": "/mockup/img/building3.jpg",
     "category": {
       "id": 1,
       "title": "Apartment",
@@ -169,7 +169,7 @@
   },
   {
     "id": 7,
-    "img": "./img/house4.jpg",
+    "img": "/mockup/img/house4.jpg",
     "category": {
       "id": 2,
       "title": "House",
@@ -189,7 +189,10 @@
         "province": {
           "id": 7,
           "name": "Cordoba",
-          "country": { "id": 7, "name": "Argentina" }
+          "country": { 
+            "id": 7, 
+            "name": "Argentina" 
+          }
         }
       }
     },
@@ -197,7 +200,7 @@
   },
   {
     "id": 8,
-    "img": "./img/building4.jpg",
+    "img": "/mockup/img/building4.jpg",
     "category": {
       "id": 1,
       "title": "Apartment",
