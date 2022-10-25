@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { useSearchContext } from '../../../context/SearchContext'
+import { useSearchContext } from '@/context/SearchContext'
 import { CheckIcon } from '@heroicons/react/24/solid'
 
 export const MobileNavModal = ({open, setOpen, children}) => {

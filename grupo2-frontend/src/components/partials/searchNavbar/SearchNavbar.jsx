@@ -5,7 +5,7 @@ import { MobileSearchbar } from './mobileNav'
 import './searchNavbar.scss'
 
 export const SearchNavbar = () => {
-  const {width, height} = useWindowSize
+  const {width, height} = useWindowSize()
   // console.log(width,height)
   
   if (width < 1399) {return <MobileSearchbar />} else {return <DesktopSearchbar /> }

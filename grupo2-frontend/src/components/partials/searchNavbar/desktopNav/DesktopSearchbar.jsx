@@ -1,14 +1,14 @@
 import { AdjustmentsHorizontalIcon, ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { MapPinIcon, QuestionMarkCircleIcon, UserGroupIcon, CalendarDaysIcon } from '@heroicons/react/24/outline'
-
 import React, { useState } from 'react'
+import { useSearchContext } from '../../../../context/SearchContext'
+import DeskSearchbarModal from './components/DeskSearchbarModal'
+import { Calendar } from '../../../Calendar/Calendar'
 
 export const DesktopSearchbar = () => {
 
   const {filters, setFilters, reset} = useSearchContext()
 
-  // const [startDate, setStartDate] = useState(null)
-  // const [endDate, setEndDate] = useState(null)
   const handleDateFrom = (date)=> {
     setFilters({...filters, date:{...filters.date, from:date}})
 
@@ -27,7 +27,7 @@ console.log(filters)
       rounded-xl bg-shape-navbar
       ring-1 ring-violet-700 ring-opacity-5`}
     > 
-      
+
       <DeskSearchbarModal
         active={false}
         icon={<MapPinIcon className='w-7 h-7 text-violet-700' />}
