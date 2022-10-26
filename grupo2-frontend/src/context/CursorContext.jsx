@@ -1,8 +1,8 @@
 // context to handle cursor 
 
 import { createContext, useContext, useState } from 'react'
-import useWindowSize from '../hooks/useWindowSize'
 import Cursor from '../components/cursor/Cursor';
+import useWindowDimensions from '../hooks/useWindowDimensions';
 
 export const CursorContext = createContext(null)
 
@@ -15,7 +15,7 @@ export const CursorProvider = ({ children }) => {
         setCursorVariant(variant)
     }
 
-    const {height, width} = useWindowSize();
+    const {height, width} = useWindowDimensions();
     
     
     return (
