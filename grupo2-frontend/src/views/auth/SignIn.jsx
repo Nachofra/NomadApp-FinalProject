@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PublicRoutes } from "../../guard/routes";
-import { Footer } from "../../components/partials/Footer";
+import {Footer} from "../../components/partials/footer/Footer";
 import Email from "../../components/login/email";
 import PasswordValidation from "../../components/login/passwordAndConfirmPassword/PasswordValidation";
 
