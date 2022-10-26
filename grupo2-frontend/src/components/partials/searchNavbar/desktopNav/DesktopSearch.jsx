@@ -4,6 +4,8 @@ import React, { useState } from 'react'
 import { useSearchContext } from '../../../../context/SearchContext'
 import DeskSearchbarModal from './components/DeskSearchbarModal'
 import { Calendar } from '../../../Calendar/Calendar'
+import { DeskFiltersPanel } from './components/DeskFiltersPanel'
+import { PropertyTypeSelect } from '../components/PropertyTypeSelect'
 
 export const DesktopSearch = () => {
 
@@ -76,15 +78,49 @@ console.log(filters)
               <MagnifyingGlassIcon className="w-6 h-6 text-violet-700" />
         </div>
         <div className='flex items-center absolute -left-4 z-10 -translate-x-full'>
-          <button
-            className='px-3 py-2 rounded-lg 
-            flex items-center
-            bg-violet-700 shadow-violet-400/50
-            text-white font-semibold shadow-md'
-          >
-            <AdjustmentsHorizontalIcon className='w-6 h-6 ' />
-            <p className='mx-2'>Filter</p>
-          </button>
+          <DeskFiltersPanel>
+            <div className='flex items-center justify-start
+              pt-4 overflow-auto  snap-x snap-mandatory  scrollbar-none'>
+                <div className="flex space-x-6 snap-x snap-mandatory">
+                    <PropertyTypeSelect
+                        name='Apartment'
+                        illustration='/illustrations/common_building.svg'
+                        onClick={() => setFilters (prev => ({...prev, category: {
+                            ...prev.category, apartment: !prev.category.apartment
+                            }
+                        }))}
+                        selected={filters?.category.apartment} 
+                    />
+                    <PropertyTypeSelect
+                        name='House'
+                        illustration='/illustrations/house_wide.svg'
+                        onClick={() => setFilters (prev => ({...prev, category: {
+                            ...prev.category, house: !prev.category.house
+                            }
+                        }))}
+                        selected={filters?.category.house} 
+                    />
+                    <PropertyTypeSelect
+                        name='Cottage'
+                        illustration='/illustrations/forest_house.svg'
+                        onClick={() => setFilters (prev => ({...prev, category: {
+                            ...prev.category, cottage: !prev.category.cottage
+                            }
+                        }))}
+                        selected={filters?.category.cottage} 
+                    />
+                    <PropertyTypeSelect
+                        name='Deluxe'
+                        illustration='/illustrations/modern_house.svg'
+                        onClick={() => setFilters (prev => ({...prev, category: {
+                            ...prev.category, deluxe: !prev.category.deluxe
+                            }
+                        }))}
+                        selected={filters?.category.deluxe} 
+                    />
+                </div>
+            </div>
+          </DeskFiltersPanel>
           <ArrowPathIcon onClick={reset} className='text-violet-700 w-6 h-6 ml-4' />
         </div>
         <QuestionMarkCircleIcon 
