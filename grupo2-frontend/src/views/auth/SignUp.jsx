@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PublicRoutes } from "../../guard/routes";
-import { Footer } from "../../components/partials/Footer";
+import { Footer } from "../../components/partials/footer/Footer";
 import { useUserContext } from "../../context/UserContext";
 import { UserInfo } from "../../components/login/UserInfo";
 import Email from "../../components/login/email";

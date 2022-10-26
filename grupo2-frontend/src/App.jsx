@@ -16,6 +16,8 @@ function App() {
     <RouteNotFound>
       <Route path={PublicRoutes.HOME} element={<Home />} />
       <Route path={PublicRoutes.AUTH} element={<Auth />} />
+      <Route path={PublicRoutes.LOGIN} element={<SignIn />} />
+      <Route path={PublicRoutes.REGISTER} element={<SignUp />} />
       
       <Route element={<AuthGuard />}></Route>
   </RouteNotFound>
