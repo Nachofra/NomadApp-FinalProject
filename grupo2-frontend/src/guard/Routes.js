@@ -1,6 +1,6 @@
 export const PublicRoutes = {
     HOME : '/',
-    LOGIN : '/auth/login',
+    LOGIN : '/auth/signin',
     REGISTER : '/auth/signup',
     AUTH : '/auth/*',
   }

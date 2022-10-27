@@ -11,16 +11,16 @@
 html{
     background: #EDE9FE;
     scroll-behavior: smooth;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
-.scrollbar-none::-webkit-scrollbar {
+::-webkit-scrollbar {
   display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
-.scrollbar-none {
+body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
