@@ -10,20 +10,21 @@ export const Calendar = ({
     setEndDate,
     monthsDisplayed
   }) => {
-    const [selectingStart, setSelectingStart] = useState(true)
-    function handleDateChange (dates) {
-        setStartDate(dates[0].toLocaleDateString('en-US'))
-
-        setEndDate(dates[1].toLocaleDateString('en-US'))
-
-      }
     
+    function handleDateChange (dates) {
+      setDateFrom(dates[0])
+      setDateTo(dates[1])
+    }
+
+    const [dateFrom, setDateFrom] = useState(null)
+    const [dateTo, setDateTo] = useState(null)
+
       return (
         <ReactDatePicker
-          selected={startDate}
+          selected={dateFrom}
           onChange={handleDateChange}
-          startDate={startDate}
-          endDate={endDate}
+          startDate={dateFrom}
+          endDate={dateTo}
           monthsShown={monthsDisplayed}
           selectsRange
           inline
