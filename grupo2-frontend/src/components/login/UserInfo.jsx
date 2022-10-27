@@ -18,28 +18,24 @@ export const UserInfo = ({ firstName, lastName, setUser }) => {
   
   return (
     <>
-      <div>
-        <label>
-          <strong>First Name</strong>
-        </label>
+      <div className="w-full mt-4">
         <input
           type="text"
           name="firstName"
           value={firstName}
           placeholder="First Name"
           onChange={handleNameChange}
+          className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-md focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
         />
       </div>
-      <div>
-        <label>
-          <strong>Last Name</strong>
-        </label>
+      <div className="w-full mt-4">
         <input
           type="text"
           name="lastName"
           value={lastName}
           placeholder="Last Name"
           onChange={handleNameChange}
+          className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-md focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
         />
       </div>
     </>

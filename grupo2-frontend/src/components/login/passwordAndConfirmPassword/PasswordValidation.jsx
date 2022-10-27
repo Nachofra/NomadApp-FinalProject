@@ -44,7 +44,7 @@ function PasswordValidation({password, confirmPassword, setUser}) {
     }else if(!specialCharPassword){
             errMsg="At least one Special Characters";
     }*/ else if (!minLengthPassword) {
-        errMsg = "At least minumum 7 characters";
+        errMsg = "Password needs a minimum of 7 characters";
       } else {
         errMsg = "";
       }
@@ -52,7 +52,7 @@ function PasswordValidation({password, confirmPassword, setUser}) {
     }
   };
   return (
-    <div>
+    <div className="w-full mt-4">
       <PasswordInputField
         handlePasswordChange={handlePasswordChange}
         handleValidation={handleValidation}

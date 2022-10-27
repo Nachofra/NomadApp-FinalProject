@@ -46,7 +46,7 @@ function PasswordAndConfirmPasswordValidation({password, confirmPassword, setUse
     }else if(!specialCharPassword){
             errMsg="At least one Special Characters";
     }*/ else if (!minLengthPassword) {
-        errMsg = "At least minumum 7 characters";
+        errMsg = "Password needs a minimum of 7 characters";
       } else {
         errMsg = "";
       }
@@ -60,14 +60,14 @@ function PasswordAndConfirmPasswordValidation({password, confirmPassword, setUse
         confirmPassword.length > 0)
     ) {
       if (confirmPassword !== password) {
-        setConfirmPasswordError("Password is not matched");
+        setConfirmPasswordError("Passwords don't match");
       } else {
         setConfirmPasswordError("");
       }
     }
   };
   return (
-    <div>
+    <>
       <PasswordInputField
         handlePasswordChange={handlePasswordChange}
         handleValidation={handleValidation}
@@ -80,7 +80,7 @@ function PasswordAndConfirmPasswordValidation({password, confirmPassword, setUse
         confirmPasswordValue={confirmPassword}
         confirmPasswordError={confirmPasswordError}
       />
-    </div>
+    </>
   );
 }
 

@@ -10,11 +10,11 @@ export const Home = () => {
     <>
         <HeaderNav />
         <BaseLayout>
-        <div className='flex items-center justify-center flex-wrap gap-8 pb-[100px]'>
+        <div className='flex items-center justify-center flex-wrap gap-8 mb-36'>
         { data.map(( property, i ) => <PropertyCard property={property} key={i} /> )}
         </div>
         </BaseLayout>
-        <Footer />
+        {/* <Footer /> */}
         <SearchNav />
     </>
   )
