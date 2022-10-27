@@ -2,6 +2,7 @@ import React from 'react'
 import DeskNavBarModal from './components/DeskNavBarModal'
 import { PublicRoutes } from '../../../guard/routes'
 import { useUserContext } from '../../../context/UserContext'
+import { UserInitials } from './components/UserInitials'
 
 export const HeaderNav = () => {
   const { user, logout } = useUserContext();
@@ -20,22 +21,20 @@ export const HeaderNav = () => {
                 <>
                   <h2 className='mr-10 text-2xl'>Hola <span className='font-bold'>{user.firstName}</span></h2>
                   <DeskNavBarModal
-                    active={false}
                     onClick={()=>{logout()}}
                     route={PublicRoutes.REGISTER}
                     placeholder="Log Out">
                   </DeskNavBarModal>
+                  <UserInitials initials={user?.firstName[0] + user?.lastName[0]} />
                 </>
                 :
                 <>
                     <DeskNavBarModal
-                  active={false}
                   route={PublicRoutes.LOGIN}
                   placeholder="Sign In">
                   </DeskNavBarModal>
 
                   <DeskNavBarModal
-                  active={false}
                   route={PublicRoutes.REGISTER}
                   placeholder="Sign Up">
                   </DeskNavBarModal>
