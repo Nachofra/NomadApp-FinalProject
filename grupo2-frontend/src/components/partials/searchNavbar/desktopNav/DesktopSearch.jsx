@@ -1,15 +1,16 @@
+import React from 'react'
 import { AdjustmentsHorizontalIcon, ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { MapPinIcon, QuestionMarkCircleIcon, UserGroupIcon, CalendarDaysIcon } from '@heroicons/react/24/outline'
-import React, { useState } from 'react'
 import { useSearchContext } from '../../../../context/SearchContext'
 import DeskSearchbarModal from './components/DeskSearchbarModal'
 import { Calendar } from '../../../Calendar/Calendar'
 import { DeskFiltersPanel } from './components/DeskFiltersPanel'
 import { PropertyTypeSelect } from '../components/PropertyTypeSelect'
-
+import listCategory from '../../../../staticJSON/listCategory.json'
+import { LocationDatalist } from '../components/LocationDatalist'
 export const DesktopSearch = () => {
 
-  const {filters, setFilters, reset} = useSearchContext()
+  const {filters, setFilters, reset, applyCategory} = useSearchContext()
 
   const handleDateFrom = (date)=> {
     setFilters({...filters, date:{...filters.date, from:date}})
@@ -32,12 +33,14 @@ console.log(filters)
       > 
 
         <DeskSearchbarModal
-          active={false}
+          active={filters.location !== null}
           icon={<MapPinIcon className='w-7 h-7 text-violet-700' />}
-          text="Córdoba, Argentina"
+          text={`${filters.location?.city.name},  ${filters.location?.city.province.country.name}`}
           placeholder="Searching any place"
         >
-          
+          <div className='w-60'>
+          <LocationDatalist flowTop />
+          </div>
         </DeskSearchbarModal>
         <DeskSearchbarModal
           active={filters.date.from !== null | filters.date.to !== null}
@@ -83,42 +86,15 @@ console.log(filters)
             <div className='flex items-center justify-start
               pt-4 overflow-auto  snap-x snap-mandatory  scrollbar-none'>
                 <div className="flex space-x-6 snap-x snap-mandatory">
+                  {listCategory.map((category, i) => (
                     <PropertyTypeSelect
-                        name='Apartment'
-                        illustration='/illustrations/common_building.svg'
-                        onClick={() => setFilters (prev => ({...prev, category: {
-                            ...prev.category, apartment: !prev.category.apartment
-                            }
-                        }))}
-                        selected={filters?.category.apartment} 
+                        key={i}
+                        name={category.title}
+                        illustration={category.illustration}
+                        onClick={() => applyCategory(category.id)}
+                        selected={filters?.category === category.id} 
                     />
-                    <PropertyTypeSelect
-                        name='House'
-                        illustration='/illustrations/house_wide.svg'
-                        onClick={() => setFilters (prev => ({...prev, category: {
-                            ...prev.category, house: !prev.category.house
-                            }
-                        }))}
-                        selected={filters?.category.house} 
-                    />
-                    <PropertyTypeSelect
-                        name='Cottage'
-                        illustration='/illustrations/forest_house.svg'
-                        onClick={() => setFilters (prev => ({...prev, category: {
-                            ...prev.category, cottage: !prev.category.cottage
-                            }
-                        }))}
-                        selected={filters?.category.cottage} 
-                    />
-                    <PropertyTypeSelect
-                        name='Deluxe'
-                        illustration='/illustrations/modern_house.svg'
-                        onClick={() => setFilters (prev => ({...prev, category: {
-                            ...prev.category, deluxe: !prev.category.deluxe
-                            }
-                        }))}
-                        selected={filters?.category.deluxe} 
-                    />
+                    ))}
                 </div>
             </div>
           </DeskFiltersPanel>

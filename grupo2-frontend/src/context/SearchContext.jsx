@@ -25,21 +25,20 @@ export const emptyFilters =
         bathrooms: null,
         rooms: null,
         beds: null,
-        category: {
-          apartment: null,
-          house: null,
-          cottage: null,
-          deluxe: null
-        }
+        category: null
       }
 
 export const SearchProvider = ({ children }) => {
     const [filters, setFilters] = useState(emptyFilters)
 
       const reset = () => setFilters(emptyFilters)
+
+      const applyCategory = (id) => {
+        setFilters({...filters, category : id})
+      }
     
     return (
-        <SearchContext.Provider value={{ filters, setFilters, reset }}>
+        <SearchContext.Provider value={{ filters, setFilters, reset, applyCategory }}>
             {children}
         </SearchContext.Provider>
     )
