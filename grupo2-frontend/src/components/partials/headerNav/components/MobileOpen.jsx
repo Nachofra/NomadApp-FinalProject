@@ -7,7 +7,7 @@ import { ArrowRightOnRectangleIcon } from '@heroicons/react/20/solid';
 
 export const MobileOpen = ({user}) => {
   return (
-    <motion.nav className='flex flex-col'
+    <motion.nav className='flex flex-col space-y-4'
         initial={{
         height: 0,
         opacity: 0,

@@ -41,7 +41,11 @@ export const HeaderNav = () => {
               }
             </AnimatePresence>
           </div>
-          <nav className='hidden lg:flex items-center'>
+          <nav className='hidden lg:flex items-center justify-between w-full max-w-[1500px] mx-auto'>
+            <Link to={PublicRoutes.HOME} >
+              <img src='/logo/logo_demo.svg' className='h-10' />
+            </Link>
+            <div className='flex items-center'>
             {
               user ?
               <>
@@ -68,7 +72,7 @@ export const HeaderNav = () => {
                 </DeskNavBarModal>
               </> 
             }
-            
+            </div>
           </nav>
         </div>
     </section>
