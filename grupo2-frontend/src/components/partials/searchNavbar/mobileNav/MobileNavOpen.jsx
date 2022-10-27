@@ -6,6 +6,8 @@ import { useSearchContext } from '@/context/SearchContext'
 import { Datalist, DatalistItem } from '../../../datalist'
 import listBlock from '@/staticJSON/listBlock.json'
 import { LocationDatalist } from '../components/LocationDatalist'
+import { CollapsableMenu } from '../../../collapsableMenu/CollapsableMenu'
+import { Calendar } from '../../../Calendar/Calendar'
 export const MobileNavOpen = ({open, setOpen}) => {
 
     const {filters, setFilters, reset} = useSearchContext()
@@ -31,7 +33,26 @@ export const MobileNavOpen = ({open, setOpen}) => {
   return (
     
     <MobileNavModal open={open} setOpen={setOpen} >
-      <LocationDatalist />
+      <CollapsableMenu
+        question='Find locations'
+      >
+        <div className='p-2 my-4'>
+        <LocationDatalist />
+        </div>
+      </CollapsableMenu>
+      <CollapsableMenu
+        question='Search by week'
+      >
+        <div className='p-2 my-4'>
+        <Calendar
+            // startDate={filters.date.from}
+            // endDate={filters.date.to}
+            // setStartDate={handleDateFrom}
+            // setEndDate={handleDateTo}
+            monthsDisplayed={1}
+          />
+        </div>
+      </CollapsableMenu>
     </MobileNavModal>
 
     )
