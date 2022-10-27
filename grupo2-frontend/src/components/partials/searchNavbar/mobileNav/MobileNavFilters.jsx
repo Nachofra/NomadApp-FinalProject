@@ -4,10 +4,10 @@ import { useSearchContext } from '../../../../context/SearchContext'
 import { PropertyTypeSelect } from '../components/PropertyTypeSelect'
 import { CountSelect } from '../components/CountSelect'
 import { CollapsableMenu } from '../../../collapsableMenu/CollapsableMenu'
-
+import listCategory from '@/staticJSON/listCategory.json'
 export const MobileNavFilters = ({open, setOpen}) => {
 
-    const {filters, setFilters, reset} = useSearchContext()
+    const {filters, setFilters, applyCategory} = useSearchContext()
 
   return (
     <MobileNavModal setOpen={setOpen} open={open}>
@@ -45,42 +45,15 @@ export const MobileNavFilters = ({open, setOpen}) => {
                     <div className='flex items-center justify-start
                     pt-4 overflow-auto  snap-x snap-mandatory  scrollbar-none'>
                         <div className="flex space-x-6 snap-x snap-mandatory">
+                        {listCategory.map((category, i) => (
                             <PropertyTypeSelect
-                                name='Apartment'
-                                illustration='/illustrations/common_building.svg'
-                                onClick={() => setFilters (prev => ({...prev, category: {
-                                    ...prev.category, apartment: !prev.category.apartment
-                                    }
-                                }))}
-                                selected={filters?.category.apartment} 
+                                key={i}
+                                name={category.title}
+                                illustration={category.illustration}
+                                onClick={() => applyCategory(category.id)}
+                                selected={filters?.category === category.id} 
                             />
-                            <PropertyTypeSelect
-                                name='House'
-                                illustration='/illustrations/house_wide.svg'
-                                onClick={() => setFilters (prev => ({...prev, category: {
-                                    ...prev.category, house: !prev.category.house
-                                    }
-                                }))}
-                                selected={filters?.category.house} 
-                            />
-                            <PropertyTypeSelect
-                                name='Cottage'
-                                illustration='/illustrations/forest_house.svg'
-                                onClick={() => setFilters (prev => ({...prev, category: {
-                                    ...prev.category, cottage: !prev.category.cottage
-                                    }
-                                }))}
-                                selected={filters?.category.cottage} 
-                            />
-                            <PropertyTypeSelect
-                                name='Deluxe'
-                                illustration='/illustrations/modern_house.svg'
-                                onClick={() => setFilters (prev => ({...prev, category: {
-                                    ...prev.category, deluxe: !prev.category.deluxe
-                                    }
-                                }))}
-                                selected={filters?.category.deluxe} 
-                            />
+                            ))}
                         </div>
                     </div>
                 </CollapsableMenu>

@@ -32,7 +32,7 @@ export const DeskFiltersPanel = ({children}) => {
             <Popover.Panel className="absolute left-1/2 -top-10
             transform -translate-y-[100%] -translate-x-1/2
             flex-col items-start justify-start circleBtnModel
-            px-4 pt-4 pb-10 rounded-lg shadow-md bg-white flex-col">
+            px-4 pt-4 pb-10 rounded-lg shadow-md bg-white">
                 {children}
                 <button onClick={close}
                 className="absolute shadow-md w-[3.25rem] h-[3.25rem] bg-violet-700 z-10

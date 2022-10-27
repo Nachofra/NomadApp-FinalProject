@@ -1,8 +1,8 @@
 import React from 'react'
 import listCategory  from '@/staticJSON/listCategory.json'
-import { useSearchContext, emptyFilters } from '../../../context/SearchContext'
+import { useSearchContext } from '../../../context/SearchContext'
 export const HomeCategories = () => {
-    const {filters, setFilters, reset } = useSearchContext();
+    const {filters, setFilters, applyCategory } = useSearchContext();
     // {
     //     "id":3,
     //     "title":"Cottage",
@@ -17,15 +17,13 @@ export const HomeCategories = () => {
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
         {
             listCategory.map((category, i) => { return(
-                <article key={i} className='rounded-xl shadow-md overflow-hidden h-40 flex items-center justify-center'
-                onClick={() => setFilters((prev => ({...prev, category: {
-                    ...emptyFilters.category, [`${category.title}`]: !prev.category[`${category.title}`]
-                    }
-                })))}
+                <article key={i} className='rounded-xl shadow-md overflow-hidden h-40 
+                flex items-center justify-center cursor-pointer'
+                onClick={() => applyCategory(category.id)}
                 >
                     <img
                     className={`h-full w-full object-cover transition-all
-                    ${filters?.category[`${category.title}`] ? '' : 'grayscale'}`}
+                    ${filters?.category === category.id ? '' : 'grayscale'}`}
                     src={category.imageUrl} 
                     alt={category.description}
                     />
