@@ -9,7 +9,10 @@ import Email from "../../components/login/email";
 import PasswordAndConfirmPasswordValidation from "../../components/login/passwordAndConfirmPassword/PasswordAndConfirmPasswordValidation.js.jsx";
 
 export const SignUp = () => {
+  const regex = new RegExp("[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+")
   const navigate = useNavigate();
+  const { login } = useUserContext();
+  
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -17,10 +20,18 @@ export const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
-  console.log(user);
+
   function handleSubmit(e) {
     e.preventDefault();
-    navigate(PublicRoutes.LOGIN);
+    if(user.password.length > 6 && user.password === user.confirmPassword && regex.test(user.email)){
+      login({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        password: user.password,
+      });
+      navigate(PublicRoutes.LOGIN);
+    }
   }
 
   return (

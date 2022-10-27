@@ -23,7 +23,7 @@ function PasswordValidation({password, confirmPassword, setUser}) {
       const lowercaseRegExp = /(?=.*?[a-z])/;
       const digitsRegExp = /(?=.*?[0-9])/;
       const specialCharRegExp = /(?=.*?[#?!@$%^&*-])/;
-      const minLengthRegExp = /.{6,}/;
+      const minLengthRegExp = /.{7,}/;
 
       const passwordLength = passwordInputValue.length;
       const uppercasePassword = uppercaseRegExp.test(passwordInputValue);
@@ -44,7 +44,7 @@ function PasswordValidation({password, confirmPassword, setUser}) {
     }else if(!specialCharPassword){
             errMsg="At least one Special Characters";
     }*/ else if (!minLengthPassword) {
-        errMsg = "At least minumum 6 characters";
+        errMsg = "At least minumum 7 characters";
       } else {
         errMsg = "";
       }

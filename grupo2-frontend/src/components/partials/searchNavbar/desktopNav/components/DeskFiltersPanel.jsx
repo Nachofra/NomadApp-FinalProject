@@ -15,7 +15,7 @@ export const DeskFiltersPanel = ({children}) => {
             className='px-3 py-2 rounded-lg 
             flex items-center
             bg-violet-700 shadow-violet-400/50
-            text-white font-semibold shadow-md'
+            text-white font-semibold shadow-md focus:outline-none'
           >
             <AdjustmentsHorizontalIcon className='w-6 h-6 ' />
             <p className='mx-2'>Filter</p>
@@ -31,8 +31,8 @@ export const DeskFiltersPanel = ({children}) => {
           >
             <Popover.Panel className="absolute left-1/2 -top-10
             transform -translate-y-[100%] -translate-x-1/2
-            flex items-start justify-start circleBtnModel
-            px-4 pt-4 pb-10 rounded-lg shadow-md bg-white">
+            flex-col items-start justify-start circleBtnModel
+            px-4 pt-4 pb-10 rounded-lg shadow-md bg-white flex-col">
                 {children}
                 <button onClick={close}
                 className="absolute shadow-md w-[3.25rem] h-[3.25rem] bg-violet-700 z-10

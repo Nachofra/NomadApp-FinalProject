@@ -79,6 +79,7 @@ console.log(filters)
         </div>
         <div className='flex items-center absolute -left-4 z-10 -translate-x-full'>
           <DeskFiltersPanel>
+            <h2 className='text-center text-2xl'>Filters</h2>
             <div className='flex items-center justify-start
               pt-4 overflow-auto  snap-x snap-mandatory  scrollbar-none'>
                 <div className="flex space-x-6 snap-x snap-mandatory">
