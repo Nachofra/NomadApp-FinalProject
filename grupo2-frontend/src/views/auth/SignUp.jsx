@@ -40,7 +40,7 @@ export const SignUp = () => {
   return (
     <>
       <HeaderNav />
-      <div className="h-[80vh] flex items-center justify-center">
+      <div className="pt-32 flex items-center justify-center">
         <div className="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md ">
             <div className="px-6 py-4">
               <h2 className="text-3xl font-bold text-center text-gray-700">Group 2</h2>
