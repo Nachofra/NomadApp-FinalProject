@@ -15,7 +15,7 @@ export const HeaderNav = () => {
 
   return (
     <section 
-    className='top-0 fixed
+    className='top-0 fixed z-50
     w-screen flex items-center justify-between' >
         <div className='w-screen
         shadow-xl cursor-pointer h-auto relative
