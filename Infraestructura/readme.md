@@ -1,0 +1,2 @@
+Actualmente tenemos dos diseños de red principales, primero tenemos el diseño simple (el cual esta diseñado en una herramienta de diagramado de redes) y
+el segundo está diseñado en la herramienta de Designer de AWS Cloudformation.
