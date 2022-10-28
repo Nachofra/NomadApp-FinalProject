@@ -66,7 +66,7 @@ export const MobileSearch = () => {
                         opacity: 0
                     }}
                   className='absolute -top-2 left-1 -translate-y-full
-                  text-gray-800 font-medium text-4xl'
+                  text-white drop-shadow-md font-medium text-4xl'
                 >
                   {open ? 'Search' : 'Filters'}
                 </motion.h3>

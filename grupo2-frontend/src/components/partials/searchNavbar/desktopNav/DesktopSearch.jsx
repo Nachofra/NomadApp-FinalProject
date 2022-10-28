@@ -38,7 +38,9 @@ console.log(filters)
           text={`${filters.location?.city.name},  ${filters.location?.city.province.country.name}`}
           placeholder="Searching any place"
         >
-          <div className='w-60'>
+          <div className='w-60 flex flex-col items-center'>
+            <p className='text-violet-700 font-semibold uppercase text-xl'>Find places</p>
+            <p className='mb-4 text-gray-600'>Select one from the list</p>
           <LocationDatalist flowTop />
           </div>
         </DeskSearchbarModal>
