@@ -1,0 +1,28 @@
+[2022-11-02 16:57:38] [ ERROR] [ProductController:30] Error al listar todos las categorias
+[2022-11-02 16:57:43] [ INFO ] [ProductController:39] Se agrego una categoria
+[2022-11-02 16:57:43] [ INFO ] [ProductController:39] Se agrego una categoria
+[2022-11-02 16:57:44] [ INFO ] [ProductController:39] Se agrego una categoria
+[2022-11-02 16:57:45] [ INFO ] [ProductController:39] Se agrego una categoria
+[2022-11-02 16:57:45] [ INFO ] [ProductController:39] Se agrego una categoria
+[2022-11-02 16:57:46] [ INFO ] [ProductController:39] Se agrego una categoria
+[2022-11-02 16:57:46] [ INFO ] [ProductController:39] Se agrego una categoria
+[2022-11-02 16:57:49] [ INFO ] [ProductController:27] Se listaron todos las categorias
+[2022-11-02 16:57:49] [ INFO ] [ProductController:27] Se listaron todos las categorias
+[2022-11-02 16:58:01] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 16:59:37] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 17:10:01] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 17:10:30] [ INFO ] [ProductController:39] Se agrego una categoria
+[2022-11-02 17:10:41] [ INFO ] [ProductController:28] Se listaron todos los productos
+[2022-11-02 17:10:49] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 17:10:49] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 17:10:51] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 17:10:55] [ INFO ] [ProductController:74] Se actualizo correctamente el producto con id 1
+[2022-11-02 17:10:59] [ INFO ] [ProductController:28] Se listaron todos los productos
+[2022-11-02 17:11:05] [ INFO ] [ProductController:40] Se listaron todos los productos aleatoriamente
+[2022-11-02 17:11:17] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 17:11:17] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 17:11:18] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 17:11:18] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 17:11:18] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 17:11:20] [ INFO ] [ProductController:64] Se agrego un producto
+[2022-11-02 17:11:22] [ INFO ] [ProductController:40] Se listaron todos los productos aleatoriamente
