@@ -56,9 +56,9 @@ public class CategoryController {
         // the row with that id doesn't exist in the database
         if(categoryExists){
             categoryService.deleteCategory(categoryId);
-            return ResponseEntity.ok("El paciente con id " + categoryId + " ha sido borrado");
+            return ResponseEntity.ok("La categoría con id " + categoryId + " ha sido borrada");
         }else{
-            return ResponseEntity.ok("El paciente con id " + categoryId + " no existe en la base de datos");
+            return ResponseEntity.ok("La categoría con id " + categoryId + " no existe en la base de datos");
         }
     }
 }
