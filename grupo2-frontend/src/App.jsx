@@ -10,8 +10,6 @@ import { Route } from 'react-router-dom'
 import { PublicRoutes } from './guard/routes'
 
 function App() {
-  //return(<SignUp />)
-  //return(<SignIn />)
   return (
     <RouteNotFound>
       <Route path={PublicRoutes.HOME} element={<Home />} />
