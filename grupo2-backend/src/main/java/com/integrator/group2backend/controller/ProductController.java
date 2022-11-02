@@ -87,7 +87,7 @@ public class ProductController {
             logger.info("El producto con id " + productId + " ha sido borrado");
             return ResponseEntity.ok("El producto con id " + productId + " ha sido borrado");
         }else{
-            logger.info("El producto con id " + productId + " no existe en la base de datos");
+            logger.error("El producto con id " + productId + " no existe en la base de datos");
             return ResponseEntity.ok("El producto con id " + productId + " no existe en la base de datos");
         }
     }

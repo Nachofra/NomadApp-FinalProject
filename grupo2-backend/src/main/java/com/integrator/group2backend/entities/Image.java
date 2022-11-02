@@ -20,11 +20,9 @@ public class Image {
     private String extension;
 
     @OneToOne(mappedBy = "featureImage")
-    @JsonIgnore
     private Feature feature;
 
     @OneToOne(mappedBy = "categoryImage")
-    @JsonIgnore
     private Category category;
 
     @ManyToOne(fetch = FetchType.EAGER)
