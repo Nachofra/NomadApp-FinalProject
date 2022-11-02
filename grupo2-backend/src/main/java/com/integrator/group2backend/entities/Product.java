@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.*;
 
 @Getter
 @Setter
@@ -20,11 +21,18 @@ public class Product {
     private Integer bathrooms;
     private Integer guests;
     private Float dailyPrice;
-    private String adress;
+    private String address;
     private Integer number;
     private Integer floor;
     private String apartment;
     private Float latitude;
     private Float longitude;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
+
+    @OneToMany(mappedBy = "image", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Image> images = new HashSet<>();
 
 }
