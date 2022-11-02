@@ -62,8 +62,10 @@ public class CategoryController {
         // the row with that id doesn't exist in the database
         if(categoryExists){
             categoryService.deleteCategory(categoryId);
+            logger.info("Se elimino correctamente la categoria con id " + categoryId);
             return ResponseEntity.ok("La categoría con id " + categoryId + " ha sido borrada");
         }else{
+            logger.error("La categoria especificada no existe con id " + categoryId);
             return ResponseEntity.ok("La categoría con id " + categoryId + " no existe en la base de datos");
         }
     }
