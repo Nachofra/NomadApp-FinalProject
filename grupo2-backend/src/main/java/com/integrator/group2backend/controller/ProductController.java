@@ -23,7 +23,6 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<Product>> listAllProducts() {
         List<Product> searchedProducts = productService.listAllProducts();
-
         if (!(searchedProducts.isEmpty())) {
             logger.info("Se listaron todos los productos");
             return ResponseEntity.ok(searchedProducts);
@@ -35,8 +34,8 @@ public class ProductController {
     @GetMapping("/random")
     public ResponseEntity<List<Product>> listRandomAllProducts() {
         List<Product> searchedProducts = productService.listAllProducts();
-        Collections.shuffle(searchedProducts);
         if (!(searchedProducts.isEmpty())) {
+            Collections.shuffle(searchedProducts);
             logger.info("Se listaron todos los productos aleatoriamente");
             return ResponseEntity.ok(searchedProducts);
         } else {

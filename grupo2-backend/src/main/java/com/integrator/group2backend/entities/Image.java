@@ -28,6 +28,6 @@ public class Image {
     private Category category;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "image_id", referencedColumnName = "id")
-    private Image image;
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 }
