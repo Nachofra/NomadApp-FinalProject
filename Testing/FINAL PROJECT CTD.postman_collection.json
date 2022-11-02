@@ -154,6 +154,141 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "PRODUCT",
+			"item": [
+				{
+					"name": "NEW PRODUCT",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"Product\",\r\n    \"description\":\"New Product\",\r\n    \"rooms\":1,\r\n    \"beds\":1,\r\n    \"bathrooms\":1,\r\n    \"guests\":1,\r\n    \"dailyPrice\":1.1,\r\n    \"address\":\"Address\",\r\n    \"number\":1,\r\n    \"floor\":1,\r\n    \"apartment\":\"A\",\r\n    \"latitude\":\"11.11\",\r\n    \"longitude\":\"11.11\",\r\n    \"category\":{\r\n        \"id\": 1,\r\n        \"title\":\"Category\",\r\n        \"description\":\"New Category\",\r\n        \"imageUrl\":\"www.image.com\"\r\n        }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/product",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST ALL PRODUCTS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/product",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST RANDOM ALL PRODUCTS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/product/random",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"random"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST PRODUCT BY ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/product/7",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EDIT PRODUCT BY ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"Updated Product\",\r\n    \"description\":\"Updated Product\",\r\n    \"rooms\":4,\r\n    \"beds\":4,\r\n    \"bathrooms\":4,\r\n    \"guests\":4,\r\n    \"dailyPrice\":4.4,\r\n    \"address\":\"Address\",\r\n    \"number\":4,\r\n    \"floor\":4,\r\n    \"apartment\":\"B\",\r\n    \"latitude\":\"44.44\",\r\n    \"longitude\":\"44.44\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/product/9",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE PRODUCT BY ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/product/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

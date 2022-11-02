@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
@@ -44,13 +45,11 @@ public class ProductController {
         }
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Product> searchProductById(@PathVariable("id") Long productId, @RequestBody Product product){
-        boolean productExists = productService.searchProductById(productId).isPresent();
-        // If the provided category already exists it can be updated, otherwise it will throw a badRequest response
-        if(productExists){
-            product.setId(productId);
+    public ResponseEntity<Product> searchProductById(@PathVariable("id") Long productId){
+        Optional<Product> productFound = productService.searchProductById(productId);
+        if(productFound.isPresent()){
             logger.info("Se encontro correctamente el producto con id " + productId);
-            return ResponseEntity.ok(product);
+            return ResponseEntity.ok(productFound.get());
         }else{
             logger.error("El producto especificado no existe con id " + productId);
             return ResponseEntity.badRequest().build();

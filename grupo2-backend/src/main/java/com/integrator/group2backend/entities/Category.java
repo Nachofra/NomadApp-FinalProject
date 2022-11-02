@@ -1,5 +1,6 @@
 package com.integrator.group2backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +22,7 @@ public class Category {
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image categoryImage;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Product> products = new HashSet<>();
 }
