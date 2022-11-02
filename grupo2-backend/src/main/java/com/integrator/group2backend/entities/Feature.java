@@ -8,14 +8,13 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "Category")
-public class Category {
+@Table(name = "Feature")
+public class Feature {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String description;
+    private String name;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
-    private Image categoryImage;
+    private Image featureImage;
 }

@@ -43,7 +43,7 @@ export const MobileNavOpen = ({open, setOpen}) => {
       <CollapsableMenu
         question='Search by week'
       >
-        <div className='p-2 my-4'>
+        <div className='p-2 my-4 flex items-center justify-center'>
         <Calendar
             // startDate={filters.date.from}
             // endDate={filters.date.to}
