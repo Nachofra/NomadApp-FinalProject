@@ -15,5 +15,7 @@ public class Category {
     private Long id;
     private String title;
     private String description;
-    private String imageUrl;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private Image categoryImage;
 }

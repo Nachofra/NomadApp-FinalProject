@@ -1,5 +1,6 @@
 package com.integrator.group2backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +18,10 @@ public class Image {
     private String name;
     private String description;
     private String extension;
+    @OneToOne(mappedBy = "featureImage")
+    @JsonIgnore
+    private Feature feature;
+    @OneToOne(mappedBy = "categoryImage")
+    @JsonIgnore
+    private Category category;
 }
