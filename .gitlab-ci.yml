@@ -11,11 +11,9 @@ cache:
 build:
   stage: build
   script:
-    - cd "grupo2-backend"
     - mvn clean install
 
 test:
   stage: test
   script:
-    - cd "grupo2-backend"  
     - mvn test
