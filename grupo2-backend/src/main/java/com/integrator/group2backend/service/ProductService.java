@@ -33,4 +33,9 @@ public class ProductService {
     public List<Product> listProductByCityId(Long city_id){
         return this.productRepository.findByCityId(city_id);
     }
+
+    public List<Product> listProductByCategoryId(Long category_id){
+        return this.productRepository.findByCategoryId(category_id);
+    }
+
 }
