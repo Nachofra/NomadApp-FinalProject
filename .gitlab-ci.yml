@@ -1,0 +1,21 @@
+image: maven:4-jdk-17
+
+stages:
+  - build
+  - test
+
+cache:
+  paths:
+    - grupo2-backend/target/
+
+build:
+  stage: build
+  script:
+    - cd "grupo2-backend"
+    - mvn clean install
+
+test:
+  stage: test
+  script:
+    - cd "grupo2-backend"  
+    - mvn test
