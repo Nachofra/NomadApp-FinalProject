@@ -79,3 +79,4 @@
 [2022-11-02 19:08:13] [ ERROR] [ProductController:89] El producto con id 1 no existe en la base de datos
 [2022-11-02 19:08:20] [ INFO ] [ProductController:65] Se elimino correctamente la categoria con id 1
 [2022-11-02 19:08:22] [ ERROR] [ProductController:68] La categoria especificada no existe con id 1
+probandogitignore

@@ -32,5 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-/cambios.log
-/src/main/resources/application.properties
+### Logs de la API ###
+*.log
+
+src/main/resources/application.properties
