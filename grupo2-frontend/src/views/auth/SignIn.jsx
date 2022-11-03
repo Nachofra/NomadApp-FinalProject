@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PublicRoutes } from "../../guard/routes";
+import { PublicRoutes } from "../../guard/Routes";
 import { Footer } from "../../components/partials/footer/Footer";
 import { useUserContext } from "../../context/UserContext";
-import Email from "../../components/login/email";
+import Email from "../../components/login/Email";
 import PasswordValidation from "../../components/login/passwordAndConfirmPassword/PasswordValidation";
 import { Link } from "react-router-dom";
 import { HeaderNav } from "../../components/partials";

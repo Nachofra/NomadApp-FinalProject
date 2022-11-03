@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useUserContext } from '../context/UserContext'
-import { PublicRoutes } from './routes'
+import { PublicRoutes } from './Routes'
 
 export const AuthGuard = () => {
   const { user } = useUserContext()
