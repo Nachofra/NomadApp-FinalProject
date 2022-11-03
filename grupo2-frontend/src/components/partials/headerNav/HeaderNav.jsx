@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import DeskNavBarModal from './components/DeskNavBarModal'
-import { PublicRoutes } from '../../../guard/routes'
+import { PublicRoutes } from '../../../guard/Routes'
 import { useUserContext } from '../../../context/UserContext'
 import { UserInitials } from './components/UserInitials'
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'

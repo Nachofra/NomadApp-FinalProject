@@ -5,9 +5,9 @@ import { SignIn } from './views/auth/SignIn'
 import { SignUp } from './views/auth/SignUp'
 import { RouteNotFound } from './utilities/RouteNotFound'
 import { AuthGuard } from './guard/AuthGuard'
-import './app.css'
+import './App.css'
 import { Route } from 'react-router-dom'
-import { PublicRoutes } from './guard/routes'
+import { PublicRoutes } from './guard/Routes'
 
 function App() {
   return (

@@ -1,7 +1,7 @@
 import React from 'react'
 import {motion} from 'framer-motion';
 import DeskNavBarModal from './DeskNavBarModal';
-import { PublicRoutes } from '../../../../guard/routes';
+import { PublicRoutes } from '../../../../guard/Routes';
 import { Link } from 'react-router-dom';
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/20/solid';
 
