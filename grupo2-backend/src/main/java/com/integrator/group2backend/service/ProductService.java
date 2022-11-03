@@ -28,4 +28,9 @@ public class ProductService {
     public void deleteProduct(Long id){
         productRepository.deleteById(id);
     }
+
+
+    public List<Product> listProductByCityId(Long city_id){
+        return this.productRepository.findByCityId(city_id);
+    }
 }
