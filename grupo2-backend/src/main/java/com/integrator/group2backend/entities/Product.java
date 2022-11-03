@@ -33,14 +33,7 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     @JsonIgnore
->>>>>>> 8d7d8fe5165a6d47352212ba2338ea396a1eacaa
-=======
-    @JsonIgnore
->>>>>>> 8d7d8fe5165a6d47352212ba2338ea396a1eacaa
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Image> images = new HashSet<>();
 
