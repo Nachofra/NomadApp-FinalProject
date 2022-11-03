@@ -33,6 +33,6 @@ build/
 .vscode/
 
 ### Logs de la API ###
-*.log
+./cambios.log
 
 src/main/resources/application.properties
