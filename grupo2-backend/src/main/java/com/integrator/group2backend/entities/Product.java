@@ -34,6 +34,10 @@ public class Product {
     private Category category;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    @JsonIgnore
+>>>>>>> 8d7d8fe5165a6d47352212ba2338ea396a1eacaa
 =======
     @JsonIgnore
 >>>>>>> 8d7d8fe5165a6d47352212ba2338ea396a1eacaa
