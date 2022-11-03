@@ -34,25 +34,25 @@ public class CityController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<City> getCityById(@PathVariable Long id){
+    public ResponseEntity<City> getCityById(@PathVariable Long id) {
         Optional<City> city = this.cityService.getCityById(id);
-        if(city.isPresent()){
+        if (city.isPresent()) {
             return ResponseEntity.ok(city.get());
         }
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/postal/{postalCode}")
-    public ResponseEntity<City> getCityByPostalCode(@PathVariable String postalCode){
+    public ResponseEntity<City> getCityByPostalCode(@PathVariable String postalCode) {
         Optional<City> city = this.cityService.findByPostalCode(postalCode);
-        if(city.isPresent()){
+        if (city.isPresent()) {
             return ResponseEntity.ok(city.get());
         }
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<City>> getAllCity(){
+    public ResponseEntity<List<City>> getAllCity() {
         return ResponseEntity.ok(this.cityService.getAllCity());
     }
 
@@ -62,8 +62,8 @@ public class CityController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<City> updateCity(@PathVariable Long id, @RequestBody City city){
-        if(this.cityService.getCityById(id).isPresent()){
+    public ResponseEntity<City> updateCity(@PathVariable Long id, @RequestBody City city) {
+        if (this.cityService.getCityById(id).isPresent()) {
             city.setId(id);
             return ResponseEntity.ok(this.cityService.updateCity(city));
         }
