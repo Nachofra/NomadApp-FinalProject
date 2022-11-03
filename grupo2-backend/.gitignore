@@ -35,8 +35,12 @@ build/
 
 /cambios.log
 <<<<<<< HEAD
+<<<<<<< HEAD
 /src/main/resources/application.properties
 
+=======
+/src/main/resources/application.properties
+>>>>>>> 50264a194137119445e308a54da5f6ef190ee122
 =======
 /src/main/resources/application.properties
 >>>>>>> 50264a194137119445e308a54da5f6ef190ee122

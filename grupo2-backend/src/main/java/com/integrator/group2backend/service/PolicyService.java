@@ -1,7 +1,6 @@
 package com.integrator.group2backend.service;
 
 import com.integrator.group2backend.entities.Policy;
-import com.integrator.group2backend.repository.PolicyItemRepository;
 import com.integrator.group2backend.repository.PolicyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,11 +10,11 @@ import java.util.Optional;
 @Service
 public class PolicyService {
     private final PolicyRepository policyRepository;
-    private final PolicyItemRepository policyItemRepository;
+
     @Autowired
-    public PolicyService(PolicyRepository policyRepository, PolicyItemRepository policyItemRepository) {
+    public PolicyService(PolicyRepository policyRepository) {
         this.policyRepository = policyRepository;
-        this.policyItemRepository = policyItemRepository;
+
     }
 
     public Policy addPolicy(Policy policy){

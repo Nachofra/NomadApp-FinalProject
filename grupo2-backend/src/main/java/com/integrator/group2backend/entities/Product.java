@@ -35,4 +35,8 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Image> images = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    private City city;
+
 }
