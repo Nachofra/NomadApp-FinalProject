@@ -13,6 +13,9 @@ build:
   script:
     - cd "grupo2-backend"
     - mvn clean install
+  artifacts:
+    paths:
+      - target/*.jar
 
 test:
   stage: test
