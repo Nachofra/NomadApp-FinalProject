@@ -22,7 +22,7 @@ public class Category {
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image categoryImage;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    //@JsonIgnore
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Product> products = new HashSet<>();
 }
