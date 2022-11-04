@@ -23,8 +23,8 @@ public class Policy {
     @OneToMany(mappedBy = "policy",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PolicyItem> policyItems;
 
+    @ManyToMany(mappedBy = "policies", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
-    @ManyToMany(mappedBy = "policies", cascade = CascadeType.ALL)
     private Set<Product> products = new HashSet<Product>();
 
 }

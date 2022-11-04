@@ -18,11 +18,11 @@ public class Feature {
     private String name;
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image featureImage;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "features", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "features", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Product> products = new HashSet<Product>();
 }

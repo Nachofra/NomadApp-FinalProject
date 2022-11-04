@@ -16,8 +16,8 @@ public class PolicyItem {
     private Long id;
     private String name;
 
-    //@JsonIgnore
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "policy_id", referencedColumnName = "id")
     private Policy policy;
 }

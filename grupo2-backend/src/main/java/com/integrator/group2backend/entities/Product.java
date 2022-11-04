@@ -35,15 +35,15 @@ public class Product {
     private Category category;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Image> images = new HashSet<>();
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id", referencedColumnName = "id")
     private City city;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "policy_by_product",
             joinColumns = {
@@ -56,7 +56,7 @@ public class Product {
     @JsonIgnore
     Set<Policy> policies = new HashSet<Policy>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "feature_by_product",
             joinColumns = {
