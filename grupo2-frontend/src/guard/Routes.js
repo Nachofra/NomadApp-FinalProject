@@ -3,6 +3,7 @@ export const PublicRoutes = {
     LOGIN : '/auth/signin',
     REGISTER : '/auth/signup',
     AUTH : '/auth/*',
+    PRODUCT: '/product/:id'
   }
   
   export const PrivateRoutes = {
