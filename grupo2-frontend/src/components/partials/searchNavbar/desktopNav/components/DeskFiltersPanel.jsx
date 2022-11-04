@@ -14,7 +14,7 @@ export const DeskFiltersPanel = ({children}) => {
           <Popover.Button
             className='px-3 py-2 rounded-lg 
             flex items-center
-            bg-violet-700 shadow-violet-400/50
+            bg-violet-700
             text-white font-semibold shadow-md focus:outline-none'
           >
             <AdjustmentsHorizontalIcon className='w-6 h-6 ' />
