@@ -1,6 +1,10 @@
 package com.integrator.group2backend.controller;
 
+import com.integrator.group2backend.entities.Category;
+import com.integrator.group2backend.entities.City;
 import com.integrator.group2backend.entities.Product;
+import com.integrator.group2backend.service.CategoryService;
+import com.integrator.group2backend.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.integrator.group2backend.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +20,13 @@ import java.util.Optional;
 public class ProductController {
     public static final Logger logger = Logger.getLogger(ProductController.class);
     private final ProductService productService;
+    private final CityService cityService;
+    private final CategoryService categoryService;
     @Autowired
-    public ProductController(ProductService productService){
+    public ProductController(ProductService productService, CityService cityService, CategoryService categoryService){
         this.productService = productService;
+        this.cityService = cityService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -89,5 +97,25 @@ public class ProductController {
             logger.error("El producto con id " + productId + " no existe en la base de datos");
             return ResponseEntity.ok("El producto con id " + productId + " no existe en la base de datos");
         }
+    }
+
+    @GetMapping("/city/{id}")
+    public ResponseEntity<List<Product>> getProductByCityId(@PathVariable Long id){
+        Optional<City> city = this.cityService.getCityById(id);
+        if (!city.isPresent()) {
+            logger.error("La ciudad con id " + id + " no existe en la base de datos");
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(this.productService.listProductByCityId(id));
+    }
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<Product>> getProductByCategoryId(@PathVariable Long id){
+        Optional<Category> category = this.categoryService.searchCategoryById(id);
+        if (!category.isPresent()) {
+            logger.error("La categoría con id " + id + " no existe en la base de datos");
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(this.productService.listProductByCategoryId(id));
     }
 }

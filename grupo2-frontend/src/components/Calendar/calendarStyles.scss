@@ -20,7 +20,7 @@
   }
 
   .react-datepicker__month{
-    @apply px-3
+    @apply p-3
   }
 .react-datepicker__month-container:first-of-type{
   @apply mr-4
@@ -89,6 +89,10 @@
 .react-datepicker__day--in-range--range-end,
 .react-datepicker__day--in-selecting-range:last{
     @apply rounded-r-full
+}
+
+.react-datepicker__day--in-selecting-range{
+  @apply rounded-full
 }
 
 .react-datepicker__day--weekend:first-of-type{

@@ -20,8 +20,6 @@ export const DesktopSearch = () => {
     setFilters({...filters, date:{...filters.date, to:date}})
 }
 
-console.log(filters)
-
   return (
     <section className='w-screen fixed bottom-4 flex items-center justify-center'> 
       <div
@@ -102,10 +100,10 @@ console.log(filters)
           </DeskFiltersPanel>
           <ArrowPathIcon onClick={reset} className='text-violet-700 w-6 h-6 ml-4' />
         </div>
-        <QuestionMarkCircleIcon 
+        {/* <QuestionMarkCircleIcon 
         className='absolute -right-4 translate-x-full
         w-6 h-6 text-violet-700' 
-        />
+        /> */}
       </div>
     </section>
   )

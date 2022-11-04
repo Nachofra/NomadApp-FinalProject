@@ -1,6 +1,7 @@
 import { MapIcon, StarIcon } from '@heroicons/react/24/outline'
 import { MapPinIcon } from '@heroicons/react/24/solid'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export const PropertyCard = ({
     property
@@ -27,7 +28,8 @@ export const PropertyCard = ({
     //         "name": "Cordoba",
     //         "country": { "id": 7, "name": "Argentina" }
   return (
-    <article className='w-full max-w-xs rounded-xl
+    <Link to={`/product/${property.id}`} 
+    className='w-full max-w-xs rounded-xl
     flex flex-col bg-white shadow-sm p-2 group'>
         <picture className='w-full h-60 overflow-hidden rounded-lg'>
             <img 
@@ -54,6 +56,6 @@ export const PropertyCard = ({
                 <p className='text-xl font-medium'>5.0</p>
             </div>
         </div>
-    </article>
+    </Link>
   )
 }
