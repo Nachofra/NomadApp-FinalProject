@@ -39,3 +39,6 @@ cambios.log
 ### Application properties ###
 ./src/main/resources/
 ./src/main/resources/application.properties
+
+### ENV VARIABLES ###
+src/main/resources/.env
