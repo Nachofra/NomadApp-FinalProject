@@ -19,13 +19,16 @@ public class Image {
     private String description;
     private String extension;
 
-    @OneToOne(mappedBy = "featureImage")
+    @JsonIgnore
+    @OneToOne(mappedBy = "featureImage", fetch = FetchType.LAZY)
     private Feature feature;
 
-    @OneToOne(mappedBy = "categoryImage")
+    @JsonIgnore
+    @OneToOne(mappedBy = "categoryImage", fetch = FetchType.LAZY)
     private Category category;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 }

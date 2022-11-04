@@ -18,7 +18,7 @@ public class City {
     private String name;
     private String postalCode;
 
-    //@JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "city", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Product> products = new HashSet<>();
 }
