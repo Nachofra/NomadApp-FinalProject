@@ -18,7 +18,7 @@ export const HeaderNav = () => {
     className='top-0 fixed z-50
     w-screen flex items-center justify-between' >
         <div className='w-screen
-        shadow-xl cursor-pointer h-auto relative
+        shadow-md cursor-pointer h-auto relative
         flex justify-end items-end p-4 lg:p-6
         ring-1 ring-violet-700 ring-opacity-5 bg-white mb-5' >
           <div className='flex flex-col items-center lg:hidden h-auto w-full'>
