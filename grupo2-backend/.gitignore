@@ -34,11 +34,8 @@ build/
 .vscode/
 
 ### Logs de la API ###
-cambios.log
-
-### Application properties ###
-./src/main/resources/
-./src/main/resources/application.properties
+/cambios.log
+*.log
 
 ### ENV VARIABLES ###
 src/main/resources/.env

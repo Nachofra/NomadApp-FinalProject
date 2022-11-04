@@ -29,16 +29,44 @@ public class Product {
     private Float latitude;
     private Float longitude;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    //@JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Image> images = new HashSet<>();
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "city_id", referencedColumnName = "id")
     private City city;
+
+    @ManyToMany
+    @JoinTable(
+            name = "policy_by_product",
+            joinColumns = {
+                    @JoinColumn(name = "product_id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "policy_id")
+            }
+    )
+    @JsonIgnore
+    Set<Policy> policies = new HashSet<Policy>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "feature_by_product",
+            joinColumns = {
+                    @JoinColumn(name = "product_id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "feature_id")
+            }
+    )
+    @JsonIgnore
+    Set<Feature> features = new HashSet<Feature>();
 
 }

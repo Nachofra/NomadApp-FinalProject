@@ -16,4 +16,8 @@ public class PolicyItem {
     private Long id;
     private String name;
 
+    //@JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "policy_id", referencedColumnName = "id")
+    private Policy policy;
 }
