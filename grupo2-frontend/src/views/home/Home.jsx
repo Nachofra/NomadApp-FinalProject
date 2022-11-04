@@ -8,10 +8,13 @@ import data from '@/staticJSON/listBlock.json'
 import { HomeCategories } from './components/HomeCategories'
 import { HeartIcon } from '@heroicons/react/20/solid'
 export const Home = () => {
+  
   return (
     <>
         <HeaderNav />
-        <BaseLayout>
+        <BaseLayout 
+          padding='px-3 pt-32'
+        >
         <HomeCategories />
         
         <h2 className='text-3xl text-gray-800 text-center font-medium mb-6'>
@@ -23,7 +26,7 @@ export const Home = () => {
           { data.map(( property, i ) => <PropertyCard property={property} key={i} /> )}
           </div>
         </BaseLayout>
-        {/* <Footer /> */}
+        <Footer />
         <SearchNav />
     </>
   )
