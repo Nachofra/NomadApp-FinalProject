@@ -15,10 +15,4 @@ public class Group2BackendApplication extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder){
 		return builder.sources(Group2BackendApplication.class);
 	}
-
-	@RequestMapping(value = "/")
-	public String hello() {
-		return "Hello World from Tomcat";
-	}
-
 }
