@@ -15,7 +15,7 @@ build:
     - mvn clean install
   artifacts:
     paths:
-      - grupo2-backend/target/*.jar
+      - grupo2-backend/target/*.war
 
 test:
   stage: test
