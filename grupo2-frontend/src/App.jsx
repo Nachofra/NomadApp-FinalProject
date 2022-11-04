@@ -7,11 +7,9 @@ import { RouteNotFound } from './utilities/RouteNotFound'
 import { AuthGuard } from './guard/AuthGuard'
 import './App.css'
 import { Route } from 'react-router-dom'
-import { PublicRoutes } from './guard/routes'
+import { PublicRoutes } from './guard/Routes'
 
 function App() {
-  //return(<SignUp />)
-  //return(<SignIn />)
   return (
     <RouteNotFound>
       <Route path={PublicRoutes.HOME} element={<Home />} />

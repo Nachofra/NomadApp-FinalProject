@@ -1,0 +1,24 @@
+image: maven:3.8.6-openjdk-18
+
+stages:
+  - build
+  - test
+
+cache:
+  paths:
+    - grupo2-backend/target/
+
+build:
+  stage: build
+  script:
+    - cd "grupo2-backend"
+    - mvn clean install
+  artifacts:
+    paths:
+      - grupo2-backend/target/*.jar
+
+test:
+  stage: test
+  script:
+    - cd "grupo2-backend"  
+    - mvn test

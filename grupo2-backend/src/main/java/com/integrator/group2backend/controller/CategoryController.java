@@ -2,6 +2,7 @@ package com.integrator.group2backend.controller;
 
 import com.integrator.group2backend.entities.Category;
 import com.integrator.group2backend.service.CategoryService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
+    public static final Logger logger = Logger.getLogger(ProductController.class);
     private final CategoryService categoryService;
     @Autowired
     public CategoryController(CategoryService categoryService) {
@@ -22,9 +24,10 @@ public class CategoryController {
         List<Category> searchedCategories = categoryService.listAllCategories();
 
         if(!(searchedCategories.isEmpty())){
+            logger.info("Se listaron todos las categorias");
             return ResponseEntity.ok(searchedCategories);
         }else{
-            // * Change here to throw an error or a message saying "list empty" *
+            logger.error("Error al listar todos las categorias");
             return ResponseEntity.ok(searchedCategories);
         }
     }
@@ -33,6 +36,7 @@ public class CategoryController {
     public ResponseEntity<Category> createCategory(@RequestBody Category category){
         // * Here we need to forbid the requests with ids that already exists in the database *
         Category addedCategory = categoryService.addCategory(category);
+        logger.info("Se agrego una categoria");
         return ResponseEntity.ok(addedCategory);
     }
 
@@ -43,8 +47,10 @@ public class CategoryController {
         if(categoryExists){
             category.setId(categoryId);
             Category updatedCategory = categoryService.updateCategory(category);
+            logger.info("Se actualizo correctamente la categoria con id " + categoryId);
             return ResponseEntity.ok(updatedCategory);
         }else{
+            logger.error("La categoria especificada no existe con id " + categoryId);
             return ResponseEntity.badRequest().build();
         }
     }
@@ -56,9 +62,11 @@ public class CategoryController {
         // the row with that id doesn't exist in the database
         if(categoryExists){
             categoryService.deleteCategory(categoryId);
-            return ResponseEntity.ok("El paciente con id " + categoryId + " ha sido borrado");
+            logger.info("Se elimino correctamente la categoria con id " + categoryId);
+            return ResponseEntity.ok("La categoría con id " + categoryId + " ha sido borrada");
         }else{
-            return ResponseEntity.ok("El paciente con id " + categoryId + " no existe en la base de datos");
+            logger.error("La categoria especificada no existe con id " + categoryId);
+            return ResponseEntity.ok("La categoría con id " + categoryId + " no existe en la base de datos");
         }
     }
 }

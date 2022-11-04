@@ -1,13 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PublicRoutes } from "../../guard/routes";
+import { PublicRoutes } from "../../guard/Routes";
 import { Footer } from "../../components/partials/footer/Footer";
 import { useUserContext } from "../../context/UserContext";
 import { UserInfo } from "../../components/login/UserInfo";
-import Email from "../../components/login/email";
+import Email from "../../components/login/Email";
 import { Link } from "react-router-dom";
-import PasswordAndConfirmPasswordValidation from "../../components/login/passwordAndConfirmPassword/PasswordAndConfirmPasswordValidation.js.jsx";
+import PasswordAndConfirmPasswordValidation from "../../components/login/passwordAndConfirmPassword/PasswordAndConfirmPasswordValidation.jsx";
 import { HeaderNav } from "../../components/partials";
 import './auth.css'
 
