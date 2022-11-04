@@ -1,6 +1,7 @@
 package com.integrator.group2backend.controller;
 
 import com.integrator.group2backend.entities.Category;
+import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.service.CategoryService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/category")
@@ -17,6 +19,14 @@ public class CategoryController {
     @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Category> createCategory(@RequestBody Category category){
+        // * Here we need to forbid the requests with ids that already exists in the database *
+        Category addedCategory = categoryService.addCategory(category);
+        logger.info("Se agrego una categoria");
+        return ResponseEntity.ok(addedCategory);
     }
 
     @GetMapping
@@ -32,12 +42,16 @@ public class CategoryController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category){
-        // * Here we need to forbid the requests with ids that already exists in the database *
-        Category addedCategory = categoryService.addCategory(category);
-        logger.info("Se agrego una categoria");
-        return ResponseEntity.ok(addedCategory);
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> searchCategoryById(@PathVariable("id") Long categoryId){
+        Optional<Category> categoryFound = categoryService.searchCategoryById(categoryId);
+        if(categoryFound.isPresent()){
+            logger.info("Se encontro correctamente la categoria con id " + categoryId);
+            return ResponseEntity.ok(categoryFound.get());
+        }else{
+            logger.error("La categoria especificado no existe con id " + categoryId);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{id}")

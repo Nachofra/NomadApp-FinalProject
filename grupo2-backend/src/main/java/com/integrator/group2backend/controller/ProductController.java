@@ -28,7 +28,13 @@ public class ProductController {
         this.cityService = cityService;
         this.categoryService = categoryService;
     }
-
+    @PostMapping
+    public ResponseEntity<Product> createProduct(@RequestBody Product product){
+        // * Here we need to forbid the requests with ids that already exists in the database *
+        Product addedProduct = productService.addProduct(product);
+        logger.info("Se agrego un producto");
+        return ResponseEntity.ok(addedProduct);
+    }
     @GetMapping
     public ResponseEntity<List<Product>> listAllProducts() {
         List<Product> searchedProducts = productService.listAllProducts();
@@ -63,13 +69,6 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
-        // * Here we need to forbid the requests with ids that already exists in the database *
-        Product addedProduct = productService.addProduct(product);
-        logger.info("Se agrego un producto");
-        return ResponseEntity.ok(addedProduct);
-    }
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product){
         boolean productExists = productService.searchProductById(productId).isPresent();
@@ -87,8 +86,6 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId){
         boolean productExist = productService.searchProductById(productId).isPresent();
-        // If the provided category already exists it can be deleted, otherwise it will send a response telling
-        // the row with that id doesn't exist in the database
         if(productExist){
             productService.deleteProduct(productId);
             logger.info("El producto con id " + productId + " ha sido borrado");
@@ -98,7 +95,6 @@ public class ProductController {
             return ResponseEntity.ok("El producto con id " + productId + " no existe en la base de datos");
         }
     }
-
     @GetMapping("/city/{id}")
     public ResponseEntity<List<Product>> getProductByCityId(@PathVariable Long id){
         Optional<City> city = this.cityService.getCityById(id);
