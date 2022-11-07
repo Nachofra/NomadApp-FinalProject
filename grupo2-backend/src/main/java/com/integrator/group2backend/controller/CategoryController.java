@@ -1,6 +1,7 @@
 package com.integrator.group2backend.controller;
 
 import com.integrator.group2backend.entities.Category;
+import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.service.CategoryService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/category")
@@ -29,6 +31,17 @@ public class CategoryController {
         }else{
             logger.error("Error al listar todos las categorias");
             return ResponseEntity.ok(searchedCategories);
+        }
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> searchProductById(@PathVariable("id") Long categoriaId){
+        Optional<Category> categoryFound = categoryService.searchCategoryById(categoriaId);
+        if(categoryFound.isPresent()){
+            logger.info("Se encontro correctamente la categoria con id " + categoriaId);
+            return ResponseEntity.ok(categoryFound.get());
+        }else{
+            logger.error("La categoria especificado no existe con id " + categoriaId);
+            return ResponseEntity.badRequest().build();
         }
     }
 
