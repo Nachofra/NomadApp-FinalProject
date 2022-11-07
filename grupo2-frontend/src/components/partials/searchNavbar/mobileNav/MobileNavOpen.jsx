@@ -45,12 +45,12 @@ export const MobileNavOpen = ({open, setOpen}) => {
       >
         <div className='p-2 my-4 flex items-center justify-center'>
         <Calendar
-            // startDate={filters.date.from}
-            // endDate={filters.date.to}
-            // setStartDate={handleDateFrom}
-            // setEndDate={handleDateTo}
-            monthsDisplayed={1}
-          />
+          // startDate={filters.date.from}
+          // endDate={filters.date.to}
+          // setStartDate={handleDateFrom}
+          // setEndDate={handleDateTo}
+          monthsDisplayed={1}
+        />
         </div>
       </CollapsableMenu>
     </MobileNavModal>

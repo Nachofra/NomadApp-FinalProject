@@ -40,7 +40,7 @@ export default function Modal({
                         <XMarkIcon 
                         onClick={closeModal}
                         className='absolute left-6 top-6 w-10 h-10 
-                        text-red-400 z-10 cursor-pointer' />
+                        text-white z-10 cursor-pointer' />
                     </div>
                 </div>
               </Transition.Child>

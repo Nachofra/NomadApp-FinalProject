@@ -5,12 +5,14 @@ import { BaseLayout } from '../../components/layout/BaseLayout'
 import { Footer, HeaderNav, SearchNav } from '../../components/partials'
 import listBlock from '@/staticJSON/listBlock.json'
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'
-import { MapPinIcon, PhotoIcon, StarIcon } from '@heroicons/react/24/outline'
+import { ArrowRightIcon, MapPinIcon, PhotoIcon, StarIcon } from '@heroicons/react/24/outline'
 import { FeatureItem } from '../../components/featureItem/FeatureItem'
 import { motion } from 'framer-motion'
 import { ImageSlider } from '../../components/imageSlider/ImageSlider'
 import { ImageGallery } from '../../components/imageGallery/ImageGallery'
 import Modal from '../../components/modal/Modal'
+import { Calendar } from '../../components/Calendar/Calendar'
+import useWindowDimensions from '../../hooks/useWindowDimensions'
 export const Product = () => {
 
     const navigate = useNavigate();
@@ -74,6 +76,8 @@ export const Product = () => {
     ]
 
     const [modal, setModal ] = useState(false);
+
+    const { width } = useWindowDimensions();
   return (
     <>
     <HeaderNav />
@@ -116,7 +120,7 @@ export const Product = () => {
         <ImageSlider images={imageList} />
     </BaseLayout>
     <BaseLayout
-        padding='p-4 px-4'
+        padding='p-4 px-4 md:px-6 lg:px-8'
         wrapperClassName="hidden xl:block"
     >
         <div className='flex items-center justify-center w-full gap-4'>
@@ -156,34 +160,59 @@ export const Product = () => {
         </Modal>
     </BaseLayout>
     <BaseLayout
-        padding='px-4 p-2'
+        padding='px-4 md:px-6 lg:px-8 p-2'
     >
         <h3 className='text-xl md:text-2xl lg:text-3xl font-medium text-gray-700 mb-3'>{data.title}</h3>
         <p className='text-gray-700 md:text-lg max-w-4xl'>{data.description}</p>
     </BaseLayout>
     <BaseLayout
-        wrapperClassName='my-4 p-2'
-        padding='px-0 py-0'
-        className='rounded-md border-2 border-violet-500 overflow-hidden'
+        wrapperClassName='my-4'
+        padding=' py-0  p-2 md:px-6 lg:px-8'
     >
-        <h5 className='text-lg md:text-xl px-4 py-4
-        text-gray-700 border-b-2 border-violet-500'>
-            What this place offers
-        </h5>
-        <ul className='bg-gradient-to-tr from-gray-100 to-violet-50  px-4 py-4 
-        grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-y-6 gap-x-4'>
-            {featureList.map((feature, i) => (
-                <FeatureItem
-                key={i}
-                icon={feature.icon}
-                text={feature.name}
-                />
-            ))}
-        </ul>
+        <div className='rounded-md border-2 border-violet-500 overflow-hidden'>
+            <h5 className='text-lg md:text-xl px-4 py-4
+            text-gray-700 border-b-2 border-violet-500'>
+                What this place offers
+            </h5>
+            <ul className='bg-gradient-to-tr from-gray-100 to-violet-50  px-4 py-4 
+            grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-y-6 gap-x-4'>
+                {featureList.map((feature, i) => (
+                    <FeatureItem
+                    key={i}
+                    icon={feature.icon}
+                    text={feature.name}
+                    />
+                ))}
+            </ul>
+        </div>
     </BaseLayout>
     <BaseLayout
-        padding='px-2 p-2'
+        wrapperClassName="bg-gradient-to-tr from-violet-200 to-violet-50"
+        className='flex flex-col items-center justify-center lg:items-start'
+        padding='px-2 md:px-6 lg:px-8 py-10'
     >
+        <h5 className='text-xl md:text-2xl lg:text-3xl mb-4
+        text-gray-700 font-medium'>Reserve</h5>
+
+        <div className='flex flex-col w-full items-center justify-center gap-4
+        md:gap-6 lg:flex-row lg:justify-start'>
+            <Calendar
+            // startDate={filters.date.from}
+            // endDate={filters.date.to}
+            // setStartDate={handleDateFrom}
+            // setEndDate={handleDateTo}
+            monthsDisplayed={width > 660 ? 2 : 1 }
+            />
+            <div className='gap-2 flex flex-col items-center md:flex-row 
+            lg:px-4 lg:py-10 lg:border-2 lg:border-violet-700 lg:rounded-lg
+            lg:bg-white lg:mx-auto'>
+                <p className='text-gray-600 md:mr-2'>Select the date and start your reservation</p>
+                <button className='flex items-center px-4 py-3 bg-violet-700 rounded-lg'>
+                    <p className='mr-2 text-white font-medium'>Continue</p>
+                    <ArrowRightIcon className='w-6 h-6 text-white' />
+                </button>
+            </div>
+        </div>
     </BaseLayout>
     <Footer />
     <SearchNav />

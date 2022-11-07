@@ -26,6 +26,7 @@ export const Calendar = ({
           startDate={dateFrom}
           endDate={dateTo}
           monthsShown={monthsDisplayed}
+          minDate={new Date()}
           selectsRange
           inline
         />

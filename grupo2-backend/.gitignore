@@ -30,9 +30,12 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-
 .vscode/
 
-/src/main/resources/application.properties
 ### Logs de la API ###
+/cambios.log
 *.log
+
+### ENV VARIABLES ###
+/src/main/resources/.env
+.env

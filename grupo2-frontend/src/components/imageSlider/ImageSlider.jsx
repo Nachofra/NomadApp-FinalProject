@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import { ChevronLeftIcon, ChevronRightIcon, PhotoIcon } from "@heroicons/react/24/outline";
@@ -48,6 +48,16 @@ export const ImageSlider = ({images}) => {
   const paginate = (newDirection) => {
     setPage([page + newDirection, newDirection]);
   };
+
+  // automatically slide after 3 seconds
+
+  useEffect(() => {
+    const timer = setTimeout(() => paginate(1), 4500);
+    return () => clearTimeout(timer);
+  }, [paginate]);
+  
+  
+  console.log('effect')
 
   return (
 
