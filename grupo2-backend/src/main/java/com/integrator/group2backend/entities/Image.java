@@ -20,12 +20,15 @@ public class Image {
     private String extension;
 
     @OneToOne(mappedBy = "featureImage")
+    @JsonIgnore
     private Feature feature;
 
     @OneToOne(mappedBy = "categoryImage")
+    @JsonIgnore
     private Category category;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JsonIgnore
     private Product product;
 }

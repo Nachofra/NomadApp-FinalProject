@@ -25,7 +25,7 @@ public class Policy {
     private String name;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PolicyItem> policyItems;
 
 }

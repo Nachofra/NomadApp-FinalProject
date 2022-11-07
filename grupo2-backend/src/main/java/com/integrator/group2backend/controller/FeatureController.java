@@ -13,7 +13,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/feature")
 public class FeatureController {
-    public static final Logger logger = Logger.getLogger(ProductController.class);
+    public static final Logger logger = Logger.getLogger(FeatureController.class);
     private final FeatureService featureService;
     @Autowired
     public FeatureController(FeatureService featureService){
