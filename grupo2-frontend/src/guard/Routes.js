@@ -10,4 +10,8 @@ export const PublicRoutes = {
     SUBMIT : '/submit',
     COLLECTION : '/collection',
   }
+
+  export const FetchRoutes = {
+    BASEURL : 'http://localhost:8080'
+  }
   

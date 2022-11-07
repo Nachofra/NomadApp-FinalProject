@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import listCategory  from '@/staticJSON/listCategory.json'
 import { useSearchContext } from '../../../context/SearchContext'
+import axios from 'axios';
+import { FetchRoutes } from '../../../guard/Routes';
 export const HomeCategories = () => {
     const {filters, setFilters, applyCategory } = useSearchContext();
     // {
@@ -9,6 +11,13 @@ export const HomeCategories = () => {
     //     "description":"Cabañas con las mejores vistas y comodidades",
     //     "imageUrl":"https://images.unsplash.com/photo-1576874748772-584aa2bee2d4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
     // },
+
+    const [categories, setCategories ] = useState(null);
+
+    useEffect(() => {
+      const data = axios.get(`${FetchRoutes.BASEURL}/category/`);
+    }, [])
+    
   return (
     <section className='w-full flex flex-col mb-20' >
         <h2 className='text-2xl font-medium mb-6'>
