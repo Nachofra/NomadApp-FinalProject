@@ -13,7 +13,8 @@ export const HomeCategories = () => {
     // },
 
     const [categories, setCategories ] = useState(null);
-
+    
+    
     useEffect(() => {
       const data = axios.get(`${FetchRoutes.BASEURL}/category/`);
     }, [])
