@@ -27,6 +27,10 @@ public class Image {
     @JsonIgnore
     private Category category;
 
+    @OneToOne(mappedBy = "categoryIllustration")
+    @JsonIgnore
+    private Category categoryIllustration;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     @JsonIgnore
