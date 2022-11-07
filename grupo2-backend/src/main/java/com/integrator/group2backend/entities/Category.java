@@ -18,9 +18,14 @@ public class Category {
     private String title;
     private String description;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<Image> images = new HashSet<>();
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Image categoryImage;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Image categoryIllustration;
+
+
+
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
