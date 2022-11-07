@@ -23,7 +23,7 @@ build:vite:
   cache:
     key:
       files:
-        - package-lock.json
+        - grupo2-frontend/package-lock.json
       prefix: npm
     paths:
       - grupo2-frontend/node_modules/
