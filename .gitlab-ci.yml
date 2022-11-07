@@ -1,5 +1,3 @@
-image: maven:3.8.6-openjdk-18
-
 stages:
   - build
   - test
@@ -8,8 +6,8 @@ cache:
   paths:
     - grupo2-backend/target/
 
-build:
-  stage: build
+build:maven:
+  image: maven:3.8.6-openjdk-18
   script:
     - cd "grupo2-backend"
     - mvn clean install
@@ -17,8 +15,26 @@ build:
     paths:
       - grupo2-backend/target/*.war
 
-test:
-  stage: test
+test:maven:
+  image: maven:3.8.6-openjdk-18
   script:
     - cd "grupo2-backend"  
     - mvn test
+
+build:vite:
+  cache:
+    key:
+      files:
+        - package-lock.json
+      prefix: npm
+    paths:
+      - grupo2-frontend/node_modules/
+  script:
+    - cd "grupo2-frontend"
+    - npm install
+    - npm run build
+    - cp -a dist/. public/
+  artifacts:
+    paths:
+      - public
+
