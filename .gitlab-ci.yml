@@ -34,4 +34,4 @@ build:vite:
     - cp -a dist/. public/
   artifacts:
     paths:
-      - public
+      - grupo2-frontend/public
