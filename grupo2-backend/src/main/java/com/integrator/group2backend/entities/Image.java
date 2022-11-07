@@ -23,13 +23,10 @@ public class Image {
     @JsonIgnore
     private Feature feature;
 
-    @OneToOne(mappedBy = "categoryImage")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     @JsonIgnore
     private Category category;
-
-    @OneToOne(mappedBy = "categoryIllustration")
-    @JsonIgnore
-    private Category categoryIllustration;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
