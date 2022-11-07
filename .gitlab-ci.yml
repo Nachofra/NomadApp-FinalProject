@@ -1,15 +1,10 @@
-stages:
-  - build
-  - test
-
-
-
 build:maven:
   image: maven:3.8.6-openjdk-18
   cache:
     paths:
       - grupo2-backend/target/
   script:
+    - cd "grupo2-backend/"
     - mvn clean install
   artifacts:
     paths:
@@ -21,6 +16,7 @@ test:maven:
     paths:
     - grupo2-backend/target/
   script:
+    - cd "grupo2-backend/"
     - mvn test
 
 build:vite:
@@ -32,11 +28,10 @@ build:vite:
     paths:
       - grupo2-frontend/node_modules/
   script:
-    - cd "grupo2-frontend"
+    - cd "grupo2-frontend/"
     - npm install
     - npm run build
     - cp -a dist/. public/
   artifacts:
     paths:
       - public
-
