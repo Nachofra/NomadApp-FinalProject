@@ -20,6 +20,7 @@ test:maven:
     - mvn test
 
 build:vite:
+  image: node:16.5.0
   cache:
     key:
       files:
