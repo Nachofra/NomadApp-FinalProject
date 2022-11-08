@@ -37,6 +37,10 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Image> images = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Policy> policies = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "city_id", referencedColumnName = "id")
     private City city;

@@ -24,9 +24,6 @@ public class Category {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Image categoryIllustration;
 
-
-
-
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Product> products = new HashSet<>();
