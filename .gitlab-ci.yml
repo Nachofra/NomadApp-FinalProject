@@ -44,6 +44,22 @@ test:maven:
     - cd "grupo2-backend/"
     - mvn test
 
+deploy:maven:
+  stage: deploy
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update
+    - apt-get install openssh-client -y
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "$SSH_PRIVATE_KEY_BACKEND" > ~/.ssh/id_rsa
+    - chmod 600  ~/.ssh/id_rsa
+    - mv grupo2-backend/target/*.war .
+  script:
+    - ssh -o StrictHostKeyChecking=no ubuntu@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/shutdown.sh; sudo rm -r /tmp/backend-backups/*; sudo mv /tmp/apache-tomcat-9.0.68/webapps/* /tmp/backend-backups/"
+    - scp -o StrictHostKeyChecking=no *.war ubuntu@$BACKEND_IPADDRESS:/tmp/apache-tomcat-9.0.68/webapps
+    - ssh -o StrictHostKeyChecking=no ubuntu@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/startup.sh"
+
 deploy:vite:
   stage: deploy
   image: ubuntu:22.04
