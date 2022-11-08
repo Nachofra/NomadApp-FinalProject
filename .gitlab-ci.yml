@@ -57,7 +57,7 @@ deploy:maven:
     - chmod 600  ~/.ssh/id_rsa
     - mv grupo2-backend/target/*.war .
   script:
-    - ssh -o StrictHostKeyChecking=no ubuntu@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/shutdown.sh; sudo rm -r /tmp/backend-backups/*; sudo mv /tmp/apache-tomcat-9.0.68/webapps/* /tmp/backend-backups/"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/shutdown.sh; sudo rm -r /tmp/backend-backups/*; sudo mv /tmp/apache-tomcat-9.0.68/webapps/* /tmp/backend-backups/; sudo mkdir /tmp/apache-tomcat-9.0.68/webapps/ROOT/"
     - scp -o StrictHostKeyChecking=no *.war ubuntu@$BACKEND_IPADDRESS:/tmp/apache-tomcat-9.0.68/webapps
     - ssh -o StrictHostKeyChecking=no ubuntu@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/startup.sh"
 
