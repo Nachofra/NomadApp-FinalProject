@@ -57,6 +57,10 @@ deploy:vite:
     - chmod 600  ~/.ssh/id_rsa
     - cat ~/.ssh/id_rsa
     - ls -a
+    - cd grupo2-frontend/
+    - ls -a
+    - cd ../grupo2-backend/
+    - ls -a
   script:
     - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sh ~/gitlab-prepare-prod-frontend.sh; sh ~/gitlab-deploy-prod-frontend.sh"
 
