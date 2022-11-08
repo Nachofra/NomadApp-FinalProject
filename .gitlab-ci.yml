@@ -30,10 +30,9 @@ build:vite:
     - cd "grupo2-frontend/"
     - npm install
     - npm run build
-    - cp -a dist/. public/
   artifacts:
     paths:
-      - grupo2-frontend/public
+      - grupo2-frontend/dist
 
 test:maven:
   stage: test
@@ -57,9 +56,9 @@ deploy:vite:
     - chmod 600  ~/.ssh/id_rsa
     - cat ~/.ssh/id_rsa
     - ls -a
-    - cd grupo2-frontend/
+    - cd grupo2-frontend/dist
     - ls -a
-    - cd ../grupo2-backend/
+    - cd ../../grupo2-backend/target
     - ls -a
   script:
     - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sh ~/gitlab-prepare-prod-frontend.sh; sh ~/gitlab-deploy-prod-frontend.sh"
