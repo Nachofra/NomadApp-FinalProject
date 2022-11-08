@@ -60,5 +60,5 @@ deploy:vite:
   script:
     - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop"
     - scp -o StrictHostKeyChecking=no builded-frontend.zip ubuntu@$FRONTEND_IPADDRESS:/var/www/html
-    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 start"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo unzip /var/www/html/builded-frontend.zip; sudo /etc/init.d/apache2 start"
 
