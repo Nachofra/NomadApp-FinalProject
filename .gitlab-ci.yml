@@ -46,7 +46,7 @@ test:maven:
     - mvn test
 
 deploy:vite:
-  stage: build
+  stage: deploy
   image: ubuntu:22.04
   before_script:
     - apt-get update
@@ -56,6 +56,7 @@ deploy:vite:
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
     - chmod 600  ~/.ssh/id_rsa
     - cat ~/.ssh/id_rsa
+    - ls -a
   script:
     - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sh ~/gitlab-prepare-prod-frontend.sh; sh ~/gitlab-deploy-prod-frontend.sh"
 
