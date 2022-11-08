@@ -62,6 +62,7 @@ deploy:vite:
     - cd dist/
     - ls -a
   script:
-    - scp -o StrictHostKeyChecking=no builded-frontend.zip ubuntu@13.233.134.103:/var/www/html
-    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sh ~/gitlab-prepare-prod-frontend.sh; sh ~/gitlab-deploy-prod-frontend.sh"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop"
+    - scp -o StrictHostKeyChecking=no builded-frontend.zip ubuntu@$FRONTEND_IPADDRESS:/var/www/html
+    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 start"
 
