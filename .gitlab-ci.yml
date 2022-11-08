@@ -50,14 +50,12 @@ deploy:vite:
   before_script:
     - apt-get update
     - apt-get install openssh-client -y
-    - apt-get install net-tools -y
     - apt-get install zip -y && apt-get install unzip -y
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
     - chmod 600  ~/.ssh/id_rsa
     - zip -r builded-frontend.zip grupo2-frontend/dist
-    - ifconfig
   script:
     - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop; sudo rm -r /tmp/frontend-backups/*; sudo mv /var/www/html/* /tmp/frontend-backups/"
     - scp -o StrictHostKeyChecking=no builded-frontend.zip ubuntu@$FRONTEND_IPADDRESS:/var/www/html
