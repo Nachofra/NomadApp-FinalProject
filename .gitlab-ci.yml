@@ -4,6 +4,7 @@ stages:
   - deploy
 
 build:maven:
+  stage: build
   image: maven:3.8.6-openjdk-18
   cache:
     paths:
@@ -16,6 +17,7 @@ build:maven:
       - grupo2-backend/target/*.war
 
 build:vite:
+  stage: build
   image: node:16.5.0
   cache:
     key:
@@ -34,6 +36,7 @@ build:vite:
       - grupo2-frontend/public
 
 test:maven:
+  stage: test
   image: maven:3.8.6-openjdk-18
   cache:
     paths:
@@ -43,10 +46,11 @@ test:maven:
     - mvn test
 
 deploy:vite:
+  stage: deploy
   image: ubuntu:22.04
   before_script:
     - apt-get update
-    - apt-get install openssh-server
+    - apt-get install openssh-client -y
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
