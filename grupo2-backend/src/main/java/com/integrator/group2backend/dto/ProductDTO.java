@@ -1,10 +1,14 @@
 package com.integrator.group2backend.dto;
 
+import com.integrator.group2backend.entities.Image;
 import com.integrator.group2backend.entities.Policy;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.imageio.stream.ImageInputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter

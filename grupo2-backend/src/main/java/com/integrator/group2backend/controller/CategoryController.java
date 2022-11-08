@@ -59,7 +59,7 @@ public class CategoryController {
         // If the provided category already exists it can be updated, otherwise it will throw a badRequest response
         if(categoryExists){
             category.setId(categoryId);
-            Category updatedCategory = categoryService.updateCategory(category);
+            Category updatedCategory = categoryService.updateCategory(category, categoryId);
             logger.info("Se actualizo correctamente la categoria con id " + categoryId);
             return ResponseEntity.ok(updatedCategory);
         }else{

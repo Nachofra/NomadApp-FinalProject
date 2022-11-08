@@ -22,8 +22,16 @@ public class CategoryService {
     public List<Category> listAllCategories(){
         return categoryRepository.findAll();
     }
-    public Category updateCategory(Category category){
+    public Category updateCategory(Category category, Long id){
+        Optional<Category> oldCategory = this.categoryRepository.findById(id);
+        if(category.getCategoryIllustration().getURL() == null){
+            category.setCategoryIllustration(oldCategory.get().getCategoryIllustration());
+        }
+        if(category.getCategoryImage().getURL() == null){
+            category.setCategoryImage(oldCategory.get().getCategoryImage());
+        }
         return categoryRepository.save(category);
+        //agrego validaciones de imagenes para que queden presistentes en db cuando se acualiza alguna categoría
     }
     public void deleteCategory(Long id){
         categoryRepository.deleteById(id);
