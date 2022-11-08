@@ -45,7 +45,7 @@ test:maven:
 deploy:vite:
   image: ubuntu:22.04
   before_script:
-    - apt-get  update
+    - apt-get update
     - apt-get install openssh-server
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
