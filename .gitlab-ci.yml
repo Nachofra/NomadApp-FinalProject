@@ -56,9 +56,8 @@ deploy:vite:
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
     - chmod 600  ~/.ssh/id_rsa
     - zip -r builded-frontend.zip grupo2-frontend/dist
-    - ls -a
   script:
-    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop; sudo rm -r /tmp/frontend-backups/*; sudo mv /var/www/html/* /tmp/frontend-backups/"
     - scp -o StrictHostKeyChecking=no builded-frontend.zip ubuntu@$FRONTEND_IPADDRESS:/var/www/html
-    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo unzip /var/www/html/builded-frontend.zip; sudo /etc/init.d/apache2 start"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo unzip /var/www/html/builded-frontend.zip; sudo mv grupo2-frontend/dist/* /var/www/html/; sudo rm -vr builded-frontend.zip grupo2-frontend; sudo /etc/init.d/apache2 start"
 
