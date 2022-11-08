@@ -1,3 +1,8 @@
+stages:
+  - build
+  - test
+  - deploy
+
 build:maven:
   image: maven:3.8.6-openjdk-18
   cache:
@@ -40,7 +45,7 @@ test:maven:
 deploy:vite:
   image: ubuntu:22.04
   before_script:
-    - apt-get install openssh-client
+    - apt-get install openssh-server
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
