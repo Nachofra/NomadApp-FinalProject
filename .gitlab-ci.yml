@@ -11,6 +11,8 @@ build:maven:
       - grupo2-backend/target/
   script:
     - cd "grupo2-backend/"
+    - echo -e "$DOTENV_CONFIG_BACKEND" > src/main/resources/.env
+    - cat src/main/resources/.env
     - mvn clean install
   artifacts:
     paths:
