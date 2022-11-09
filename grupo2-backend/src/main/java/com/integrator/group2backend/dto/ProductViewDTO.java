@@ -1,5 +1,6 @@
 package com.integrator.group2backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.integrator.group2backend.entities.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,8 @@ public class ProductViewDTO {
     private Category category;
     private City city;
     private Set<Feature> features;
+    @JsonIgnoreProperties(value = { "product" })
     private Set<Policy> policies;
+    @JsonIgnoreProperties(value = { "product" })
     private Set<Image> images;
 }

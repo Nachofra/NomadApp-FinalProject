@@ -21,7 +21,7 @@ public class Feature {
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image featureImage;
 
-    @ManyToMany(mappedBy = "featureByProduct", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "features", cascade = CascadeType.MERGE)
     @JsonIgnore
     private Set<Product> products;
 }

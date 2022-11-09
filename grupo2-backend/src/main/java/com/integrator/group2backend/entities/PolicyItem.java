@@ -23,7 +23,7 @@ public class PolicyItem {
     private Long id;
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "policy_id", referencedColumnName = "id")
     @JsonIgnore
     private Policy policy;

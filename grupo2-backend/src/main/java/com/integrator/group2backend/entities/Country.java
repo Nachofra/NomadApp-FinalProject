@@ -1,6 +1,7 @@
 package com.integrator.group2backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,6 @@ public class Country {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
     private Set<City> cities = new HashSet<>();
 }
