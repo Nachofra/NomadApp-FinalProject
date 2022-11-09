@@ -21,6 +21,10 @@ public class PolicyService {
         return this.policyRepository.save(policy);
     }
 
+    public List<Policy> addPolicyList(List<Policy> policyList){
+        return this.policyRepository.saveAll(policyList);
+    }
+
     public List<Policy> getAllPolicy(){
         return this.policyRepository.findAll();
     }

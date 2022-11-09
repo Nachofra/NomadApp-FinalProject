@@ -22,6 +22,10 @@ public class PolicyItemController {
     private ResponseEntity<PolicyItem> addPolicy(@RequestBody PolicyItem policyItem){
         return ResponseEntity.ok(this.policyItemService.addPolicyItem(policyItem));
     }
+    @PostMapping("/list")
+    private ResponseEntity<List<PolicyItem>> addPolicyList(@RequestBody List<PolicyItem> policyItemList){
+        return ResponseEntity.ok(this.policyItemService.addPolicyItemList(policyItemList));
+    }
     @GetMapping
     private ResponseEntity<List<PolicyItem>> getAllPolicy(){
         List<PolicyItem> list = this.policyItemService.getAllPolicyItem();

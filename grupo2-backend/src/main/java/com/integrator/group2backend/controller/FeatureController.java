@@ -22,9 +22,16 @@ public class FeatureController {
     @PostMapping
     public ResponseEntity<Feature> createFeature(@RequestBody Feature feature){
         Feature addedFeature = featureService.addFeature(feature);
-        logger.info("Se agrego un producto");
+        logger.info("Se agrego una feature");
 
         return ResponseEntity.ok(addedFeature);
+    }
+    @PostMapping("/list")
+    public ResponseEntity<List<Feature>> createFeatureList(@RequestBody List<Feature> featureList){
+        List<Feature> addedFeatures = featureService.addFeatureList(featureList);
+        logger.info("Se agrego una lista de features");
+
+        return ResponseEntity.ok(addedFeatures);
     }
     @GetMapping
     public ResponseEntity<List<Feature>> listAllFeatures() {

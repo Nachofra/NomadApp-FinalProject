@@ -26,6 +26,11 @@ public class ImageController {
         return ResponseEntity.ok(this.imageService.addImage(image));
     }
 
+    @PostMapping("/list")
+    private ResponseEntity<List<Image>> addImageList(@RequestBody List<Image> imageList){
+        return ResponseEntity.ok(this.imageService.addImageList(imageList));
+    }
+
     @GetMapping("/{id}")
     private ResponseEntity<Image> getImageById(@PathVariable Long id){
         Optional<Image> image = this.imageService.getImageById(id);

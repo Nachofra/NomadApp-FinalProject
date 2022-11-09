@@ -1,5 +1,6 @@
 package com.integrator.group2backend.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.integrator.group2backend.entities.Policy;
 import com.integrator.group2backend.service.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ public class PolicyController {
     @PostMapping
     private ResponseEntity<Policy> addPolicy(@RequestBody Policy policy){
         return ResponseEntity.ok(this.policyService.addPolicy(policy));
+    }
+
+    @PostMapping("/list")
+    private ResponseEntity<List<Policy>> addPolicy(@RequestBody List<Policy> policyList){
+        return ResponseEntity.ok(this.policyService.addPolicyList(policyList));
     }
 
     @GetMapping("/{id}")

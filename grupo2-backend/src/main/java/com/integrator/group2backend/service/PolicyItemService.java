@@ -18,6 +18,9 @@ public class PolicyItemService {
     public PolicyItem addPolicyItem(PolicyItem policyItem){
         return policyItemRepository.save(policyItem);
     }
+    public List<PolicyItem> addPolicyItemList(List<PolicyItem> policyItemList){
+        return policyItemRepository.saveAll(policyItemList);
+    }
     public List<PolicyItem> getAllPolicyItem(){
         return policyItemRepository.findAll();
     }

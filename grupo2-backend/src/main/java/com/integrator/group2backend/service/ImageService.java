@@ -21,6 +21,10 @@ public class ImageService {
         return this.imageRepository.save(image);
     }
 
+    public List<Image> addImageList(List<Image> imagelist){
+        return this.imageRepository.saveAll(imagelist);
+    }
+
     public List<Image> getAllImage(){
         return this.imageRepository.findAll();
     }

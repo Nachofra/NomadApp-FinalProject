@@ -16,6 +16,9 @@ public class FeatureService {
     public Feature addFeature(Feature feature){
         return featureRepository.save(feature);
     }
+    public List<Feature> addFeatureList(List<Feature> featureList){
+        return featureRepository.saveAll(featureList);
+    }
     public Optional<Feature> searchFeatureById(Long featureId){
         return featureRepository.findById(featureId);
     }
