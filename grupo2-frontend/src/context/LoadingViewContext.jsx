@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { createContext, useContext, useState } from "react";
+import { FetchRoutes } from "../guard/Routes";
 
 const loadingViewContext = createContext(null);
 
@@ -48,7 +49,7 @@ function LoadingViewProvider({ children }) {
                 className="fixed inset-0 z-[1000] bg-white flex items-center justify-center"
                 >
                 <img 
-                    src="https://s3-0222ftc1-grupo2-frontend.s3.us-east-2.amazonaws.com/logo/logo_square.svg"
+                    src={`${FetchRoutes.BUCKET}/logo/logo_square.svg`}
                     alt="logo_square"
                     className="w-[25vw] max-w-[150px] animate-pulse"
                 />
