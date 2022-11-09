@@ -13,10 +13,29 @@ import { ImageGallery } from '../../components/imageGallery/ImageGallery'
 import Modal from '../../components/modal/Modal'
 import { Calendar } from '../../components/Calendar/Calendar'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
+import { PolicyList } from './components/PolicyList'
+
 export const Product = () => {
 
     const navigate = useNavigate();
     const [ data, setData ] = useState(listBlock[0])
+
+    // useEffect(() => {
+
+    //     const fetchData = async () =>{
+    //       startLoading();
+    //         try {
+    //           const { data } = await axios.get(`${FetchRoutes.BASEURL}/category`);
+    //           setCategories(data);
+    //         } catch (error) {
+    //           console.error(error.message);
+    //           triggerError()
+    //         }
+    //         loadDone();
+    //       }
+          
+    //       fetchData();
+    // }, [])
 
     const featureList = [
         {
@@ -78,10 +97,12 @@ export const Product = () => {
     const [modal, setModal ] = useState(false);
 
     const { width } = useWindowDimensions();
+    
   return (
     <>
     <HeaderNav />
     <BaseLayout
+        padding='pt-20 lg:pt-24 md:px-6 lg:px-8'
         wrapperClassName="bg-violet-800"
         className="flex items-center justify-between"
     >
@@ -96,7 +117,7 @@ export const Product = () => {
     <BaseLayout
         wrapperClassName="bg-violet-100"
         className=" flex items-center justify-between"
-        padding='pt-4 pb-4'
+        padding='pt-4 pb-4 md:px-6 lg:px-8'
     >
         <div className='flex items-center max-w-xs text-gray-700'>
             <MapPinIcon className='w-6 h-6' />
@@ -160,9 +181,9 @@ export const Product = () => {
         </Modal>
     </BaseLayout>
     <BaseLayout
-        padding='px-4 md:px-6 lg:px-8 p-2'
+        padding='px-4 md:px-6 lg:px-8 p-2 pb-4 pt-6'
     >
-        <h3 className='text-xl md:text-2xl lg:text-3xl font-medium text-gray-700 mb-3'>{data.title}</h3>
+        <h3 className='text-2xl md:text-3xl lg:text-4xl font-medium text-gray-700 mb-3'>{data.title}</h3>
         <p className='text-gray-700 md:text-lg max-w-4xl'>{data.description}</p>
     </BaseLayout>
     <BaseLayout
@@ -191,7 +212,7 @@ export const Product = () => {
         className='flex flex-col items-center justify-center lg:items-start'
         padding='px-2 md:px-6 lg:px-8 py-10'
     >
-        <h5 className='text-xl md:text-2xl lg:text-3xl mb-4
+        <h5 className='text-2xl md:text-3xl lg:text-4xl mb-4
         text-gray-700 font-medium'>Reserve</h5>
 
         <div className='flex flex-col w-full items-center justify-center gap-4
@@ -212,6 +233,19 @@ export const Product = () => {
                     <ArrowRightIcon className='w-6 h-6 text-white' />
                 </button>
             </div>
+        </div>
+    </BaseLayout>
+    <BaseLayout
+        padding='px-4 md:px-6 lg:px-8 p-2'
+        className='py-10 flex flex-col '
+    >
+        <h5 className='text-2xl md:text-3xl lg:text-4xl mb-4
+        text-gray-700 font-medium'>Rent policies</h5>
+
+        <div className='grid grid-cols-1 md:gird-cols-2 lg:grid-cols-3 gap-8 mt-4'>
+        { data.policies?.map((item, i) => (
+            <PolicyList key={i} title={item.name} list={item.list} />
+        ))}
         </div>
     </BaseLayout>
     <Footer />
