@@ -28,7 +28,7 @@ public class Image {
 //    @JsonIgnore
 //    private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     @JsonIgnore
     private Product product;
