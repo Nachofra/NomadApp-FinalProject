@@ -25,7 +25,21 @@
         }
       }
     },
-    "description": "House overlooking the river, Pent house Apartment  at 50 meters from Rambla (waterfront). Walking distance to Estadio Centenario.  Terrace with seaview + balcony ."
+    "description": "House overlooking the river, Pent house Apartment  at 50 meters from Rambla (waterfront). Walking distance to Estadio Centenario.  Terrace with seaview + balcony .",
+    "policies" : [
+      {
+        "name": "House norms",
+        "list" : ["Check out 10:00", "No parties allowed", "No smoking"]
+      },
+      {
+        "name": "Health and safety",
+        "list" : ["Social distance and coronavirus protocol applies", "Smoke detector", "Security deposit"]
+      },
+      {
+        "name": "Refund policy",
+        "list" : ["Refunds will only be emitted 48hs before reservation date", "Cashback will be made in the same account", "Damages will be descounted"]
+      }
+    ]
   },
   {
     "id": 2,
