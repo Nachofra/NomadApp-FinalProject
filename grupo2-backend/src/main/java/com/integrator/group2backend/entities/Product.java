@@ -29,7 +29,7 @@ public class Product {
     private Float latitude;
     private Float longitude;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
@@ -37,8 +37,20 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Image> images = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Policy> policies = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "city_id", referencedColumnName = "id")
     private City city;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "FeatureByProduct",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "feature_id")
+    )
+    @JsonIgnore
+    private Set<Feature> featureByProduct;
 }

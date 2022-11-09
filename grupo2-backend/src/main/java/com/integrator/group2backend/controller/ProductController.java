@@ -1,10 +1,12 @@
 package com.integrator.group2backend.controller;
 
+import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Category;
 import com.integrator.group2backend.entities.City;
 import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.service.CategoryService;
 import com.integrator.group2backend.service.CityService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.integrator.group2backend.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,17 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
+    /*@GetMapping
+    public ResponseEntity<List<Product>> listAllProducts() {
+        List<Product> searchedProducts = productService.listAllProducts();
+        if (!(searchedProducts.isEmpty())) {
+            logger.info("Se listaron todos los productos");
+            return ResponseEntity.ok(searchedProducts);
+        } else {
+            logger.error("Error al listar todos los productos");
+            return ResponseEntity.ok(searchedProducts);
+        }
+    }*/
     @GetMapping
     public ResponseEntity<List<Product>> listAllProducts() {
         List<Product> searchedProducts = productService.listAllProducts();
@@ -52,12 +65,23 @@ public class ProductController {
             return ResponseEntity.ok(searchedProducts);
         }
     }
-    @GetMapping("/{id}")
+    /*@GetMapping("/{id}")
     public ResponseEntity<Product> searchProductById(@PathVariable("id") Long productId){
         Optional<Product> productFound = productService.searchProductById(productId);
         if(productFound.isPresent()){
             logger.info("Se encontro correctamente el producto con id " + productId);
             return ResponseEntity.ok(productFound.get());
+        }else{
+            logger.error("El producto especificado no existe con id " + productId);
+            return ResponseEntity.badRequest().build();
+        }
+    }*/
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId){
+        Optional<Product> productFound = productService.searchProductById(productId);
+        if(productFound.isPresent()){
+            logger.info("Se encontro correctamente el producto con id " + productId);
+            return ResponseEntity.ok(convertToDto(productFound.get()));
         }else{
             logger.error("El producto especificado no existe con id " + productId);
             return ResponseEntity.badRequest().build();
@@ -117,5 +141,11 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(this.productService.listProductByCategoryId(id));
+    }
+    @Autowired
+    ModelMapper modelMapper;
+    private ProductViewDTO convertToDto(Product product) {
+        ProductViewDTO productViewDTO = modelMapper.map(product, ProductViewDTO.class);
+        return productViewDTO;
     }
 }
