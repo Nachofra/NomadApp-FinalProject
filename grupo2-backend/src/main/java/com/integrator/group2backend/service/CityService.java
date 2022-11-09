@@ -45,14 +45,12 @@ public class CityService {
 
     public City deleteCity(Long id) throws ResourceNotFoundException {
         Optional<City> city = this.getCityById(id);
-        List<Product> products = this.productService.listAllProducts();
         if(city.isPresent()){
             this.cityRepository.deleteById(id);
             return city.get();
         }
         throw new ResourceNotFoundException("No existe una ciudad con el id: " + id);
     }
-
     public City updateCity(City city){
         return this.cityRepository.save(city);
     }

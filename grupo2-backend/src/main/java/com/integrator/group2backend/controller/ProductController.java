@@ -44,27 +44,25 @@ public class ProductController {
     }*/
     @GetMapping
     public ResponseEntity<List<ProductViewDTO>> listAllProducts() {
-        List<Product> searchedProducts = productService.listAllProducts();
-        List<ProductViewDTO> dtoSearchedProducts = mapList(searchedProducts, ProductViewDTO.class);
+        List<ProductViewDTO> searchedProducts = productService.listAllProducts();;
         if (!(searchedProducts.isEmpty())) {
             logger.info("Se listaron todos los productos");
-            return ResponseEntity.ok(dtoSearchedProducts);
+            return ResponseEntity.ok(searchedProducts);
         } else {
             logger.error("Error al listar todos los productos");
-            return ResponseEntity.ok(dtoSearchedProducts);
+            return ResponseEntity.ok(searchedProducts);
         }
     }
 
     @GetMapping("/random")
     public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts() {
-        List<Product> searchedProducts = productService.listRandomAllProducts();
-        List<ProductViewDTO> dtoSearchedProducts = mapList(searchedProducts, ProductViewDTO.class);
+        List<ProductViewDTO> searchedProducts = productService.listRandomAllProducts();
         if (!(searchedProducts.isEmpty())) {
             logger.info("Se listaron todos los productos aleatoriamente");
-            return ResponseEntity.ok(dtoSearchedProducts);
+            return ResponseEntity.ok(searchedProducts);
         } else {
             logger.error("Error al listar todos los productos aleatoriamente");
-            return ResponseEntity.ok(dtoSearchedProducts);
+            return ResponseEntity.ok(searchedProducts);
         }
     }
     /*@GetMapping("/{id}")
@@ -83,7 +81,7 @@ public class ProductController {
         Optional<Product> productFound = productService.searchProductById(productId);
         if(productFound.isPresent()){
             logger.info("Se encontro correctamente el producto con id " + productId);
-            return ResponseEntity.ok(convertToDto(productFound.get()));
+            return ResponseEntity.ok(productService.convertToDto(productFound.get()));
         }else{
             logger.error("El producto especificado no existe con id " + productId);
             return ResponseEntity.badRequest().build();
@@ -92,7 +90,6 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product){
-        // * Here we need to forbid the requests with ids that already exists in the database *
         Product addedProduct = productService.addProduct(product);
         logger.info("Se agrego un producto");
         return ResponseEntity.ok(addedProduct);
@@ -101,7 +98,6 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product){
         boolean productExists = productService.searchProductById(productId).isPresent();
-        // If the provided category already exists it can be updated, otherwise it will throw a badRequest response
         if(productExists){
             product.setId(productId);
             Product updatedProduct = productService.updateProduct(product);
@@ -116,8 +112,6 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId){
         boolean productExist = productService.searchProductById(productId).isPresent();
-        // If the provided category already exists it can be deleted, otherwise it will send a response telling
-        // the row with that id doesn't exist in the database
         if(productExist){
             productService.deleteProduct(productId);
             logger.info("El producto con id " + productId + " ha sido borrado");
@@ -129,7 +123,7 @@ public class ProductController {
     }
 
     @GetMapping("/city/{id}")
-    public ResponseEntity<List<Product>> getProductByCityId(@PathVariable Long id){
+    public ResponseEntity<List<ProductViewDTO>> getProductByCityId(@PathVariable Long id){
         Optional<City> city = this.cityService.getCityById(id);
         if (!city.isPresent()) {
             logger.error("La ciudad con id " + id + " no existe en la base de datos");
@@ -139,7 +133,7 @@ public class ProductController {
     }
 
     @GetMapping("/category/{id}")
-    public ResponseEntity<List<Product>> getProductByCategoryId(@PathVariable Long id){
+    public ResponseEntity<List<ProductViewDTO>> getProductByCategoryId(@PathVariable Long id){
         Optional<Category> category = this.categoryService.searchCategoryById(id);
         if (!category.isPresent()) {
             logger.error("La categoría con id " + id + " no existe en la base de datos");
@@ -148,14 +142,5 @@ public class ProductController {
         return ResponseEntity.ok(this.productService.listProductByCategoryId(id));
     }
 
-    
-    @Autowired
-    ModelMapper modelMapper;
-    private ProductViewDTO convertToDto(Product product) {
-        ProductViewDTO productViewDTO = modelMapper.map(product, ProductViewDTO.class);
-        return productViewDTO;
-    }
-    private <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
-        return source.stream().map(element -> modelMapper.map(element, targetClass)).collect(Collectors.toList());
-    }
+
 }
