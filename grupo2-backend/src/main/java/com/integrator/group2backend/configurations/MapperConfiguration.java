@@ -1,4 +1,4 @@
-package com.integrator.group2backend.utils;
+package com.integrator.group2backend.configurations;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

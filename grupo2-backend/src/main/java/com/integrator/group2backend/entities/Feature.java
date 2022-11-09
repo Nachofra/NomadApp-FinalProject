@@ -1,5 +1,6 @@
 package com.integrator.group2backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,5 +22,6 @@ public class Feature {
     private Image featureImage;
 
     @ManyToMany(mappedBy = "featureByProduct", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Product> products;
 }

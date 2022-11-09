@@ -4,10 +4,7 @@ import com.integrator.group2backend.entities.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.*;
 import javax.persistence.Id;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -25,9 +22,8 @@ public class ProductViewDTO {
     private Float latitude;
     private Float longitude;
     private Category category;
-    private String cityName;
-    private String countryName;
+    private City city;
     private Set<Feature> features;
     private Set<Policy> policies;
-    private List<String> images;
+    private Set<Image> images;
 }

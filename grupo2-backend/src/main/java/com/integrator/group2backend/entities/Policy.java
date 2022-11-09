@@ -17,11 +17,11 @@ public class Policy {
     private Long id;
     private String name;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PolicyItem> policyItems;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JsonIgnore
     private Product product;
 }

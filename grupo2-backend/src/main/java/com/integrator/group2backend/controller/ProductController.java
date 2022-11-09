@@ -13,9 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/product")
@@ -43,26 +43,28 @@ public class ProductController {
         }
     }*/
     @GetMapping
-    public ResponseEntity<List<Product>> listAllProducts() {
+    public ResponseEntity<List<ProductViewDTO>> listAllProducts() {
         List<Product> searchedProducts = productService.listAllProducts();
+        List<ProductViewDTO> dtoSearchedProducts = mapList(searchedProducts, ProductViewDTO.class);
         if (!(searchedProducts.isEmpty())) {
             logger.info("Se listaron todos los productos");
-            return ResponseEntity.ok(searchedProducts);
+            return ResponseEntity.ok(dtoSearchedProducts);
         } else {
             logger.error("Error al listar todos los productos");
-            return ResponseEntity.ok(searchedProducts);
+            return ResponseEntity.ok(dtoSearchedProducts);
         }
     }
+
     @GetMapping("/random")
-    public ResponseEntity<List<Product>> listRandomAllProducts() {
-        List<Product> searchedProducts = productService.listAllProducts();
+    public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts() {
+        List<Product> searchedProducts = productService.listRandomAllProducts();
+        List<ProductViewDTO> dtoSearchedProducts = mapList(searchedProducts, ProductViewDTO.class);
         if (!(searchedProducts.isEmpty())) {
-            Collections.shuffle(searchedProducts);
             logger.info("Se listaron todos los productos aleatoriamente");
-            return ResponseEntity.ok(searchedProducts);
+            return ResponseEntity.ok(dtoSearchedProducts);
         } else {
             logger.error("Error al listar todos los productos aleatoriamente");
-            return ResponseEntity.ok(searchedProducts);
+            return ResponseEntity.ok(dtoSearchedProducts);
         }
     }
     /*@GetMapping("/{id}")
@@ -87,6 +89,7 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product){
         // * Here we need to forbid the requests with ids that already exists in the database *
@@ -94,6 +97,7 @@ public class ProductController {
         logger.info("Se agrego un producto");
         return ResponseEntity.ok(addedProduct);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product){
         boolean productExists = productService.searchProductById(productId).isPresent();
@@ -108,6 +112,7 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId){
         boolean productExist = productService.searchProductById(productId).isPresent();
@@ -142,10 +147,15 @@ public class ProductController {
         }
         return ResponseEntity.ok(this.productService.listProductByCategoryId(id));
     }
+
+    
     @Autowired
     ModelMapper modelMapper;
     private ProductViewDTO convertToDto(Product product) {
         ProductViewDTO productViewDTO = modelMapper.map(product, ProductViewDTO.class);
         return productViewDTO;
+    }
+    private <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
+        return source.stream().map(element -> modelMapper.map(element, targetClass)).collect(Collectors.toList());
     }
 }
