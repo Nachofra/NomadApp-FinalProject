@@ -39,7 +39,7 @@ export default function Modal({
                         {props.children}
                         <XMarkIcon 
                         onClick={closeModal}
-                        className='absolute left-6 top-6 w-10 h-10 
+                        className='absolute right-6 top-6 w-10 h-10 
                         text-white z-10 cursor-pointer' />
                     </div>
                 </div>
