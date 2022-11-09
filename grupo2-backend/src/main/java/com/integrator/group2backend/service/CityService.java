@@ -26,7 +26,7 @@ public class CityService {
     public City addCity(City city) throws BadRequestException {
         Optional<City> buscaCity = this.cityRepository.findByPostalCode(city.getPostalCode());
         if(buscaCity.isPresent()){
-            throw new BadRequestException("El código postal" + city.getPostalCode() + " ya esta registrado");
+            throw new BadRequestException("El código postal " + city.getPostalCode() + " ya esta registrado");
         }
         return this.cityRepository.save(city);
     }

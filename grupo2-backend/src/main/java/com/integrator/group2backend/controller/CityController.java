@@ -40,10 +40,10 @@ public class CityController {
     public ResponseEntity<City> getCityById(@PathVariable Long id) {
         Optional<City> city = this.cityService.getCityById(id);
         if (city.isPresent()) {
-            logger.info("Se obtuvo correctamente la ciudad con id " + getCityById(id));
+            logger.info("Se obtuvo correctamente la ciudad con id " + id);
             return ResponseEntity.ok(city.get());
         }
-        logger.error("Error al listar la ciudad con id " + getCityById(id));
+        logger.error("Error al listar la ciudad con id " + id);
         return ResponseEntity.notFound().build();
     }
 

@@ -55,11 +55,11 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable("id") Long categoryId, @RequestBody Category category){
-        boolean categoryExists = categoryService.searchCategoryById(categoryId).isPresent();
+        Optional<Category> searchedCategory = categoryService.searchCategoryById(categoryId);
         // If the provided category already exists it can be updated, otherwise it will throw a badRequest response
-        if(categoryExists){
+        if(searchedCategory.isPresent()){
             category.setId(categoryId);
-            Category updatedCategory = categoryService.updateCategory(category, categoryId);
+            Category updatedCategory = categoryService.updateCategory(category, searchedCategory.get());
             logger.info("Se actualizo correctamente la categoria con id " + categoryId);
             return ResponseEntity.ok(updatedCategory);
         }else{

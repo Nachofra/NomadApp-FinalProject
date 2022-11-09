@@ -10,30 +10,37 @@ import java.util.Optional;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
-    public Optional<Category> searchCategoryById(Long categoryId){
+
+    public Optional<Category> searchCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId);
     }
-    public Category addCategory(Category category){
+
+    public Category addCategory(Category category) {
         return categoryRepository.save(category);
     }
-    public List<Category> listAllCategories(){
+
+    public List<Category> listAllCategories() {
         return categoryRepository.findAll();
     }
-    public Category updateCategory(Category category, Long id){
-        Optional<Category> oldCategory = this.categoryRepository.findById(id);
-        if(category.getCategoryIllustration().getURL() == null){
-            category.setCategoryIllustration(oldCategory.get().getCategoryIllustration());
+
+    public Category updateCategory(Category category, Category oldCategory) {
+
+        if (category.getCategoryIllustration() == null) {
+            category.setCategoryIllustration(oldCategory.getCategoryIllustration());
         }
-        if(category.getCategoryImage().getURL() == null){
-            category.setCategoryImage(oldCategory.get().getCategoryImage());
+
+        if (category.getCategoryImage() == null) {
+            category.setCategoryImage(oldCategory.getCategoryImage());
         }
-        return categoryRepository.save(category);
-        //agrego validaciones de imagenes para que queden presistentes en db cuando se acualiza alguna categoría
+
+        return this.categoryRepository.save(category);
     }
-    public void deleteCategory(Long id){
+
+    public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
     }
 }
