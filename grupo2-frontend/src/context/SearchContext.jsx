@@ -41,8 +41,10 @@ export const SearchProvider = ({ children }) => {
       const fetchData = async () =>{
           try {
             const { data } = await axios.get(`${FetchRoutes.BASEURL}/city`);
-            
+            const { data : category } = await axios.get(`${FetchRoutes.BASEURL}/category`);
+
             setCities(data);
+            setCategories(category)
           } catch (error) {
             console.error(error.message);
           }
@@ -63,7 +65,7 @@ export const SearchProvider = ({ children }) => {
     }
     
     return (
-        <SearchContext.Provider value={{ filters, cities , setFilters, reset, applyCategory, handleDates }}>
+        <SearchContext.Provider value={{ filters, cities, categories, setFilters, reset, applyCategory, handleDates }}>
             {children}
         </SearchContext.Provider>
     )

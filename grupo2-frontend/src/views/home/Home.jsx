@@ -13,13 +13,10 @@ import { useSearchContext } from '../../context/SearchContext'
 import { LoadingSpinner } from '../../components/loadingSpinner/LoadingSpinner'
 export const Home = () => {
 
-  const [categories, setCategories] = useState(null);
+  // const [categories, setCategories] = useState(null);
   const [index, setIndex ] = useState(null)
   const [ showCount, setShowCount ] = useState(10);
 
-  function getCategoryByID() {
-    return categories?.find(elm => elm.id === filters.category)
-  };
   const {
     status,
     startLoading,
@@ -31,19 +28,24 @@ export const Home = () => {
 
   const { user } = useUserContext();
 
-  const { filters } = useSearchContext()
+  const { filters, categories } = useSearchContext()
+
+  
+  function getCategoryByID() {
+    return categories?.find(elm => elm.id === filters.category)
+  };
 
     useEffect(() => {
 
       const fetchData = async () =>{
         startLoading();
           try {
-            const { data : categoriesData } = await axios.get(`${FetchRoutes.BASEURL}/category`);
+            // const { data : categoriesData } = await axios.get(`${FetchRoutes.BASEURL}/category`);
             const { data : feed }  = await axios.get(
               `${FetchRoutes.BASEURL}/product${!user ? '/random?' : '?'}${filters.category ? `category=${filters.category}` : ''}${filters.location ? `&city=${filters.location.id}` : ''}`
               );
 
-            setCategories(categoriesData);
+            // setCategories(categoriesData);
             setIndex(feed)
           } catch (error) {
             console.error(error.message);

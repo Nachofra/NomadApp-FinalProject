@@ -6,11 +6,11 @@ import DeskSearchbarModal from './components/DeskSearchbarModal'
 import { Calendar } from '../../../Calendar/Calendar'
 import { DeskFiltersPanel } from './components/DeskFiltersPanel'
 import { PropertyTypeSelect } from '../components/PropertyTypeSelect'
-import listCategory from '../../../../staticJSON/listCategory.json'
 import { LocationDatalist } from '../components/LocationDatalist'
 export const DesktopSearch = () => {
 
   const {filters, 
+    categories,
     setFilters, 
     reset, 
     applyCategory,
@@ -89,11 +89,11 @@ const handleDate = date => date? date.formatMMDDYYYY() : 'Any';
             <div className='flex items-center justify-start
               pt-4 overflow-auto  snap-x snap-mandatory  scrollbar-none'>
                 <div className="flex space-x-6 snap-x snap-mandatory">
-                  {listCategory.map((category, i) => (
+                  {categories.map((category, i) => (
                     <PropertyTypeSelect
                         key={i}
                         name={category.title}
-                        illustration={category.illustration}
+                        illustration={category.categoryIllustration.url}
                         onClick={() => applyCategory(category.id)}
                         selected={filters?.category === category.id} 
                     />
