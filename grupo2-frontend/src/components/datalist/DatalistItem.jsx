@@ -15,16 +15,14 @@ export const DatalistItem  = ({
   return (
     <Combobox.Option
       className={`text-gray-900 bg-white relative 
-      cursor-default select-none py-2 px-4
+      cursor-default select-none py-4 px-4
       hover:bg-gray-50 ${className}`}
       value={value}
     >
       <span
         className={`flex truncate `}
       >
-        {icon && 
-          <img src={icon} className="h-5 w-5 mr-3" aria-hidden="true" />
-        }
+        {icon && icon }
         {name}
       </span>
     </Combobox.Option>

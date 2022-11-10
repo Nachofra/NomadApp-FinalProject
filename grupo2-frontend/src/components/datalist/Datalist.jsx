@@ -24,7 +24,7 @@ export const Datalist = ({
     query === ''
       ? data
       : data.filter((item) =>
-            item.city.name
+            item.name
             .toLowerCase()
             .replace(/\s+/g, '')
             .includes(query.toLowerCase().replace(/\s+/g, ''))
@@ -45,7 +45,7 @@ export const Datalist = ({
               onChange={(e) => setQuery(e.target.value)}
               placeholder={placeholder}
             />
-            <Combobox.Button className="absolute bottom-2 right-0 flex items-center pr-2">
+            <Combobox.Button className="absolute bottom-2 right-0 flex items-center pr-2 z-50">
               <ChevronUpDownIcon
                 className="h-5 w-5 text-gray-400"
                 aria-hidden="true"
@@ -69,7 +69,7 @@ export const Datalist = ({
           >
             <Combobox.Options 
             className={`${flowTop ? '-translate-y-full -top-3' : '  mt-3' }
-            absolute max-h-60 w-full
+            absolute max-h-60 md:max-h-80 w-full
             overflow-auto rounded-md z-10 divide-y divide-violet-100
             text-slate-100 placeholder:text-slate-400
                ring-1 ring-gray-300`}>
