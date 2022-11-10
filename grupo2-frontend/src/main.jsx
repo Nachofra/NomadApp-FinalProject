@@ -7,7 +7,6 @@ import { SearchProvider } from './context/SearchContext'
 import { UserProvider } from './context/UserContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
     <BrowserRouter>
       <LoadingViewProvider>
         <UserProvider>
@@ -17,5 +16,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </UserProvider>
       </LoadingViewProvider>
     </BrowserRouter>
-  </React.StrictMode>
 )
