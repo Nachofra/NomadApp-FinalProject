@@ -14,7 +14,7 @@ export const HomeCategories = ({categories}) => {
                 categories?.map((category, i) => { return(
                     <article key={i} className='rounded-xl shadow-md overflow-hidden h-32 md:h-40
                     flex items-center justify-center cursor-pointer'
-                    onClick={() => applyCategory(category.id)}
+                    onClick={() => { category.id  === filters.category ? applyCategory(null) : applyCategory(category.id)}}
                     >
                         <img
                         className={`h-full w-full object-cover transition-all

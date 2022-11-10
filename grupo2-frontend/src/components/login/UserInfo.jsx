@@ -25,8 +25,10 @@ export const UserInfo = ({ firstName, lastName, setUser }) => {
           value={firstName}
           placeholder="First Name"
           onChange={handleNameChange}
-          className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-md focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-        />
+          className='block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 
+          bg-white border rounded-md focus:border-violet-700 focus:ring-opacity-40 
+          focus:outline-none focus:ring focus:ring-violet-700'
+          />
       </div>
       <div className="w-full mt-4">
         <input
@@ -35,8 +37,10 @@ export const UserInfo = ({ firstName, lastName, setUser }) => {
           value={lastName}
           placeholder="Last Name"
           onChange={handleNameChange}
-          className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-md focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-        />
+          className='block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 
+          bg-white border rounded-md focus:border-violet-700 focus:ring-opacity-40 
+          focus:outline-none focus:ring focus:ring-violet-700'
+          />
       </div>
     </>
   );

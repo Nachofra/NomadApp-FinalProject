@@ -34,12 +34,14 @@ export const SearchProvider = ({ children }) => {
     const [filters, setFilters] = useState(emptyFilters);
 
     const [cities, setCities ] = useState([]);
+    const [categories, setCategories ] = useState([])
     
     useEffect(() => {
 
       const fetchData = async () =>{
           try {
             const { data } = await axios.get(`${FetchRoutes.BASEURL}/city`);
+            
             setCities(data);
           } catch (error) {
             console.error(error.message);

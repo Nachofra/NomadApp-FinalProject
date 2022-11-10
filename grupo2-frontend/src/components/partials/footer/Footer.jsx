@@ -1,19 +1,20 @@
 import React from 'react'
+import { FetchRoutes } from '../../../guard/Routes';
 import { BaseLayout } from '../../layout/BaseLayout'
 
 export const Footer = () => {
   const year = new Date();
   const socialMedia = [
     {
-      url: '/icons/facebook-app-logo-svgrepo-com.svg',
+      url: `${FetchRoutes.BUCKET}/icons/facebook-app-logo-svgrepo-com.svg`,
       name: 'Facebook icon',
     },
     {
-      url: '/icons/instagram-svgrepo-com.svg',
+      url: `${FetchRoutes.BUCKET}/icons/instagram-svgrepo-com.svg`,
       name: 'Instagram icon',
     },
     {
-      url: '/icons/linkedin-svgrepo-com.svg',
+      url: `${FetchRoutes.BUCKET}/icons/linkedin-svgrepo-com.svg`,
       name: 'Linkedin icon',
     }
   ]

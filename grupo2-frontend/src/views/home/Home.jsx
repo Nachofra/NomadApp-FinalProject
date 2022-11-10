@@ -5,17 +5,21 @@ import { Footer } from '../../components/partials/footer/Footer'
 import { HeaderNav } from '../../components/partials/headerNav/HeaderNav'
 import { PropertyCard } from '../../components/propertyCard/PropertyCard'
 import { HomeCategories } from './components/HomeCategories'
-import { HeartIcon } from '@heroicons/react/20/solid'
 import { FetchRoutes } from '../../guard/Routes'
 import axios from 'axios'
 import { useLoadingViewContext } from '../../context/LoadingViewContext'
 import { useUserContext } from '../../context/UserContext'
+import { useSearchContext } from '../../context/SearchContext'
+import { LoadingSpinner } from '../../components/loadingSpinner/LoadingSpinner'
 export const Home = () => {
 
   const [categories, setCategories] = useState(null);
   const [index, setIndex ] = useState(null)
   const [ showCount, setShowCount ] = useState(10);
 
+  function getCategoryByID() {
+    return categories?.find(elm => elm.id === filters.category)
+  };
   const {
     status,
     startLoading,
@@ -23,7 +27,11 @@ export const Home = () => {
     triggerError
   } = useLoadingViewContext()
 
-    const { user } = useUserContext();
+  const [ feedStatus, setFeedStatus ] = useState('OK');
+
+  const { user } = useUserContext();
+
+  const { filters } = useSearchContext()
 
     useEffect(() => {
 
@@ -31,7 +39,9 @@ export const Home = () => {
         startLoading();
           try {
             const { data : categoriesData } = await axios.get(`${FetchRoutes.BASEURL}/category`);
-            const { data : feed }  = await axios.get(`${FetchRoutes.BASEURL}/product${!user ? '/random' : ''}`);
+            const { data : feed }  = await axios.get(
+              `${FetchRoutes.BASEURL}/product${!user ? '/random?' : '?'}${filters.category ? `category=${filters.category}` : ''}${filters.location ? `&city=${filters.location.id}` : ''}`
+              );
 
             setCategories(categoriesData);
             setIndex(feed)
@@ -41,8 +51,23 @@ export const Home = () => {
           }
           loadDone();
         }
-        if(!index || !categories) {fetchData()};
-  }, [])
+        const refreshData = async () =>{
+          setFeedStatus('LOADING');
+            try {
+              const { data : feed }  = await axios.get(
+                `${FetchRoutes.BASEURL}/product${!user ? '/random?' : '?'}${filters.category ? `category=${filters.category}` : ''}${filters.location ? `&city=${filters.location.id}` : ''}`
+                );
+  
+              setIndex(feed)
+            } catch (error) {
+              console.error(error.message);
+              setFeedStatus('ERROR')
+            }
+            setFeedStatus('OK');
+          }
+      
+        if(!index || !categories) { fetchData() } else { refreshData() };
+  }, [filters])
 
 
   return (
@@ -57,19 +82,30 @@ export const Home = () => {
           padding='pt-0 pb-8 '
           className='flex flex-col items-center justify-center'
         >
-        
-        <h2 className='text-3xl lg:text-4xl text-gray-800 text-center font-medium mb-6'>
-            Places you will love <span className="text-violet-700">❤</span>
-        </h2>
 
-          <div className='flex items-center justify-center flex-wrap gap-8'>
+
+        {filters.category !== null ?
+        <h2 className='text-3xl lg:text-4xl text-gray-800 text-center font-medium mb-6'>
+            Searching in <span className="text-violet-700">{ getCategoryByID().title }</span>
+        </h2> :
+        <h2 className='text-3xl lg:text-4xl text-gray-800 text-center font-medium mb-6'>
+          Places you will love <span className="text-violet-700">❤</span>
+        </h2>
+        }
+
+          {feedStatus === 'OK' ?
+            <div className='flex items-center justify-center flex-wrap gap-8'>
 
           { index?.map(( property, i ) => 
           i < showCount ?
           <PropertyCard property={property} key={i} />
           : null )}
           
-          </div>
+          </div> :
+
+          <LoadingSpinner />
+          
+        }
 
           {showCount < index?.length &&
           <button 

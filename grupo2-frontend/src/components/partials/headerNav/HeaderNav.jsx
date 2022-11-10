@@ -9,7 +9,7 @@ import { Bars2Icon, XMarkIcon } from '@heroicons/react/20/solid'
 import {motion, AnimatePresence } from 'framer-motion'
 import { MobileOpen } from './components/MobileOpen'
 
-export const HeaderNav = () => {
+export const HeaderNav = ({transparent}) => {
   const { user, logout } = useUserContext();
   const [open, setOpen] = useState(false);
 
@@ -17,10 +17,10 @@ export const HeaderNav = () => {
     <section 
     className='top-0 fixed z-50
     w-screen flex items-center justify-between' >
-        <div className='w-screen
-        shadow-md cursor-pointer h-auto relative
-        flex justify-end items-end p-4 lg:p-6
-        ring-1 ring-violet-700 ring-opacity-5 bg-white mb-5' >
+        <div className={`w-screen cursor-pointer h-auto relative
+        flex justify-end items-end p-4 lg:p-6 transition-all
+        ring-1 ring-violet-700 ring-opacity-5 
+        ${transparent && !open ? '' : 'bg-white mb-5 shadow-md'}`} >
           <div className='flex flex-col items-center lg:hidden h-auto w-full'>
             <div className='flex items-center justify-between w-full'>
               <Link to={PublicRoutes.HOME} >
