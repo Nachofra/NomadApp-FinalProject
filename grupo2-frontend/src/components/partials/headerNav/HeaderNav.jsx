@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import DeskNavBarModal from './components/DeskNavBarModal'
-import { PublicRoutes } from '../../../guard/Routes'
+import { FetchRoutes, PublicRoutes } from '../../../guard/Routes'
 import { useUserContext } from '../../../context/UserContext'
 import { UserInitials } from './components/UserInitials'
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
@@ -24,7 +24,7 @@ export const HeaderNav = ({transparent}) => {
           <div className='flex flex-col items-center lg:hidden h-auto w-full'>
             <div className='flex items-center justify-between w-full'>
               <Link to={PublicRoutes.HOME} >
-                <img src='/logo/logo_demo.svg' className='h-10' />
+                <img src={`${FetchRoutes.BUCKET}/logo/logo_demo.svg`} className='h-10' />
               </Link>
               <div className='p-2 w-10 h-10 flex items-center justify-center'
                 onClick={() => setOpen(!open)}
