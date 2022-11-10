@@ -58,7 +58,7 @@ export const CollapsableMenu = (props) => {
               opacity: 0,
             }}
             key={props.answer}
-            className="w-full overflow-hidden"
+            className="w-full"
           >
             {props.children}
           </motion.div>
