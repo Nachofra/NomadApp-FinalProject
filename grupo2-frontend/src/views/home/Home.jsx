@@ -94,7 +94,7 @@ export const Home = () => {
         }
 
           {feedStatus === 'OK' ?
-            <div className='flex items-center justify-center flex-wrap gap-8'>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 flex-wrap gap-8'>
 
           { index?.map(( property, i ) => 
           i < showCount ?
@@ -107,7 +107,7 @@ export const Home = () => {
           
         }
 
-          {showCount < index?.length &&
+          {(showCount < index?.length && feedStatus === 'OK') &&
           <button 
           onClick={() => setShowCount(showCount + 10)}
           className='mb-36 w-32 py-2 mt-10 rounded-lg 
