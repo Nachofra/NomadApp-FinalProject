@@ -10,15 +10,19 @@ import listCategory from '../../../../staticJSON/listCategory.json'
 import { LocationDatalist } from '../components/LocationDatalist'
 export const DesktopSearch = () => {
 
-  const {filters, setFilters, reset, applyCategory} = useSearchContext()
+  const {filters, 
+    setFilters, 
+    reset, 
+    applyCategory,
+    handleDates } = useSearchContext()
 
-  const handleDateFrom = (date)=> {
-    setFilters({...filters, date:{...filters.date, from:date}})
-
-  }
-  const handleDateTo = (date)=> {
-    setFilters({...filters, date:{...filters.date, to:date}})
+Date.prototype.formatMMDDYYYY = function(){
+  return (this.getMonth() + 1) + 
+  "/" +  this.getDate() +
+  "/" +  this.getFullYear();
 }
+
+const handleDate = date => date? date.formatMMDDYYYY() : 'Any';
 
   return (
     <section className='w-screen fixed bottom-4 flex items-center justify-center'> 
@@ -32,20 +36,20 @@ export const DesktopSearch = () => {
 
         <DeskSearchbarModal
           active={filters.location !== null}
-          icon={<MapPinIcon className='w-7 h-7 text-violet-700' />}
-          text={`${filters.location?.city.name},  ${filters.location?.city.province.country.name}`}
+          icon={<MapPinIcon className='shrink-0 w-7 h-7 text-violet-700' />}
+          text={`${filters.location?.name},  ${filters.location?.country.name}`}
           placeholder="Searching any place"
         >
-          <div className='w-60 flex flex-col items-center'>
-            <p className='text-violet-700 font-semibold uppercase text-xl'>Find places</p>
-            <p className='mb-4 text-gray-600'>Select one from the list</p>
+          <div className='w-96 flex flex-col items-center'>
+            <p className='text-violet-700 font-semibold uppercase text-3xl'>Find places</p>
+            <p className='mb-4 text-lg text-gray-600'>Select one from the list</p>
           <LocationDatalist flowTop />
           </div>
         </DeskSearchbarModal>
         <DeskSearchbarModal
           active={filters.date.from !== null | filters.date.to !== null}
           icon={<CalendarDaysIcon className='w-7 h-7 text-violet-700' />}
-          text={``}
+          text={`${handleDate(filters.date.from)} - ${handleDate(filters.date.to)}`}
           placeholder="Any date - any date"
         >
           <div className='h-full w-16 p-6'>
@@ -56,9 +60,8 @@ export const DesktopSearch = () => {
           <Calendar
             startDate={filters.date.from}
             endDate={filters.date.to}
-            setStartDate={handleDateFrom}
-            setEndDate={handleDateTo}
             monthsDisplayed={2}
+            afterChange={(dateFrom, dateTo) => { handleDates(dateFrom, dateTo)}}
           />
         </DeskSearchbarModal>
 

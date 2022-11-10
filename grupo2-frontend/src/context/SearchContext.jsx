@@ -1,6 +1,8 @@
 // context to handle cursor 
 
-import { createContext, useContext, useState } from 'react'
+import axios from 'axios';
+import { createContext, useContext, useEffect, useState } from 'react'
+import { FetchRoutes } from '../guard/Routes';
 
 export const SearchContext = createContext(null)
 
@@ -29,16 +31,37 @@ export const emptyFilters =
       }
 
 export const SearchProvider = ({ children }) => {
-    const [filters, setFilters] = useState(emptyFilters)
+    const [filters, setFilters] = useState(emptyFilters);
 
-      const reset = () => setFilters(emptyFilters)
+    const [cities, setCities ] = useState([]);
+    
+    useEffect(() => {
 
-      const applyCategory = (id) => {
-        setFilters({...filters, category : id})
-      }
+      const fetchData = async () =>{
+          try {
+            const { data } = await axios.get(`${FetchRoutes.BASEURL}/city`);
+            setCities(data);
+          } catch (error) {
+            console.error(error.message);
+          }
+        }
+        fetchData();
+  }, [])
+
+    const reset = () => setFilters(emptyFilters);
+
+    const applyCategory = (id) => {
+      setFilters({...filters, category : id})
+    }
+
+    const handleDates = ( dateFrom, dateTo )=> {
+      console.log(dateFrom, dateTo)
+      setFilters({...filters, date:{ from:dateFrom, to:dateTo}})
+  
+    }
     
     return (
-        <SearchContext.Provider value={{ filters, setFilters, reset, applyCategory }}>
+        <SearchContext.Provider value={{ filters, cities , setFilters, reset, applyCategory, handleDates }}>
             {children}
         </SearchContext.Provider>
     )

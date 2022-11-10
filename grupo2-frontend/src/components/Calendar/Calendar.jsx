@@ -8,23 +8,20 @@ export const Calendar = ({
     endDate,
     setStartDate,
     setEndDate,
-    monthsDisplayed
+    monthsDisplayed,
+    afterChange
   }) => {
-    
+        
     function handleDateChange (dates) {
-      setDateFrom(dates[0])
-      setDateTo(dates[1])
+      afterChange(dates[0], dates[1])
     }
-
-    const [dateFrom, setDateFrom] = useState(null)
-    const [dateTo, setDateTo] = useState(null)
 
       return (
         <ReactDatePicker
-          selected={dateFrom}
+          selected={startDate}
           onChange={handleDateChange}
-          startDate={dateFrom}
-          endDate={dateTo}
+          startDate={startDate}
+          endDate={endDate}
           monthsShown={monthsDisplayed}
           minDate={new Date()}
           selectsRange

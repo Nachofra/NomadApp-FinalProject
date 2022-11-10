@@ -10,26 +10,8 @@ import { CollapsableMenu } from '../../../collapsableMenu/CollapsableMenu'
 import { Calendar } from '../../../Calendar/Calendar'
 export const MobileNavOpen = ({open, setOpen}) => {
 
-    const {filters, setFilters, reset} = useSearchContext()
-    // const {category, price, date, guests, location} = filters
-    // "location": {
-    //   "id": 1,
-    //   "adress": "Calle Falsa",
-    //   "number": 123,
-    //   "floor": 10,
-    //   "apartment": "A",
-    //   "city": {
-    //     "id": 1,
-    //     "name": "Springfield",
-    //     "province": {
-    //       "id": 1,
-    //       "name": "Awckland",
-    //       "country": { "id": 1, "name": "New Zealand" }
-    //     }
-    //   }
-    // }
-
-
+    const {filters, setFilters, reset, handleDates} = useSearchContext()
+    
   return (
     
     <MobileNavModal open={open} setOpen={setOpen} >
@@ -45,10 +27,11 @@ export const MobileNavOpen = ({open, setOpen}) => {
       >
         <div className='p-2 my-4 flex items-center justify-center'>
         <Calendar
-          // startDate={filters.date.from}
-          // endDate={filters.date.to}
+          startDate={filters.date.from}
+          endDate={filters.date.to}
           // setStartDate={handleDateFrom}
           // setEndDate={handleDateTo}
+          afterChange={(dateFrom, dateTo) => { handleDates(dateFrom, dateTo)}}
           monthsDisplayed={1}
         />
         </div>
