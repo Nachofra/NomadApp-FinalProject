@@ -1,29 +1,29 @@
 import React from 'react'
-import listBlock from '@/staticJSON/listBlock.json'
 import { Datalist, DatalistItem } from '../../../datalist'
 import { useSearchContext } from '../../../../context/SearchContext'
+import { MapPinIcon } from '@heroicons/react/24/outline'
 
 export const LocationDatalist = ({flowTop}) => {
 
-    const {filters, setFilters, reset} = useSearchContext()
-    const locations = listBlock.map((elm => elm.location));
+    const {filters, setFilters } = useSearchContext()
+    const { cities } = useSearchContext();
 
   return (
     <Datalist
     flowTop={flowTop}
-    data={locations}
-    value={filters.location ? `${filters.location?.city.name},  ${filters.location?.city.province.country.name}` : null}
+    data={cities}
+    value={filters.location ? `${filters.location?.name},  ${filters.location?.country.name}` : null}
     id='locations_dsk_filter'
     // label='Company / Organization'
     placeholder='Search around the world'
     onChange={(e) => setFilters({...filters, location: e})}
-    resultRenderer={(location, i) => (
+    resultRenderer={(city, i) => (
       <DatalistItem
-        
         key={i}
-        name={`${location.city.name},  ${location.city.province.country.name}`}
-        id={location.id}
-        value={location}
+        name={`${city.name}, ${city.country.name}`}
+        id={city.id}
+        value={city}
+        icon={<MapPinIcon className='w-6 h-6 mr-2 text-violet-600' />}
       />)
     }
   />

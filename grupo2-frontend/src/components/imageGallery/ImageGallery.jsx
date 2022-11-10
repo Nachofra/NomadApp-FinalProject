@@ -56,7 +56,7 @@ export const ImageGallery = ({images}) => {
             <motion.img
             className="absolute top-0 left-0 w-full h-full object-cover"
             key={page}
-            src={images[imageIndex].src}
+            src={images[imageIndex].url}
             custom={direction}
             variants={variants}
             initial="enter"
@@ -100,8 +100,8 @@ export const ImageGallery = ({images}) => {
             key={i}
             className="h-full rounded-lg shadow-lg overflow-hidden relative">
               <img className={`h-full`} 
-              alt={image.alt}
-              src={image.src}
+              alt={image.description}
+              src={image.url}
               onClick={() => setPage([i, i])}
               />
               {i === imageIndex &&

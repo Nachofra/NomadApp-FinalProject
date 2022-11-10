@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { BaseLayout } from '../../components/layout/BaseLayout'
 import { Footer, HeaderNav, SearchNav } from '../../components/partials'
@@ -14,91 +14,45 @@ import Modal from '../../components/modal/Modal'
 import { Calendar } from '../../components/Calendar/Calendar'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import { PolicyList } from './components/PolicyList'
+import { useLoadingViewContext } from '../../context/LoadingViewContext'
+import { FetchRoutes } from '../../guard/Routes'
 
 export const Product = () => {
 
+    const {
+        status,
+        startLoading,
+        loadDone,
+        triggerError
+      } = useLoadingViewContext()
+
     const navigate = useNavigate();
-    const [ data, setData ] = useState(listBlock[0])
+    const [ data, setData ] = useState()
+    const {id} = useParams();
 
-    // useEffect(() => {
+    console.log(data)
 
-    //     const fetchData = async () =>{
-    //       startLoading();
-    //         try {
-    //           const { data } = await axios.get(`${FetchRoutes.BASEURL}/category`);
-    //           setCategories(data);
-    //         } catch (error) {
-    //           console.error(error.message);
-    //           triggerError()
-    //         }
-    //         loadDone();
-    //       }
+    useEffect(() => {
+        const fetchData = async () =>{
+          startLoading();
+            try {
+              const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
+              setData(data);
+            } catch (error) {
+              console.error(error.message);
+              triggerError()
+            }
+            loadDone();
+          }
           
-    //       fetchData();
-    // }, [])
-
-    const featureList = [
-        {
-            name: 'WiFi',
-            icon: '/icons/features/freeWifi.svg'
-        },
-        {
-            name: 'Security 24hs',
-            icon: '/icons/features/security.svg'
-        },
-        {
-            name: 'King-S bed',
-            icon: '/icons/features/kingBed.svg'
-        },
-        {
-            name: 'Pets allowed',
-            icon: '/icons/features/petHand.svg'
-        },
-        {
-            name: 'Home heating',
-            icon: '/icons/features/heating.svg'
-        },
-        {
-            name: 'Microwave',
-            icon: '/icons/features/microwave.svg'
-        },
-        {
-            name: 'Air conditioner',
-            icon: '/icons/features/airConditioner.svg'
-        },
-        {
-            name: 'Garage',
-            icon: '/icons/features/car.svg'
-        },
-    ]
-    const imageList = [
-        {
-            src : '/mockup/img/house2.jpg',
-            alt : 'Mockup house'
-        },
-        {
-            src : '/mockup/img/building1.jpg',
-            alt : 'Mockup house'
-        },
-        {
-            src : '/mockup/img/house2.jpg',
-            alt : 'Mockup house'
-        },
-        {
-            src : '/mockup/img/house2.jpg',
-            alt : 'Mockup house'
-        },
-        {
-            src : '/mockup/img/house2.jpg',
-            alt : 'Mockup house'
-        }
-    ]
+          fetchData();
+    }, [])
 
     const [modal, setModal ] = useState(false);
 
     const { width } = useWindowDimensions();
     
-  return (
+  if (data) {return (
     <>
     <HeaderNav />
     <BaseLayout
@@ -108,7 +62,8 @@ export const Product = () => {
     >
         <div className='flex flex-col items-start justify-center py-4'>
             <p className='uppercase text-gray-200 font-thin text-lg'>{data.category.title}</p>
-            <p className='text-xl text-white font-medium'>{data.title}</p>
+            <p className='text-xl text-white font-medium overflow-ellipsis whitespace-nowrap overflow-hidden 
+            max-w-[20ch] sm:max-w-[25ch] md:max-w-none'>{data.title}</p>
         </div>
         <button onClick={() => navigate(-1)}>
             <ChevronLeftIcon className='w-10 h-10 text-white' />
@@ -119,11 +74,13 @@ export const Product = () => {
         className=" flex items-center justify-between"
         padding='pt-4 pb-4 md:px-6 lg:px-8'
     >
-        <div className='flex items-center max-w-xs text-gray-700'>
+        <div className='flex items-center text-gray-700 max-w-[100vw]'>
             <MapPinIcon className='w-6 h-6' />
-            <div className='ml-2 flex items-center text-sm md:text-base '>
-                <p className='mr-1'>{data.location.city.name},</p>
-                <p className='font-medium text-gray-900'>{data.location.city.province.country.name}</p>
+            <div className='ml-2 flex items-center text-sm md:text-base'>
+                <p className='overflow-ellipsis whitespace-nowrap overflow-hidden 
+                max-w-[25ch] sm:max-w-none'>{data.city.name},
+                <span className='ml-1 font-medium text-gray-900'>{data.city.country.name}</span>
+                </p>
             </div>
         </div>
         <div className='flex items-center'>
@@ -138,7 +95,7 @@ export const Product = () => {
         padding='p-2 px-2'
         wrapperClassName="xl:hidden"
     >
-        <ImageSlider images={imageList} />
+        <ImageSlider images={data.images} />
     </BaseLayout>
     <BaseLayout
         padding='p-4 px-4 md:px-6 lg:px-8'
@@ -148,36 +105,37 @@ export const Product = () => {
             <div className='h-full max-h-[550px] w-[70%] rounded-lg overflow-hidden'>
                 <img
                 className='w-full h-full object-cover'
-                src={imageList[0].src} 
-                alt={imageList[0].alt}
+                src={data.images[0].url} 
+                alt={data.images[0].name}
                 />
             </div>
             <div className='h-full max-h-[550px] w-[30%] overflow-hidden
             grid grid-cols-2 grid-rows-4 gap-4'>
                 {
-                    imageList.map((image, i) => { 
-                        if (i > 0 && i <= 8){ return(
+                    data.images.map((image, i) => { 
+                        if (i > 0 && i <= 7){ return(
                             <img
                             className='w-full h-full object-cover rounded-lg'
-                            src={image.src} 
-                            alt={image.alt}
+                            src={image.url} 
+                            alt={image.name}
                             key={i}
                             />
                         )}
                     })
                 }
+            
                 <div 
                     onClick={() => setModal(true)}
                     className='flex flex-col items-center gap-4 justify-center
                     border-2 border-gray-200 rounded-lg cursor-pointer'
                 >
                     <PhotoIcon className='w-10 h-10 text-gray-400' />
-                    <p className='text-gray-500'>{`View more (${imageList.length})`}</p>
+                    <p className='text-gray-500'>{`View more (${data.images.length})`}</p>
                 </div>
             </div>
         </div>
         <Modal isOpen={modal} closeModal={() => setModal(false)} >
-            <ImageGallery images={imageList} />
+            <ImageGallery images={data.images} />
         </Modal>
     </BaseLayout>
     <BaseLayout
@@ -197,10 +155,10 @@ export const Product = () => {
             </h5>
             <ul className='bg-gradient-to-tr from-gray-100 to-violet-50  px-4 py-4 
             grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-y-6 gap-x-4'>
-                {featureList.map((feature, i) => (
+                {data.features?.map((feature, i) => (
                     <FeatureItem
                     key={i}
-                    icon={feature.icon}
+                    icon={feature.featureImage.url}
                     text={feature.name}
                     />
                 ))}
@@ -243,13 +201,17 @@ export const Product = () => {
         text-gray-700 font-medium'>Rent policies</h5>
 
         <div className='grid grid-cols-1 md:gird-cols-2 lg:grid-cols-3 gap-8 mt-4'>
-        { data.policies?.map((item, i) => (
-            <PolicyList key={i} title={item.name} list={item.list} />
-        ))}
+        { data.policies.map((item, i) => (
+            <PolicyList key={i} title={item.name} list={item.policyItems} />
+        ))} 
         </div>
     </BaseLayout>
     <Footer />
     <SearchNav />
 </>
-  )
+  )}
+
+  else {
+    return(<p>err</p>)
+  }
 }

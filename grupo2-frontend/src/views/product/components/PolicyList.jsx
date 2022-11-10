@@ -12,7 +12,7 @@ export const PolicyList = ({
       {list.map((item, i) => (
         <li className='flex items-start text-gray-700 max-w-xs w-full' key={i} >
           <span className='mr-2 w-4 h-1 mt-[10px] rounded-full bg-violet-700 shrink-0' />
-          <p className=''>{item}</p>
+          <p className=''>{item.name}</p>
           
         </li>
       ))}

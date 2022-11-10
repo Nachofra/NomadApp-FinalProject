@@ -56,9 +56,6 @@ export const ImageSlider = ({images}) => {
     return () => clearTimeout(timer);
   }, [paginate]);
   
-  
-  console.log('effect')
-
   return (
 
       <div className="max-h-[300px] md:max-h-[450px] h-screen w-full relative rounded-lg overflow-hidden">
@@ -66,7 +63,7 @@ export const ImageSlider = ({images}) => {
             <motion.img
             className="absolute top-0 left-0 w-full h-full object-cover"
             key={page}
-            src={images[imageIndex].src}
+            src={images[imageIndex].url}
             custom={direction}
             variants={variants}
             initial="enter"
