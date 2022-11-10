@@ -13,6 +13,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+
 @RunWith(MockitoJUnitRunner.class)
 public class CategoryServiceTest {
 
@@ -24,6 +29,54 @@ public class CategoryServiceTest {
     @Before
     public void setUp() {
         this.categoryService = new CategoryService(this.categoryRepository);
+    }
+
+
+
+    @Test
+    public void testAddCategory(){
+        Image categoryImage = new Image();
+        categoryImage.setId(10L);
+
+        Image illustrationImage = new Image();
+        illustrationImage.setId(11L);
+
+        Category requestCategory = new Category();
+        requestCategory.setCategoryImage(categoryImage);
+        requestCategory.setCategoryIllustration(illustrationImage);
+        requestCategory.setDescription("Casas en general");
+        requestCategory.setTitle("Casas");
+
+        ArgumentCaptor<Category> categoryArgumentCaptor = ArgumentCaptor.forClass(Category.class);
+        Mockito.when(this.categoryRepository.save(categoryArgumentCaptor.capture())).thenReturn(null);
+
+        this.categoryService.addCategory(requestCategory);
+
+        Category capturedCategory = categoryArgumentCaptor.getValue();
+
+        Assert.assertNotNull(capturedCategory.getCategoryImage());
+        Assert.assertNotNull(capturedCategory.getCategoryIllustration());
+        Assert.assertEquals("Casas en general", capturedCategory.getDescription());
+        Assert.assertEquals("Casas", capturedCategory.getTitle());
+    }
+
+    @Test
+    public void testSearchCategoryById(){
+        Mockito.when(this.categoryRepository.findById(eq(1L))).thenReturn(null);
+
+        this.categoryService.searchCategoryById(1L);
+
+        Mockito.verify(this.categoryRepository, times(1)).findById(eq(1L));
+
+    }
+
+    @Test
+    public void testSearchAllCategories(){
+        Mockito.when(this.categoryRepository.findAll()).thenReturn(null);
+
+        this.categoryService.listAllCategories();
+
+        Mockito.verify(this.categoryRepository, times(1)).findAll();
     }
 
     @Test
@@ -52,4 +105,94 @@ public class CategoryServiceTest {
         Assert.assertEquals(10L, capturedCategory.getCategoryImage().getId(), 1);
         Assert.assertEquals(11L, capturedCategory.getCategoryIllustration().getId(), 1);
     }
+
+    @Test
+    public void testUpdateCategoryWhitCategoryImageInDBButNoIlustrationImageInDB(){
+        Image categoryImage = new Image();
+        categoryImage.setId(10L);
+        Category oldCategory = new Category();
+        oldCategory.setId(1L);
+        oldCategory.setCategoryImage(categoryImage);
+
+        Image illustrationImage = new Image();
+        illustrationImage.setURL("url");
+        Category requestCategory = new Category();
+        requestCategory.setCategoryIllustration(illustrationImage);
+
+        ArgumentCaptor<Category> categoryArgumentCaptor = ArgumentCaptor.forClass(Category.class);
+        Mockito.when(this.categoryRepository.save(categoryArgumentCaptor.capture())).thenReturn(null);
+
+        this.categoryService.updateCategory(requestCategory, oldCategory);
+
+        Category capturedCategory = categoryArgumentCaptor.getValue();
+
+        Assert.assertNotNull(capturedCategory.getCategoryImage());
+        Assert.assertNotNull(capturedCategory.getCategoryIllustration());
+        Assert.assertEquals(10L, capturedCategory.getCategoryImage().getId(), 1);
+        Assert.assertEquals("url", capturedCategory.getCategoryIllustration().getURL());
+    }
+    @Test
+    public void testCategoryUpdateWhitCategoyIllustrationinDBButNoCategoryImageInDB(){
+        Image illustrationImage = new Image();
+        illustrationImage.setId(10L);
+        Category oldCategory = new Category();
+        oldCategory.setId(1L);
+        oldCategory.setCategoryIllustration(illustrationImage);
+
+        Image categoryImage = new Image();
+        categoryImage.setURL("url");
+        Category requestCategory = new Category();
+        requestCategory.setCategoryImage(categoryImage);
+
+        ArgumentCaptor<Category> categoryArgumentCaptor = ArgumentCaptor.forClass(Category.class);
+        Mockito.when(this.categoryRepository.save(categoryArgumentCaptor.capture())).thenReturn(null);
+
+        this.categoryService.updateCategory(requestCategory, oldCategory);
+
+        Category capturedCategory = categoryArgumentCaptor.getValue();
+
+        Assert.assertNotNull(capturedCategory.getCategoryImage());
+        Assert.assertNotNull(capturedCategory.getCategoryIllustration());
+        Assert.assertEquals(10L, capturedCategory.getCategoryIllustration().getId(), 1);
+        Assert.assertEquals("url", capturedCategory.getCategoryImage().getURL());
+    }
+
+
+
+    @Test
+    public void testUpdateCategoryWhitImagesInRequest(){
+        Category oldCategory = new Category();
+        oldCategory.setId(1L);
+
+        Image categoryImage = new Image();
+        Image illustrationImage = new Image();
+        categoryImage.setURL("url");
+        illustrationImage.setURL("url");
+        Category requestCategory = new Category();
+        requestCategory.setCategoryImage(categoryImage);
+        requestCategory.setCategoryIllustration(illustrationImage);
+
+        ArgumentCaptor<Category> categoryArgumentCaptor = ArgumentCaptor.forClass(Category.class);
+        Mockito.when(this.categoryRepository.save(categoryArgumentCaptor.capture())).thenReturn(null);
+
+        this.categoryService.updateCategory(requestCategory, oldCategory);
+
+        Category capturedCategory = categoryArgumentCaptor.getValue();
+
+        Assert.assertNotNull(capturedCategory.getCategoryImage());
+        Assert.assertNotNull(capturedCategory.getCategoryIllustration());
+        Assert.assertEquals("url", capturedCategory.getCategoryImage().getURL());
+        Assert.assertEquals("url", capturedCategory.getCategoryIllustration().getURL());
+    }
+
+    @Test
+    public void testDeleteCategory(){
+        Mockito.doNothing().when(this.categoryRepository).deleteById(eq(1L));
+
+        this.categoryService.deleteCategory(1L);
+
+        Mockito.verify(this.categoryRepository, times(1)).deleteById(eq(1L));
+    }
+
+
 }
