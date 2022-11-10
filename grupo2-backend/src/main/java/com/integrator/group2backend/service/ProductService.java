@@ -51,6 +51,11 @@ public class ProductService {
         List<ProductViewDTO> dtoProductFoundByCategoryId = mapList(productFoundByCategoryId, ProductViewDTO.class);
         return dtoProductFoundByCategoryId;
     }
+    public List<ProductViewDTO> listProductByCityIdAndCategoryId(Long city_id, Long category_id){
+        List<Product> productFoundByCityIdAndCategoryId = productRepository.findByCityIdAndCategoryId(city_id, category_id);
+        List<ProductViewDTO> dtoProductFoundByCityIdAndCategoryId = mapList(productFoundByCityIdAndCategoryId, ProductViewDTO.class);
+        return dtoProductFoundByCityIdAndCategoryId;
+    }
 
     @Autowired
     ModelMapper modelMapper;

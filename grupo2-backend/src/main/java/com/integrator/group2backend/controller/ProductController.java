@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -43,8 +45,20 @@ public class ProductController {
         }
     }*/
     @GetMapping
-    public ResponseEntity<List<ProductViewDTO>> listAllProducts() {
-        List<ProductViewDTO> searchedProducts = productService.listAllProducts();;
+    public ResponseEntity<List<ProductViewDTO>> listAllProducts(@RequestParam Map<String, String> allParams) {
+        List<ProductViewDTO> searchedProducts = new ArrayList<>();
+
+        // If empty bring all products
+        if(allParams.isEmpty()){
+            searchedProducts = productService.listAllProducts();
+        }else if(allParams.get("city") != null && allParams.get("category") != null){
+            searchedProducts.addAll(productService.listProductByCityIdAndCategoryId(Long.valueOf(allParams.get("city")), Long.valueOf(allParams.get("category"))));
+        }else if (allParams.get("city") == null){
+            searchedProducts.addAll(productService.listProductByCategoryId(Long.valueOf(allParams.get("category"))));
+        }else{
+            searchedProducts.addAll(productService.listProductByCityId(Long.valueOf(allParams.get("city"))));
+        }
+
         if (!(searchedProducts.isEmpty())) {
             logger.info("Se listaron todos los productos");
             return ResponseEntity.ok(searchedProducts);
@@ -55,8 +69,20 @@ public class ProductController {
     }
 
     @GetMapping("/random")
-    public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts() {
-        List<ProductViewDTO> searchedProducts = productService.listRandomAllProducts();
+    public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts(@RequestParam Map<String, String> allParams) {
+        List<ProductViewDTO> searchedProducts = new ArrayList<>();
+
+        // If empty bring all products
+        if(allParams.isEmpty()){
+            searchedProducts = productService.listAllProducts();
+        }else if(allParams.get("city") != null && allParams.get("category") != null){
+            searchedProducts.addAll(productService.listProductByCityIdAndCategoryId(Long.valueOf(allParams.get("city")), Long.valueOf(allParams.get("category"))));
+        }else if (allParams.get("city") == null){
+            searchedProducts.addAll(productService.listProductByCategoryId(Long.valueOf(allParams.get("category"))));
+        }else{
+            searchedProducts.addAll(productService.listProductByCityId(Long.valueOf(allParams.get("city"))));
+        }
+
         if (!(searchedProducts.isEmpty())) {
             logger.info("Se listaron todos los productos aleatoriamente");
             return ResponseEntity.ok(searchedProducts);
