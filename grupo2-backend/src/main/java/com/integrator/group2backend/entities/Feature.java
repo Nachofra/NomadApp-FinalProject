@@ -1,6 +1,7 @@
 package com.integrator.group2backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ public class Feature {
     private Long id;
     private String name;
 
+    @JsonIgnoreProperties(value = { "product" })
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image featureImage;

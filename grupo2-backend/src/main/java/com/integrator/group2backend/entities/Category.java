@@ -19,9 +19,11 @@ public class Category {
     private String title;
     private String description;
 
+    @JsonIgnoreProperties(value = { "product" })
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Image categoryImage;
 
+    @JsonIgnoreProperties(value = { "product" })
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Image categoryIllustration;
 
