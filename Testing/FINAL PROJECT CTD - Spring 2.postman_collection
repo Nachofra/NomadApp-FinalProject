@@ -652,7 +652,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\":\"Alquila en el centro de Mar del Plata\",\r\n    \"description\": \"Departamento 2 dormitorios\",\r\n    \"rooms\": 2,\r\n    \"beds\": 3,\r\n    \"bathrooms\": 1,\r\n    \"guests\": 6,\r\n    \"dailyPrice\": 50.00,\r\n    \"address\": \"San Martin\",\r\n    \"number\": 388,\r\n    \"floor\": 1,\r\n    \"apartment\": \"D\",\r\n    \"latitude\": null,\r\n    \"longitude\": null,\r\n    \"policies\":[{\r\n        \"name\":\"Cancelacion\",\r\n        \"policiItems\":[\r\n            {\r\n                \"name\":\"48 horas reembolso del 100%\"\r\n            },\r\n            {\r\n                \"name\":\"24 horas reembolso del 50%\"\r\n            },\r\n            {\r\n                \"name\":\"dia de ingreso sin reembolso\"\r\n            }\r\n        ]   \r\n        },{\r\n            \"name\":\"Normas de la casa\",\r\n        \"policiItems\":[\r\n            {\r\n                \"name\":\"No se permiten fiestas\"\r\n            }\r\n        ] \r\n        }],\r\n        \r\n\r\n    \"category\": {\r\n        \"id\": 3\r\n        },\r\n    \"city\":{\r\n        \"id\": 7\r\n    }    \r\n}",
+							"raw": "{\r\n    \"title\": \"Alquila en el centro de Mar del Plata\",\r\n    \"description\": \"Departamento 2 dormitorios\",\r\n    \"rooms\": 2,\r\n    \"beds\": 3,\r\n    \"bathrooms\": 1,\r\n    \"guests\": 6,\r\n    \"dailyPrice\": 50.0,\r\n    \"address\":\"San Martin\",\r\n    \"number\":456,\r\n    \"floor\":6,\r\n    \"apartment\":\"A\",\r\n    \"latitude\": null,\r\n    \"longitude\": null,\r\n    \"category\": {\r\n        \"id\": 12\r\n    },\r\n    \"city\": {\r\n        \"id\": 7\r\n    },\r\n    \"features\": [],\r\n    \"policies\": [{\r\n        \"id\": 9\r\n    },{\r\n        \"id\":10\r\n    }],\r\n    \"images\": [{\r\n        \"id\":13\r\n    },{\r\n        \"id\":14\r\n    }]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -737,7 +737,7 @@
 									"});\r",
 									"pm.test(\"Valido que el id sea = 13\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.id).to.eql(13);\r",
+									"    pm.expect(jsonData.id).to.eql(22);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -760,14 +760,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/product/13",
+							"raw": "localhost:8080/product/22",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"product",
-								"13"
+								"22"
 							]
 						}
 					},
