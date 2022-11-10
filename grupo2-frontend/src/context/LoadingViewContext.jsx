@@ -39,7 +39,6 @@ function LoadingViewProvider({ children }) {
       }}
     > 
         {children}
-
         <AnimatePresence  initial={false} mode="wait">
             {status === statusEnum.LOADING &&
                 <motion.div
