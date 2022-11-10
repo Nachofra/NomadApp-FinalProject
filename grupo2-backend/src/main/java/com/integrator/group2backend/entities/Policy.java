@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,7 +25,7 @@ public class Policy {
     @JsonIgnoreProperties(value = { "policy" })
     private List<PolicyItem> policyItems;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private Product product;
+    @ManyToMany(mappedBy = "policies", cascade = CascadeType.MERGE)
+    @JsonIgnore
+    private Set<Product> products;
 }

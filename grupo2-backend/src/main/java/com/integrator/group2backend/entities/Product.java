@@ -39,9 +39,13 @@ public class Product {
     @JsonIgnore
     private Set<Image> images = new HashSet<>();
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<Policy> policies = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "PolicyByProduct",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "policy_id")
+    )
+    private Set<Policy> policies;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "city_id", referencedColumnName = "id")
