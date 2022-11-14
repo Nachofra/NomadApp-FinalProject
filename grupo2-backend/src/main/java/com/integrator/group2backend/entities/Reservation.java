@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.util.Date;
 
 @Getter
@@ -15,7 +16,7 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double finalPrice;
-    private Date reservationDate;
+    private Time checkInTime;
     private Date checkInDate;
     private Date checkOutDate;
 
