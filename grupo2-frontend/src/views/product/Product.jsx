@@ -15,7 +15,8 @@ import { Calendar } from '../../components/Calendar/Calendar'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import { PolicyList } from './components/PolicyList'
 import { useLoadingViewContext } from '../../context/LoadingViewContext'
-import { FetchRoutes } from '../../guard/Routes'
+import { FetchRoutes, PrivateRoutes } from '../../guard/Routes'
+import { useSearchContext } from '../../context/SearchContext'
 
 export const Product = () => {
 
@@ -23,14 +24,15 @@ export const Product = () => {
         status,
         startLoading,
         loadDone,
-        triggerError
+        triggerError,
       } = useLoadingViewContext()
+
+    const {filters, handleDates} = useSearchContext()
+
 
     const navigate = useNavigate();
     const [ data, setData ] = useState()
     const {id} = useParams();
-
-    console.log(data)
 
     useEffect(() => {
         const fetchData = async () =>{
@@ -176,20 +178,22 @@ export const Product = () => {
         <div className='flex flex-col w-full items-center justify-center gap-4
         md:gap-6 lg:flex-row lg:justify-start'>
             <Calendar
-            // startDate={filters.date.from}
-            // endDate={filters.date.to}
-            // setStartDate={handleDateFrom}
-            // setEndDate={handleDateTo}
+            startDate={filters.date.from}
+            endDate={filters.date.to}
+            afterChange={(dateFrom, dateTo) => { handleDates(dateFrom, dateTo)}}
             monthsDisplayed={width > 660 ? 2 : 1 }
             />
             <div className='gap-2 flex flex-col items-center md:flex-row 
             lg:px-4 lg:py-10 lg:border-2 lg:border-violet-700 lg:rounded-lg
             lg:bg-white lg:mx-auto'>
                 <p className='text-gray-600 md:mr-2'>Select the date and start your reservation</p>
-                <button className='flex items-center px-4 py-3 bg-violet-700 rounded-lg'>
+                <Link
+                to={ PrivateRoutes.RESERVEID(data.id)}
+                className='flex items-center px-4 py-3 bg-violet-700 rounded-lg'
+                >
                     <p className='mr-2 text-white font-medium'>Continue</p>
                     <ArrowRightIcon className='w-6 h-6 text-white' />
-                </button>
+                </Link>
             </div>
         </div>
     </BaseLayout>

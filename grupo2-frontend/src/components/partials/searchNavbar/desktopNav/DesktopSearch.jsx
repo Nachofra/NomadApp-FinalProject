@@ -22,7 +22,7 @@ Date.prototype.formatMMDDYYYY = function(){
   "/" +  this.getFullYear();
 }
 
-const handleDate = date => date? date.formatMMDDYYYY() : 'Any';
+const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
 
   return (
     <section className='w-screen fixed bottom-4 flex items-center justify-center'> 
@@ -49,7 +49,7 @@ const handleDate = date => date? date.formatMMDDYYYY() : 'Any';
         <DeskSearchbarModal
           active={filters.date.from !== null | filters.date.to !== null}
           icon={<CalendarDaysIcon className='w-7 h-7 text-violet-700' />}
-          text={`${handleDate(filters.date.from)} - ${handleDate(filters.date.to)}`}
+          text={`${handleDateFormat(filters.date.from)} - ${handleDateFormat(filters.date.to)}`}
           placeholder="Any date - any date"
         >
           <div className='h-full w-16 p-6'>
