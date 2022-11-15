@@ -12,7 +12,7 @@ import java.util.Set;
 @Setter
 @Getter
 @Entity
-@Table(name = "city")
+@Table(name = "City")
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +28,8 @@ public class City {
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Country country;
+
+    @OneToOne(mappedBy = "city")
+    @JsonIgnore
+    private User user;
 }
