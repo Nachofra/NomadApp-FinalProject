@@ -1,33 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+// import { useState } from 'react'
+import { SearchProvider } from './context/SearchContext'
+import { Auth, Home, Product } from './views'
+import { RouteNotFound } from './utilities/RouteNotFound'
+import { AuthGuard } from './guard/AuthGuard'
+import { Route } from 'react-router-dom'
+import { PublicRoutes } from './guard/Routes'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
 
+function App() {
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <RouteNotFound>
+      <Route path={PublicRoutes.HOME} element={<Home />} />
+      <Route path={PublicRoutes.AUTH} element={<Auth />} />
+      <Route path={PublicRoutes.PRODUCT} element={<Product />} />
+      
+      <Route element={<AuthGuard />}></Route>
+  </RouteNotFound>
   )
 }
 

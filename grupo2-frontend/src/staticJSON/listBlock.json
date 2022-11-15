@@ -1,0 +1,243 @@
+[
+  {
+    "id": 1,
+    "img": "/mockup/img/house1.jpg",
+    "category": {
+      "id": 2,
+      "title": "House",
+      "description": "House in general",
+      "imageUrl": "asdfgv"
+    },
+    "title": "Center House",
+    "location": {
+      "id": 1,
+      "adress": "Calle Falsa",
+      "number": 123,
+      "floor": 10,
+      "apartment": "A",
+      "city": {
+        "id": 1,
+        "name": "Springfield",
+        "province": {
+          "id": 1,
+          "name": "Awckland",
+          "country": { "id": 1, "name": "New Zealand" }
+        }
+      }
+    },
+    "description": "House overlooking the river, Pent house Apartment  at 50 meters from Rambla (waterfront). Walking distance to Estadio Centenario.  Terrace with seaview + balcony .",
+    "policies" : [
+      {
+        "name": "House norms",
+        "list" : ["Check out 10:00", "No parties allowed", "No smoking"]
+      },
+      {
+        "name": "Health and safety",
+        "list" : ["Social distance and coronavirus protocol applies", "Smoke detector", "Security deposit"]
+      },
+      {
+        "name": "Refund policy",
+        "list" : ["Refunds will only be emitted 48hs before reservation date", "Cashback will be made in the same account", "Damages will be descounted"]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "img": "/mockup/img/building1.jpg",
+    "category": {
+      "id": 3,
+      "title": "Cottage",
+      "description": "Cottage in general",
+      "imageUrl": "asdfgv"
+    },
+    "title": "Apartment",
+    "location": {
+      "id": 2,
+      "adress": "rue",
+      "number": 22,
+      "floor": 0,
+      "apartment": "A",
+      "city": {
+        "id": 2,
+        "name": "Paris",
+        "province": {
+          "id": 2,
+          "name": "Paris",
+          "country": { "id": 1, "name": "France" }
+        }
+      }
+    },
+    "description": "Country house in Paris"
+  },
+  {
+    "id": 3,
+    "img": "/mockup/img/house3.jpg",
+    "category": {
+      "id": 1,
+      "title": "Apartment",
+      "description": "Departamentos en general",
+      "imageUrl": "asdfgv"
+    },
+    "title": "Country House",
+    "location": {
+      "id": 3,
+      "adress": "Street",
+      "number": 125453,
+      "floor": 10,
+      "apartment": "A",
+      "city": {
+        "id": 3,
+        "name": "Canberra",
+        "province": {
+          "id": 3,
+          "name": "Canberra",
+          "country": { "id": 3, "name": "Australia" }
+        }
+      }
+    },
+    "description": "Country house in Canberra"
+  },
+  {
+    "id": 4,
+    "img": "/mockup/img/house2.jpg",
+    "category": {
+      "id": 4,
+      "title": "Deluxe",
+      "description": "Deluxe in general",
+      "imageUrl": "asdfgv"
+    },
+    "title": "Deluxe House",
+    "location": {
+      "id": 4,
+      "adress": "Street",
+      "number": 14523,
+      "floor": 150,
+      "apartment": "F",
+      "city": {
+        "id": 4,
+        "name": "Manhattan",
+        "province": {
+          "id": 4,
+          "name": "New York",
+          "country": { "id": 4, "name": "United States" }
+        }
+      }
+    },
+    "description": "Deluxe house in New York"
+  },
+  {
+    "id": 5,
+    "img": "/mockup/img/building2.jpg",
+    "category": {
+      "id": 1,
+      "title": "Apartment",
+      "description": "Departamentos en general",
+      "imageUrl": "asdfgv"
+    },
+    "title": "Apartment",
+    "location": {
+      "id": 5,
+      "adress": "Calle que no existe",
+      "number": 123,
+      "floor": 10,
+      "apartment": "A",
+      "city": {
+        "id": 5,
+        "name": "Madrid",
+        "province": {
+          "id": 5,
+          "name": "Madrid",
+          "country": { "id": 5, "name": "Spain" }
+        }
+      }
+    },
+    "description": "Apartment in Madrid"
+  },
+  {
+    "id": 6,
+    "img": "/mockup/img/building3.jpg",
+    "category": {
+      "id": 1,
+      "title": "Apartment",
+      "description": "Departamentos en general",
+      "imageUrl": "asdfgv"
+    },
+    "title": "Apartment",
+    "location": {
+      "id": 6,
+      "adress": "Calle Tango",
+      "number": 123,
+      "floor": 10,
+      "apartment": "A",
+      "city": {
+        "id": 6,
+        "name": "Buenos Aires",
+        "province": {
+          "id": 6,
+          "name": "Ciudad Autonoma de Buenos Aires",
+          "country": { "id": 6, "name": "Argentina" }
+        }
+      }
+    },
+    "description": "Apartment in Madrid"
+  },
+  {
+    "id": 7,
+    "img": "/mockup/img/house4.jpg",
+    "category": {
+      "id": 2,
+      "title": "House",
+      "description": "House in general",
+      "imageUrl": "asdfgv"
+    },
+    "title": "Country House",
+    "location": {
+      "id": 7,
+      "adress": "Calle Cuarteto",
+      "number": 123,
+      "floor": 10,
+      "apartment": "A",
+      "city": {
+        "id": 7,
+        "name": "Cordoba",
+        "province": {
+          "id": 7,
+          "name": "Cordoba",
+          "country": { 
+            "id": 7, 
+            "name": "Argentina" 
+          }
+        }
+      }
+    },
+    "description": "Apartment in Madrid"
+  },
+  {
+    "id": 8,
+    "img": "/mockup/img/building4.jpg",
+    "category": {
+      "id": 1,
+      "title": "Apartment",
+      "description": "Departamentos en general",
+      "imageUrl": "asdfgv"
+    },
+    "title": "Apartment",
+    "location": {
+      "id": 1,
+      "adress": "Calle Falsa",
+      "number": 123,
+      "floor": 10,
+      "apartment": "A",
+      "city": {
+        "id": 1,
+        "name": "Springfield",
+        "province": {
+          "id": 1,
+          "name": "Awckland",
+          "country": { "id": 1, "name": "New Zealand" }
+        }
+      }
+    },
+    "description": "Apartment in Madrid"
+  }
+]
