@@ -4,14 +4,14 @@ import { CheckBadgeIcon, CheckIcon, UserGroupIcon } from '@heroicons/react/24/so
 import { Fragment } from 'react'
 import './SearchbarModal.scss'
 
-export default function DeskSearchbarModal({children, text, icon, active, placeholder}) {
+export default function DeskSearchbarModal({children, text, icon, active, placeholder, flowBottom}) {
   return (
     <div className="relative">
       <Popover className="relative">
         {({ open, close }) => (
           <>
             <Popover.Button
-              className={`mr-4
+              className={`z-[-1]
                 group inline-flex items-center rounded-md  text-base
                  hover:text-opacity-100 focus:outline-none focus-visible:ring-2 
                  focus-visible:ring-white focus-visible:ring-opacity-75
@@ -35,17 +35,20 @@ export default function DeskSearchbarModal({children, text, icon, active, placeh
               leaveFrom="opacity-100 translate-y-0"
               leaveTo="opacity-0 translate-y-1"
             >
-              <Popover.Panel className="absolute left-1/2 -top-10
-              transform -translate-y-[100%] -translate-x-1/2
-              flex items-start justify-start circleBtnModel
-              px-4 pt-4 pb-10 rounded-lg shadow-md bg-white">
-                  {children}
-                  <button onClick={close}
-                  className="absolute shadow-md w-[3.25rem] h-[3.25rem] bg-violet-700 z-10
-                  rounded-full left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2
-                  flex items-center justify-center">
-                    <CheckIcon className='w-8 text-white' />
-                  </button>
+              <Popover.Panel className={`absolute left-1/2
+              transform -translate-x-1/2
+              flex items-start justify-start 
+              px-4 rounded-lg shadow-md bg-white z-50
+              ${flowBottom ? 'translate-y-[100%] -bottom-10 circleBtnModelBottom pb-4 pt-10' 
+              : '-translate-y-[100%] -top-10 circleBtnModel pt-4 pb-10'}`} >
+                {children}
+                <button onClick={close}
+                className={`absolute shadow-md w-[3.25rem] h-[3.25rem] bg-violet-700 z-10
+                rounded-full left-1/2 -translate-x-1/2
+                flex items-center justify-center
+                ${flowBottom ? 'top-0 -translate-y-1/2' : 'bottom-0 translate-y-1/2'}`}>
+                  <CheckIcon className='w-8 text-white' />
+                </button>
               </Popover.Panel>
             </Transition>
           </>

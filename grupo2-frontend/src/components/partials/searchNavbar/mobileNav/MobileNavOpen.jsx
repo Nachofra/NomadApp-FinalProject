@@ -29,7 +29,7 @@ export const MobileNavOpen = ({open, setOpen}) => {
           // setEndDate={handleDateTo}
           afterChange={(dateFrom, dateTo) => { handleDates(dateFrom, dateTo)}}
           monthsDisplayed={1}
-        />
+        /> 
         </div>
       </CollapsableMenu>
     </MobileNavModal>
