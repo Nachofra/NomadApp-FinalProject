@@ -18,8 +18,8 @@ import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private AuthenticationConfig authenticationConfig;
-    private RestAuthEntryPoint restAuthEntryPoint;
+    private final AuthenticationConfig authenticationConfig;
+    private final RestAuthEntryPoint restAuthEntryPoint;
 
     @Autowired
     public WebSecurity(AuthenticationConfig authenticationConfig, RestAuthEntryPoint restAuthEntryPoint) {
@@ -37,7 +37,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         httpSecurity.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class); //permito que pasen las peticiones OPTIONS
         httpSecurity
                 .csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/user/register").permitAll() //permito post sin token
+                .antMatchers(HttpMethod.POST, "/user/register").permitAll()//permito post sin token
+                .antMatchers(HttpMethod.GET, "/user/verify").permitAll()//permito verificacion sin token
 
                 .anyRequest().authenticated().and()                    //filtra todas las peticiones para validar token
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

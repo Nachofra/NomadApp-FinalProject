@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthenticationConfig implements UserDetailsService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public AuthenticationConfig(UserRepository userRepository) {
