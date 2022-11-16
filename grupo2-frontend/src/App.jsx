@@ -14,9 +14,9 @@ function App() {
       <Route path={PublicRoutes.HOME} element={<Home />} />
       <Route path={PublicRoutes.AUTH} element={<Auth />} />
       <Route path={PublicRoutes.PRODUCT} element={<Product />} />
-      
+      <Route path={PrivateRoutes.RESERVE} element={<Reserve />} />
+
       <Route element={<AuthGuard />}>
-        <Route path={PrivateRoutes.RESERVE} element={<Reserve />} />
       </Route>
   </RouteNotFound>
   )
