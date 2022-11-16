@@ -26,7 +26,7 @@ Date.prototype.formatMMDDYYYY = function(){
 const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
 
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false} mode="wait">
     {!hide && 
     <motion.section
     initial={{ y: -100, opacity: 0 }}

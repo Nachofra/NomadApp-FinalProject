@@ -9,7 +9,7 @@ export const MobileSearch = ({hide}) => {
     const [filtersTab, setFiltersTab] = useState(false)
 
     return ( 
-      <AnimatePresence>
+      <AnimatePresence initial={false} mode="wait" >
       {!hide && 
       <motion.section
       initial={{ y: -100, opacity: 0 }}
