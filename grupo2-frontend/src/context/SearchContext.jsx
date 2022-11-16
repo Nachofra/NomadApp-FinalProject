@@ -61,7 +61,6 @@ export const SearchProvider = ({ children }) => {
     const handleDates = ( dateFrom, dateTo )=> {
       console.log(dateFrom, dateTo)
       setFilters({...filters, date:{ from:dateFrom, to:dateTo}})
-  
     }
     
     return (
