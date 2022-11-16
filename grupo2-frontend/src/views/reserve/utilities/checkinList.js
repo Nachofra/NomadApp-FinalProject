@@ -1,5 +1,10 @@
 export const checkinList = [
     {
+        id: 0,
+        value: '0:00 AM',
+        end: '1:00 AM'
+      },
+    {
       id: 1,
       value: '1:00 AM',
       end: '2:00 AM'
