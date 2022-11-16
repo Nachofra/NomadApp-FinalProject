@@ -34,7 +34,7 @@ export const Footer = () => {
           ))}
       </li>
     </div>
-      <img src='/logo/logo_md_variant_outline.svg' 
+      <img src={`${FetchRoutes.BUCKET}/logo/logo_md_variant_outline.svg` }
       alt='logo_outline nomad'
       className='w-full -mb-[10%] pb-16 md:pb-0'
       />
