@@ -21,4 +21,5 @@ public class Roles {
     @OneToMany(mappedBy = "roles", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<User> users = new HashSet<>();
+    //ROLE_USER,ROLE_ADMIN;
 }

@@ -29,7 +29,7 @@ public class City {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Country country;
 
-    @OneToOne(mappedBy = "city")
     @JsonIgnore
-    private User user;
+    @OneToMany(mappedBy = "city", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<User> users = new HashSet<>();
 }
