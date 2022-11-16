@@ -93,7 +93,7 @@ export const Reserve = () => {
           <h3 className='text-2xl md:text-3xl
           font-medium text-gray-700 mb-4'>Billing information</h3>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6 p-4 md:p-8
-          rounded-md border-2 border-violet-500 bg-white'>
+          rounded-xl border-2 border-violet-500 bg-white'>
             <Input
               label='Name'
               id='reservation_name'
