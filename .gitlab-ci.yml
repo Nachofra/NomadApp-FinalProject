@@ -3,6 +3,10 @@ stages:
   - test
   - deploy
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+
 build:maven:
   stage: build
   image: maven:3.8.6-openjdk-18
@@ -77,4 +81,3 @@ deploy:vite:
     - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop; sudo rm -r /tmp/frontend-backups/*; sudo mv /var/www/html/* /tmp/frontend-backups/"
     - scp -o StrictHostKeyChecking=no builded-frontend.zip ubuntu@$FRONTEND_IPADDRESS:/var/www/html
     - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "cd /var/www/html/; sudo unzip builded-frontend.zip; sudo mv grupo2-frontend/dist/* .; sudo rm -vr builded-frontend.zip grupo2-frontend/; sudo /etc/init.d/apache2 start"
-

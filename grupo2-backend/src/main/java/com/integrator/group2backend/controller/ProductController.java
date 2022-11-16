@@ -13,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -82,6 +79,7 @@ public class ProductController {
         }else{
             searchedProducts.addAll(productService.listProductByCityId(Long.valueOf(allParams.get("city"))));
         }
+        Collections.shuffle(searchedProducts);
 
         if (!(searchedProducts.isEmpty())) {
             logger.info("Se listaron todos los productos aleatoriamente");
