@@ -27,7 +27,7 @@ public class Group2BackendApplication extends SpringBootServletInitializer {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://18.217.21.141", "http://ec2-18-217-21-141.us-east-2.compute.amazonaws.com", "http://localhost:5173").allowedMethods("*").allowedHeaders("*");
+				registry.addMapping("/**").allowedOrigins("http://18.217.21.141", "http://ec2-18-217-21-141.us-east-2.compute.amazonaws.com", "http://localhost:5173", "http://10.0.10.10").allowedMethods("*").allowedHeaders("*");
 			}
 		};
 	}
