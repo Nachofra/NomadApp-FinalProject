@@ -3,11 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { BaseLayout } from '../../components/layout/BaseLayout'
 import { Footer, HeaderNav, SearchNav } from '../../components/partials'
-import listBlock from '@/staticJSON/listBlock.json'
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'
 import { ArrowRightIcon, MapPinIcon, PhotoIcon, StarIcon } from '@heroicons/react/24/outline'
 import { FeatureItem } from '../../components/featureItem/FeatureItem'
-import { motion } from 'framer-motion'
 import { ImageSlider } from '../../components/imageSlider/ImageSlider'
 import { ImageGallery } from '../../components/imageGallery/ImageGallery'
 import Modal from '../../components/modal/Modal'
@@ -58,8 +56,8 @@ export const Product = () => {
     <>
     <HeaderNav />
     <BaseLayout
-        padding='pt-20 lg:pt-24 md:px-6 lg:px-8'
-        wrapperClassName="bg-violet-800"
+        padding='mt-16 lg:mt-24 md:px-6 lg:px-8'
+        wrapperClassName="bg-violet-800 sticky top-16 lg:top-24 z-20"
         className="flex items-center justify-between"
     >
         <div className='flex flex-col items-start justify-center py-4'>
@@ -211,7 +209,6 @@ export const Product = () => {
         </div>
     </BaseLayout>
     <Footer />
-    <SearchNav />
 </>
   )}
 
