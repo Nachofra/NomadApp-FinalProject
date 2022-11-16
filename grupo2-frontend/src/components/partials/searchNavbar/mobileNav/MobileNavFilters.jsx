@@ -4,7 +4,6 @@ import { useSearchContext } from '../../../../context/SearchContext'
 import { PropertyTypeSelect } from '../components/PropertyTypeSelect'
 import { CountSelect } from '../components/CountSelect'
 import { CollapsableMenu } from '../../../collapsableMenu/CollapsableMenu'
-import listCategory from '@/staticJSON/listCategory.json'
 export const MobileNavFilters = ({open, setOpen}) => {
 
     const {filters, setFilters, applyCategory} = useSearchContext()
