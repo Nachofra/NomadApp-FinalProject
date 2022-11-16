@@ -26,8 +26,8 @@ import static com.integrator.group2backend.security.Constants.TOKEN_EXPIRATION_T
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private AuthenticationManager authenticationManager;
-    private ObjectMapper objectMapper;
+    private final AuthenticationManager authenticationManager;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {

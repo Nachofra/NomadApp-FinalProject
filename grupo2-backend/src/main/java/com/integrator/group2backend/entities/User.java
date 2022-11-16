@@ -27,6 +27,9 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
     private String password;
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+    private boolean enabled;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "city_id", referencedColumnName = "id")
@@ -51,7 +54,7 @@ public class User implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
-        return this.getEmail();
+        return this.getFirstName();
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -75,6 +78,6 @@ public class User implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 }
