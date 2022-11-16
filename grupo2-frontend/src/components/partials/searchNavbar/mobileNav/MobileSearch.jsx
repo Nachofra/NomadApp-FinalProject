@@ -12,9 +12,9 @@ export const MobileSearch = ({hide}) => {
       <AnimatePresence initial={false} mode="wait" >
       {!hide && 
       <motion.section
-      initial={{ y: -100, opacity: 0 }}
+      initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      exit={{ y: 100, opacity: 0 }}
+      exit={{ y: -50, opacity: 0 }}
       className='w-screen fixed bottom-4 flex items-center justify-center'>
         <div
           className={`transition-all w-[94vw] max-w-[900px]  

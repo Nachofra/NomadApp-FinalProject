@@ -4,7 +4,7 @@ import { CheckBadgeIcon, CheckIcon, UserGroupIcon } from '@heroicons/react/24/so
 import { Fragment } from 'react'
 import './SearchbarModal.scss'
 
-export default function DeskSearchbarModal({children, text, icon, active, placeholder, flowBottom}) {
+export default function DeskSearchbarModal({children, text, icon, active, placeholder, flowBottom, panelClassName}) {
   return (
     <div className="relative">
       <Popover className="relative">
@@ -40,7 +40,7 @@ export default function DeskSearchbarModal({children, text, icon, active, placeh
               flex items-start justify-start 
               px-4 rounded-lg shadow-md bg-white z-50
               ${flowBottom ? 'translate-y-[100%] -bottom-10 circleBtnModelBottom pb-4 pt-10' 
-              : '-translate-y-[100%] -top-10 circleBtnModel pt-4 pb-10'}`} >
+              : '-translate-y-[100%] -top-10 circleBtnModel pt-4 pb-10'} ${panelClassName}`} >
                 {children}
                 <button onClick={close}
                 className={`absolute shadow-md w-[3.25rem] h-[3.25rem] bg-violet-700 z-10

@@ -15,7 +15,7 @@ export const MobileNavOpen = ({open, setOpen}) => {
         question='Find locations'
       >
         <div className='p-2 my-4'>
-        <LocationDatalist />
+        <LocationDatalist  origin={filters} setOrigin={setFilters} />
         </div>
       </CollapsableMenu>
       <CollapsableMenu

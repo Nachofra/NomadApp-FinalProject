@@ -29,9 +29,9 @@ const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
     <AnimatePresence initial={false} mode="wait">
     {!hide && 
     <motion.section
-    initial={{ y: -100, opacity: 0 }}
+    initial={{ y: -50, opacity: 0 }}
     animate={{ y: 0, opacity: 1 }}
-    exit={{ y: 100, opacity: 0 }}
+    exit={{ y: -50, opacity: 0 }}
     className='w-screen fixed bottom-4 flex items-center justify-center'> 
       <div
         className={`w-[94vw] max-w-[900px]  
@@ -49,7 +49,7 @@ const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
           <div className='w-96 flex flex-col items-center'>
             <p className='text-violet-700 font-semibold uppercase text-3xl'>Find places</p>
             <p className='mb-4 text-lg text-gray-600'>Select one from the list</p>
-          <LocationDatalist flowTop />
+          <LocationDatalist flowTop origin={filters} setOrigin={setFilters}  />
           </div>
         </DeskSearchbarModal>
         <DeskSearchbarModal
