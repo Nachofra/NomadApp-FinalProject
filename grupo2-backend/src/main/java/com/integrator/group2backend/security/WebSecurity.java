@@ -39,7 +39,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/user/register").permitAll()//permito post sin token
                 .antMatchers(HttpMethod.GET, "/user/verify").permitAll()//permito verificacion sin token
-                .antMatchers(HttpMethod.GET, "/login").permitAll()
+                    .antMatchers(HttpMethod.POST, "/login").permitAll()
 
                 .anyRequest().authenticated().and()                    //filtra todas las peticiones para validar token
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
