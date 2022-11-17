@@ -4,8 +4,10 @@ import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Category;
 import com.integrator.group2backend.entities.City;
 import com.integrator.group2backend.entities.Product;
+import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.service.CategoryService;
 import com.integrator.group2backend.service.CityService;
+import com.integrator.group2backend.service.ReservationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.integrator.group2backend.service.ProductService;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,28 +26,41 @@ public class ProductController {
     private final ProductService productService;
     private final CityService cityService;
     private final CategoryService categoryService;
+    private final ReservationService reservationService;
     @Autowired
-    public ProductController(ProductService productService, CityService cityService, CategoryService categoryService){
+    public ProductController(ProductService productService, CityService cityService, CategoryService categoryService, ReservationService reservationService){
         this.productService = productService;
         this.cityService = cityService;
         this.categoryService = categoryService;
+        this.reservationService = reservationService;
     }
 
-    /*@GetMapping
-    public ResponseEntity<List<Product>> listAllProducts() {
-        List<Product> searchedProducts = productService.listAllProducts();
+    @GetMapping
+    public ResponseEntity<List<ProductViewDTO>> listAllProducts() {
+        List<ProductViewDTO> searchedProducts = productService.listAllProducts();
         if (!(searchedProducts.isEmpty())) {
             logger.info("Se listaron todos los productos");
             return ResponseEntity.ok(searchedProducts);
         } else {
             logger.error("Error al listar todos los productos");
-            return ResponseEntity.ok(searchedProducts);
+            return ResponseEntity.badRequest().build();
         }
-    }*/
-    @GetMapping
+    }
+    @GetMapping("/random")
+    public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts() {
+        List<ProductViewDTO> searchedProducts = productService.listRandomAllProducts();
+        if (!(searchedProducts.isEmpty())) {
+            logger.info("Se listaron todos los productos aleatoriamente");
+            return ResponseEntity.ok(searchedProducts);
+        } else {
+            logger.error("Error al listar todos los productos aleatoriamente");
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    /*@GetMapping
     public ResponseEntity<List<ProductViewDTO>> listAllProducts(@RequestParam Map<String, String> allParams) {
         List<ProductViewDTO> searchedProducts = new ArrayList<>();
-
+        System.out.println(allParams);
         // If empty bring all products
         if(allParams.isEmpty()){
             searchedProducts = productService.listAllProducts();
@@ -64,7 +80,6 @@ public class ProductController {
             return ResponseEntity.ok(searchedProducts);
         }
     }
-
     @GetMapping("/random")
     public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts(@RequestParam Map<String, String> allParams) {
         List<ProductViewDTO> searchedProducts = new ArrayList<>();
@@ -87,17 +102,6 @@ public class ProductController {
         } else {
             logger.error("Error al listar todos los productos aleatoriamente");
             return ResponseEntity.ok(searchedProducts);
-        }
-    }
-    /*@GetMapping("/{id}")
-    public ResponseEntity<Product> searchProductById(@PathVariable("id") Long productId){
-        Optional<Product> productFound = productService.searchProductById(productId);
-        if(productFound.isPresent()){
-            logger.info("Se encontro correctamente el producto con id " + productId);
-            return ResponseEntity.ok(productFound.get());
-        }else{
-            logger.error("El producto especificado no existe con id " + productId);
-            return ResponseEntity.badRequest().build();
         }
     }*/
     @GetMapping("/{id}")
@@ -165,6 +169,47 @@ public class ProductController {
         }
         return ResponseEntity.ok(this.productService.listProductByCategoryId(id));
     }
-
-
+    @RequestMapping(params = "category")
+    public ResponseEntity<List<ProductViewDTO>>  searchProductByCategoryId (@RequestParam Long category){
+        List<ProductViewDTO> searchedProductsByCategory = productService.listProductByCategoryId(category);
+        if (!searchedProductsByCategory.isEmpty()){
+            logger.info("Se encontraron los productos correspondientes a la Categoria con ID " + category);
+            return ResponseEntity.ok(searchedProductsByCategory);
+        }
+        logger.error("NO se encontraron los productos correspondientes a la Categoria con ID " + category);
+        return ResponseEntity.badRequest().build();
+    }
+    @RequestMapping(params = "city")
+    public ResponseEntity<List<ProductViewDTO>>  searchProductByCityId (@RequestParam String city){
+        List<ProductViewDTO> searchedProductsByCityId = productService.listProductByCityId(Long.parseLong(city));
+        if (!searchedProductsByCityId.isEmpty()){
+            logger.info("Se encontraron los productos correspondientes a la Ciudad con ID " + city);
+            return ResponseEntity.ok(searchedProductsByCityId);
+        }
+        logger.error("No se encontraron los productos correspondientes a la Ciudad con ID " + city);
+        return ResponseEntity.badRequest().build();
+    }
+    @RequestMapping(params = {"city" , "category"})
+    public ResponseEntity<List<ProductViewDTO>>  searchProductByCityIdAndCategoryId (@RequestParam Long city, @RequestParam Long category){
+        List<ProductViewDTO> searchedProductsByCityIdAndCategoryId = productService.listProductByCityIdAndCategoryId(city, category);
+        if (!searchedProductsByCityIdAndCategoryId.isEmpty()){
+            logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " y a la Categoria con ID " + category);
+            return ResponseEntity.ok(searchedProductsByCityIdAndCategoryId);
+        }
+        logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city + " y a la Categoria con ID " + category);
+        return ResponseEntity.badRequest().build();
+    }
+    @RequestMapping(params = {"city_id" , "checkInDate" , "checkOutDate"})
+    public ResponseEntity<List<ProductViewDTO>>  findByCityIdAndCheckInDateAndCheckOutDate (@RequestParam Long city_id, @RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date formattedCheckInDate = formatter.parse(checkInDate);
+        Date formattedCheckOutDate = formatter.parse(checkOutDate);
+        List<ProductViewDTO> searchedProductByCityIdCheckInDateCheckOutDate = productService.searchProductsByCityIdCheckInDateCheckOutDate(city_id, formattedCheckInDate, formattedCheckOutDate);
+        if (!searchedProductByCityIdCheckInDateCheckOutDate.isEmpty()){
+            logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city_id + " en las fechas especificadas.");
+            return ResponseEntity.ok(searchedProductByCityIdCheckInDateCheckOutDate);
+        }
+        logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city_id + " en las fechas especificadas.");
+        return ResponseEntity.badRequest().build();
+    }
 }
