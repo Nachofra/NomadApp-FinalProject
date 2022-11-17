@@ -42,7 +42,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
         if(!credentials.isEnabled()){
             response.getWriter().write("Correo no verificado");
         }
-        request.
+
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
