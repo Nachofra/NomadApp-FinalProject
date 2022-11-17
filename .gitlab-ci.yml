@@ -39,8 +39,11 @@ release:maven:
   image: docker:latest
   services:
     - name: docker:dind
+      alias: thedockerhost
   variables:
-    DOCKER_DRIVER: "overlay"
+    DOCKER_HOST: tcp://thedockerhost:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
   before_script:
     - docker version
     - "docker info"
@@ -56,8 +59,11 @@ release:vite:
   image: docker:latest
   services:
     - name: docker:dind
+      alias: thedockerhost
   variables:
-    DOCKER_DRIVER: "overlay"
+    DOCKER_HOST: tcp://thedockerhost:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
   before_script:
     - docker version
     - "docker info"
