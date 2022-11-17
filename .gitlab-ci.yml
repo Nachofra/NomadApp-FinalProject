@@ -35,7 +35,7 @@ build:vite:
       - grupo2-frontend/dist
 
 release:maven:
-  stage: deploy
+  stage: release
   image: docker:latest
   services:
     - docker:dind
@@ -50,7 +50,7 @@ release:maven:
     - "docker logout ${CI_REGISTRY}"
 
 release:vite:
-  stage: deploy
+  stage: release
   image: docker:latest
   services:
     - docker:dind
