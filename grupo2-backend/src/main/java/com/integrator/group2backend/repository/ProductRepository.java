@@ -17,6 +17,9 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
     List<Product> findByCityId(Long id);
     List<Product> findByCategoryId(Long id);
     List<Product> findByCityIdAndCategoryId(Long city_id, Long category_id);
-    @Query(value = "SELECT * FROM product p INNER JOIN reservation r ON r.product_id = p.id WHERE p.city_id = %:city_id% AND r.check_in_date >= %:checkInDate% AND r.check_out_date <= %:checkOutDate%", nativeQuery = true)
-    List<Product> searchProductByCityIdCheckInDateCheckOutDate(@Param("city_id") Long city_id, @Param("checkInDate") Date checkInDate, @Param("checkOutDate") Date checkOutDate);
+    List<Product> findByCityIdAndCategoryIdAndGuests(Long city_id, Long category_id, Integer guests);
+    @Query(value = "SELECT * FROM product p LEFT JOIN reservation r ON p.id = r.product_id " +
+            "WHERE p.city_id = :city AND r.check_in_date >= :checkInDate AND r.check_out_date <= :checkOutDate",
+            nativeQuery = true)
+    List<Product> searchProductByCityCheckInDateCheckOutDate(@Param("city") Long city, @Param("checkInDate") Date checkInDate, @Param("checkOutDate") Date checkOutDate);
 }

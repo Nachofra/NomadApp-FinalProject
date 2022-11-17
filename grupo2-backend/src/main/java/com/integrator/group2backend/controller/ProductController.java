@@ -8,14 +8,17 @@ import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.service.CategoryService;
 import com.integrator.group2backend.service.CityService;
 import com.integrator.group2backend.service.ReservationService;
+import org.hibernate.type.DateType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.integrator.group2backend.service.ProductService;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -193,23 +196,36 @@ public class ProductController {
     public ResponseEntity<List<ProductViewDTO>>  searchProductByCityIdAndCategoryId (@RequestParam Long city, @RequestParam Long category){
         List<ProductViewDTO> searchedProductsByCityIdAndCategoryId = productService.listProductByCityIdAndCategoryId(city, category);
         if (!searchedProductsByCityIdAndCategoryId.isEmpty()){
-            logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " y a la Categoria con ID " + category);
+            logger.info("Se encontraron los productos correspondientes a la Ciudad con ID " + city + " y a la Categoria con ID " + category);
             return ResponseEntity.ok(searchedProductsByCityIdAndCategoryId);
         }
-        logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city + " y a la Categoria con ID " + category);
+        logger.error("No se encontraron los productos correspondientes a la Ciudad con ID " + city + " y a la Categoria con ID " + category);
         return ResponseEntity.badRequest().build();
     }
-    @RequestMapping(params = {"city_id" , "checkInDate" , "checkOutDate"})
-    public ResponseEntity<List<ProductViewDTO>>  findByCityIdAndCheckInDateAndCheckOutDate (@RequestParam Long city_id, @RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date formattedCheckInDate = formatter.parse(checkInDate);
-        Date formattedCheckOutDate = formatter.parse(checkOutDate);
-        List<ProductViewDTO> searchedProductByCityIdCheckInDateCheckOutDate = productService.searchProductsByCityIdCheckInDateCheckOutDate(city_id, formattedCheckInDate, formattedCheckOutDate);
-        if (!searchedProductByCityIdCheckInDateCheckOutDate.isEmpty()){
-            logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city_id + " en las fechas especificadas.");
-            return ResponseEntity.ok(searchedProductByCityIdCheckInDateCheckOutDate);
+    @RequestMapping(params = {"city" , "category", "guests"})
+    public ResponseEntity<List<ProductViewDTO>>  searchProductByFilter (@RequestParam Long city, @RequestParam Long category, @RequestParam Integer guests){
+        List<ProductViewDTO> searchProductByFilter = productService.listProductByCityIdAndCategoryIdAndGuests(city, category, guests);
+        if (!searchProductByFilter.isEmpty()){
+            logger.info("Se encontraron los productos correspondientes a la Ciudad con ID " + city + ", a la Categoria con ID " + category + " y para " + guests + " inquilinos.");
+            return ResponseEntity.ok(searchProductByFilter);
         }
-        logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city_id + " en las fechas especificadas.");
+        logger.error("No se encontraron los productos correspondientes a la Ciudad con ID " + city + ", a la Categoria con ID " + category + " y para " + guests + " inquilinos.");
+        return ResponseEntity.badRequest().build();
+    }
+    @RequestMapping(params = {"city" , "checkInDate" , "checkOutDate"})
+    public ResponseEntity<List<ProductViewDTO>>  findByCityIdAndCheckInDateAndCheckOutDate (@RequestParam Long city, @RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception{
+        SimpleDateFormat dateFormatter = new SimpleDateFormat ("yyyy-MM-dd");
+        //System.out.println("\n" + "ENTRO EN CITY AND DATE");
+        //System.out.println(city +" | "+ checkInDate +" | "+ checkOutDate);
+        Date formattedCheckInDate = dateFormatter.parse(checkInDate);
+        Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+        //System.out.println(city + " | " + formattedCheckInDate + " | " + formattedCheckOutDate + "\n");
+        List<ProductViewDTO> searchedProductByCityCheckInDateCheckOutDate = productService.searchProductsByCityCheckInDateCheckOutDate(city, formattedCheckInDate, formattedCheckOutDate);
+        if (!searchedProductByCityCheckInDateCheckOutDate.isEmpty()){
+            logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " en las fechas especificadas.");
+            return ResponseEntity.ok(searchedProductByCityCheckInDateCheckOutDate);
+        }
+        logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city + " en las fechas especificadas.");
         return ResponseEntity.badRequest().build();
     }
 }
