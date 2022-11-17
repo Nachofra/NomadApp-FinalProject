@@ -6,16 +6,13 @@ import { Footer } from "../../components/partials/footer/Footer";
 import { useUserContext } from "../../context/UserContext";
 import { UserInfo } from "../../components/login/UserInfo";
 import Email from "../../components/login/Email";
-import { Link } from "react-router-dom";
 import PasswordAndConfirmPasswordValidation from "../../components/login/passwordAndConfirmPassword/PasswordAndConfirmPasswordValidation.jsx";
-import { HeaderNav } from "../../components/partials";
-import { useLoadingViewContext } from "../../context/LoadingViewContext";
 
 export const SignUp = (props) => {
 
   const regex = new RegExp("[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+")
   const navigate = useNavigate();
-  const { login } = useUserContext();
+  const { register } = useUserContext();
   
   const [user, setUser] = useState({
     firstName: "",
@@ -28,7 +25,7 @@ export const SignUp = (props) => {
   function handleSubmit(e) {
     e.preventDefault();
     if(user.password.length > 6 && user.password === user.confirmPassword && regex.test(user.email)){
-      login({
+      register({
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
@@ -51,8 +48,11 @@ export const SignUp = (props) => {
         <Email email={user.email} setUser={setUser} />
         <PasswordAndConfirmPasswordValidation password={user.password} confirmPassword={user.confirmPassword} setUser={setUser}/>
         <div className="flex items-center justify-center mt-4">
-          <button className="w-32 py-3 leading-5 text-white text-lg font-medium transition-colors duration-300 
-          transform bg-violet-700 rounded-lg hover:bg-violet-600 focus:outline-none" type="submit">Register</button>
+          <button className="w-32 py-3 leading-5 text-white text-lg 
+          font-medium transition-colors duration-300 
+          transform bg-violet-700 rounded-lg hover:bg-violet-600 
+          focus:outline-none" 
+          type="submit">Register</button>
         </div>
       </form>     
     </>
