@@ -36,9 +36,9 @@ build:vite:
 
 release:maven:
   stage: release
-  image: docker:20.10.16
+  image: docker
   services:
-    - docker:20.10.16-dind
+    - docker:dind
   script:
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
     # - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest --pull ."
