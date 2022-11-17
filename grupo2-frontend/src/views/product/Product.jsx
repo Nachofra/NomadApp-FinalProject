@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { BaseLayout } from '../../components/layout/BaseLayout'
 import { Footer, HeaderNav, SearchNav } from '../../components/partials'
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'
@@ -17,20 +17,21 @@ import { FetchRoutes, PrivateRoutes } from '../../guard/Routes'
 import { useSearchContext } from '../../context/SearchContext'
 
 export const Product = () => {
+    const navigate = useNavigate();
 
     const {
-        status,
         startLoading,
         loadDone,
         triggerError,
       } = useLoadingViewContext()
 
     const {filters, handleDates} = useSearchContext()
+    const {state} = useLocation()
 
-
-    const navigate = useNavigate();
-    const [ data, setData ] = useState()
+    const [ data, setData ] = useState(state?.product)
     const {id} = useParams();
+
+    console.log(state?.product)
 
     useEffect(() => {
         const fetchData = async () =>{
@@ -45,7 +46,7 @@ export const Product = () => {
             loadDone();
           }
           
-          fetchData();
+          if ( !data ) { fetchData() };
     }, [])
 
     const [modal, setModal ] = useState(false);
@@ -187,6 +188,7 @@ export const Product = () => {
                 <p className='text-gray-600 md:mr-2'>Select the date and start your reservation</p>
                 <Link
                 to={ PrivateRoutes.RESERVEID(data.id)}
+                state={{product: data}}
                 className='flex items-center px-4 py-3 bg-violet-700 rounded-lg'
                 >
                     <p className='mr-2 text-white font-medium'>Continue</p>

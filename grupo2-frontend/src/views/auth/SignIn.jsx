@@ -10,13 +10,14 @@ import { Link } from "react-router-dom";
 export const SignIn = (props) => {
 
   const navigate = useNavigate();
-  const { user, login }  = useUserContext();
+  const { login, registeredUser }  = useUserContext();
   const [ ingressedUser, setIngressedUser] = useState({ email: "", password: "" });
   const [ usuarioIncorrecto, setUsuarioIncorrecto ] = useState(false);
 
   function handleSubmit(e) {
     e.preventDefault();
-    if(user?.email === ingressedUser.email && user?.password === ingressedUser.password){
+    if(registeredUser?.email === ingressedUser.email && registeredUser?.password === ingressedUser.password){
+      login()
       navigate(PublicRoutes.HOME);
     }else{
       setUsuarioIncorrecto(true);
