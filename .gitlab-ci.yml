@@ -47,7 +47,7 @@ release:maven:
   before_script:
     - docker version
     - "docker info"
-    - echo $CI_REGISTRY_PASSWORD | "docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
+    - echo $CI_REGISTRY_PASSWORD | "docker login -u $CI_REGISTRY --password-stdin"
   script:
     - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest"
@@ -67,7 +67,7 @@ release:vite:
   before_script:
     - "docker version"
     - "docker info"
-    - echo $CI_REGISTRY_PASSWORD | "docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
+    - echo $CI_REGISTRY_PASSWORD | "docker login -u $CI_REGISTRY --password-stdin"
   script:
     - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest"
