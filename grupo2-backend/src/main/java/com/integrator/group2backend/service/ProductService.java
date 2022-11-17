@@ -5,6 +5,7 @@ import com.integrator.group2backend.entities.*;
 import com.integrator.group2backend.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -57,10 +58,15 @@ public class ProductService {
         List<ProductViewDTO> dtoProductFoundByCityIdAndCategoryId = mapList(productFoundByCityIdAndCategoryId, ProductViewDTO.class);
         return dtoProductFoundByCityIdAndCategoryId;
     }
-    public List<ProductViewDTO> searchProductsByCityIdCheckInDateCheckOutDate(Long city_id, Date checkInDate, Date checkOutDate){
-        List<Product> productFoundByCityIdCheckInDateCheckOutDate = productRepository.searchProductByCityIdCheckInDateCheckOutDate(city_id,checkInDate,checkOutDate);
-        List<ProductViewDTO> dtoProductFoundByCityIdCheckInDateCheckOutDate = mapList(productFoundByCityIdCheckInDateCheckOutDate, ProductViewDTO.class);
-        return dtoProductFoundByCityIdCheckInDateCheckOutDate;
+    public List<ProductViewDTO> listProductByCityIdAndCategoryIdAndGuests(Long city_id, Long category_id, Integer guests){
+        List<Product> productFoundByCityIdAndCategoryIdAndGuests = productRepository.findByCityIdAndCategoryIdAndGuests(city_id, category_id, guests);
+        List<ProductViewDTO> dtoProductFounded = mapList(productFoundByCityIdAndCategoryIdAndGuests, ProductViewDTO.class);
+        return dtoProductFounded;
+    }
+    public List<ProductViewDTO> searchProductsByCityCheckInDateCheckOutDate(Long city, Date checkInDate, Date checkOutDate){
+        List<Product> productFoundByCityCheckInDateCheckOutDate = productRepository.searchProductByCityCheckInDateCheckOutDate(city, checkInDate, checkOutDate);
+        List<ProductViewDTO> dtoProductFoundByCityCheckInDateCheckOutDate = mapList(productFoundByCityCheckInDateCheckOutDate, ProductViewDTO.class);
+        return dtoProductFoundByCityCheckInDateCheckOutDate;
     }
 
     @Autowired
