@@ -47,7 +47,7 @@ release:maven:
   before_script:
     - docker version
     - "docker info"
-    - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
+    - "docker login -u gitlab.ctd.academy:5050 -p $CI_BUILD_TOKEN $CI_REGISTRY"
   script:
     - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest"
@@ -67,7 +67,7 @@ release:vite:
   before_script:
     - docker version
     - "docker info"
-    - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
+    - "docker login -u gitlab.ctd.academy:5050 -p $CI_BUILD_TOKEN $CI_REGISTRY"
   script:
     - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest"
