@@ -1,12 +1,6 @@
 stages:
   - build
-  - test
   - release
-  - deploy
-
-workflow:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
 
 build:maven:
   stage: build
@@ -41,31 +35,26 @@ build:vite:
       - grupo2-frontend/dist
 
 release:maven:
-  stage: deploy
-  image: docker:latest
+  stage: release
+  image: docker
   services:
     - docker:dind
-  before_script:
-    - docker version
-    - "docker info"
-    - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
   script:
-    - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest --pull ."
-    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest"
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    # - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest --pull ."
+    # - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest"
   after_script:
     - "docker logout ${CI_REGISTRY}"
 
-release:vite:
-  stage: deploy
-  image: docker:latest
-  services:
-    - docker:dind
-  before_script:
-    - docker version
-    - "docker info"
-    - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
-  script:
-    - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest --pull ."
-    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest"
-  after_script:
-    - "docker logout ${CI_REGISTRY}"
+# release:vite:
+#   stage: release
+#   image: docker:latest
+#   services:
+#     - name: docker:dind
+#   before_script:
+#     - docker login gitlab.ctd.academy:5050 -u gitlab_docker_token -p $GITLAB_DOCKER_TOKEN
+#   script:
+#     - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest --pull ."
+#     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest"
+#   after_script:
+#     - "docker logout ${CI_REGISTRY}"
