@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - release
   - deploy
 
 workflow:
@@ -39,45 +40,32 @@ build:vite:
     paths:
       - grupo2-frontend/dist
 
-test:maven:
-  stage: test
-  image: maven:3.8.6-openjdk-18
-  cache:
-    paths:
-    - grupo2-backend/target/
-  script:
-    - cd "grupo2-backend/"
-    - mvn test
-
-deploy:maven:
+release:maven:
   stage: deploy
-  image: ubuntu:22.04
+  image: docker:latest
+  services:
+    - docker:dind
   before_script:
-    - apt-get update
-    - apt-get install openssh-client -y
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo -e "$SSH_PRIVATE_KEY_BACKEND" > ~/.ssh/id_rsa
-    - chmod 600  ~/.ssh/id_rsa
-    - mv grupo2-backend/target/*.war .
+    - docker version
+    - "docker info"
+    - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
   script:
-    - ssh -o StrictHostKeyChecking=no ubuntu@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/shutdown.sh; sudo rm -r /tmp/backend-backups/*; sudo mv /tmp/apache-tomcat-9.0.68/webapps/* /tmp/backend-backups/; sudo mkdir /tmp/apache-tomcat-9.0.68/webapps/ROOT/"
-    - scp -o StrictHostKeyChecking=no *.war ubuntu@$BACKEND_IPADDRESS:/tmp/apache-tomcat-9.0.68/webapps
-    - ssh -o StrictHostKeyChecking=no ubuntu@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/startup.sh"
+    - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest --pull ."
+    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest"
+  after_script:
+    - "docker logout ${CI_REGISTRY}"
 
-deploy:vite:
+release:vite:
   stage: deploy
-  image: ubuntu:22.04
+  image: docker:latest
+  services:
+    - docker:dind
   before_script:
-    - apt-get update
-    - apt-get install openssh-client -y
-    - apt-get install zip -y && apt-get install unzip -y
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
-    - chmod 600  ~/.ssh/id_rsa
-    - zip -r builded-frontend.zip grupo2-frontend/dist
+    - docker version
+    - "docker info"
+    - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
   script:
-    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop; sudo rm -r /tmp/frontend-backups/*; sudo mv /var/www/html/* /tmp/frontend-backups/"
-    - scp -o StrictHostKeyChecking=no builded-frontend.zip ubuntu@$FRONTEND_IPADDRESS:/var/www/html
-    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "cd /var/www/html/; sudo unzip builded-frontend.zip; sudo mv grupo2-frontend/dist/* .; sudo rm -vr builded-frontend.zip grupo2-frontend/; sudo /etc/init.d/apache2 start"
+    - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest --pull ."
+    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest"
+  after_script:
+    - "docker logout ${CI_REGISTRY}"
