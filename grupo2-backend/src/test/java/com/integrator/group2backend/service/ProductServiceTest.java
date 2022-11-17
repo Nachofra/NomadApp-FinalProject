@@ -80,9 +80,10 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void listAllProducts() {
+    public void testListAllProducts() {
         Mockito.when(this.productRepository.findAll()).thenReturn(null);
 
+        //this.productService.listAllProducts();
         this.productRepository.findAll();// ver porque no me anda con el service
 
         Mockito.verify(this.productRepository, times(1)).findAll();
@@ -98,11 +99,17 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void deleteProduct() {
+    public void testDeleteProduct() {
+        Mockito.doNothing().when(this.productRepository).deleteById(eq(1L));
+
+        this.productService.deleteProduct(1L);
+
+        Mockito.verify(this.productRepository, times(1)).deleteById(eq(1L));
+
     }
 
     @Test
-    public void listProductByCityId() {
+    public void testListProductByCityId() {
     }
 
     @Test
