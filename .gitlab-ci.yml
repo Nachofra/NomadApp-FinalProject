@@ -38,7 +38,9 @@ release:maven:
   stage: release
   image: docker:latest
   services:
-    - docker:dind
+    - name: docker:dind
+  variables:
+    DOCKER_DRIVER: "overlay"
   before_script:
     - docker version
     - "docker info"
@@ -53,7 +55,9 @@ release:vite:
   stage: release
   image: docker:latest
   services:
-    - docker:dind
+    - name: docker:dind
+  variables:
+    DOCKER_DRIVER: "overlay"
   before_script:
     - docker version
     - "docker info"
