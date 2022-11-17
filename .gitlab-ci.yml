@@ -40,7 +40,7 @@ release:maven:
   services:
     - name: docker:dind
   before_script:
-    - docker login gitlab.ctd.academy:5050 -u Nachofra -p $GITLAB_DOCKER_TOKEN
+    - docker login gitlab.ctd.academy:5050 -u gitlab_docker_token -p $GITLAB_DOCKER_TOKEN
   script:
     - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest"
@@ -53,7 +53,7 @@ release:vite:
   services:
     - name: docker:dind
   before_script:
-    - docker login gitlab.ctd.academy:5050 -u Nachofra -p $GITLAB_DOCKER_TOKEN
+    - docker login gitlab.ctd.academy:5050 -u gitlab_docker_token -p $GITLAB_DOCKER_TOKEN
   script:
     - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest"
