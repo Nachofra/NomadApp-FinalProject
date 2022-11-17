@@ -41,7 +41,7 @@ export const Home = () => {
 
     useEffect(() => {
 
-      const fetchData = async () =>{
+      const fetchData = async () => {
         startLoading();
           try {
             // const { data : categoriesData } = await axios.get(`${FetchRoutes.BASEURL}/category`);
@@ -63,7 +63,7 @@ export const Home = () => {
               const { data : feed }  = await axios.get(
                 `${FetchRoutes.BASEURL}/product${!user ? '/random?' : '?'}${filters.category ? `category=${filters.category}` : ''}${filters.location ? `&city=${filters.location.id}` : ''}`
                 );
-  
+
               setIndex(feed)
             } catch (error) {
               console.error(error.message);
@@ -89,6 +89,7 @@ export const Home = () => {
         </BaseLayout>
         <BaseLayout
           padding='px-3 pt-4 md:pt-6'
+          className=" mb-10"
         >
           <HomeCategories categories={categories} />
         </BaseLayout>
