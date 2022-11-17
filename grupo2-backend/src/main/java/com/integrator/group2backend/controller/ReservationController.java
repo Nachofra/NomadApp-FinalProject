@@ -7,6 +7,7 @@ import com.integrator.group2backend.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -27,7 +28,15 @@ public class ReservationController {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<Reservation>> seachReservationByUserId(@PathVariable("id") Long userId){
+        List<Reservation> reservationFound = reservationService.findReservationByUserId(userId);
+        if(!reservationFound.isEmpty()){
+            return ResponseEntity.ok(reservationFound);
+        }else{
+            return ResponseEntity.badRequest().build();
+        }
+    }
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation){
         Reservation createdReservation = reservationService.addReservation(reservation);

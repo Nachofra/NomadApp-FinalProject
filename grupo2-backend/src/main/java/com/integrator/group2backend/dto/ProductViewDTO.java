@@ -28,4 +28,6 @@ public class ProductViewDTO {
     private Set<Policy> policies;
     @JsonIgnoreProperties(value = { "product" })
     private Set<Image> images;
+    @JsonIgnoreProperties(value = { "product" })
+    private Set<Reservation> reservations;
 }

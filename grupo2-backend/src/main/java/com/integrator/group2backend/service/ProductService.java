@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,6 +56,11 @@ public class ProductService {
         List<Product> productFoundByCityIdAndCategoryId = productRepository.findByCityIdAndCategoryId(city_id, category_id);
         List<ProductViewDTO> dtoProductFoundByCityIdAndCategoryId = mapList(productFoundByCityIdAndCategoryId, ProductViewDTO.class);
         return dtoProductFoundByCityIdAndCategoryId;
+    }
+    public List<ProductViewDTO> searchProductsByCityIdCheckInDateCheckOutDate(Long city_id, Date checkInDate, Date checkOutDate){
+        List<Product> productFoundByCityIdCheckInDateCheckOutDate = productRepository.searchProductByCityIdCheckInDateCheckOutDate(city_id,checkInDate,checkOutDate);
+        List<ProductViewDTO> dtoProductFoundByCityIdCheckInDateCheckOutDate = mapList(productFoundByCityIdCheckInDateCheckOutDate, ProductViewDTO.class);
+        return dtoProductFoundByCityIdCheckInDateCheckOutDate;
     }
 
     @Autowired
