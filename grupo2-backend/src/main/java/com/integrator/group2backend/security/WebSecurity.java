@@ -1,5 +1,5 @@
 package com.integrator.group2backend.security;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +19,11 @@ import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationConfig authenticationConfig;
-    private final RestAuthEntryPoint restAuthEntryPoint;
-
+    //private final RestAuthEntryPoint restAuthEntryPoint;
     @Autowired
-    public WebSecurity(AuthenticationConfig authenticationConfig, RestAuthEntryPoint restAuthEntryPoint) {
+    public WebSecurity(AuthenticationConfig authenticationConfig) {
         this.authenticationConfig = authenticationConfig;
-        this.restAuthEntryPoint = restAuthEntryPoint;
+        //this.restAuthEntryPoint = restAuthEntryPoint;
     }
 
     @Bean
@@ -32,8 +31,17 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public ObjectMapper objectMapper() {
+        // This bean is created if needed
+        return new ObjectMapper();
+    }
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        JWTAuthenticationFilter jwtFilter = new JWTAuthenticationFilter(authenticationManager());
+        jwtFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
+
         httpSecurity.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class); //permito que pasen las peticiones OPTIONS
         httpSecurity
                 .csrf().disable().authorizeRequests()
@@ -41,10 +49,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/user/verify").permitAll()//permito verificacion sin token
 
                 .anyRequest().authenticated().and()                    //filtra todas las peticiones para validar token
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilter(jwtFilter)
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
-                .exceptionHandling()
-                .authenticationEntryPoint(this.restAuthEntryPoint).and()     //si no pasa sale con error 401
+                .exceptionHandling().and()
+                //.authenticationEntryPoint(this.restAuthEntryPoint).and()     //si no pasa sale con error 401
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         HeadersConfigurer<HttpSecurity> headers = httpSecurity.headers();
@@ -59,4 +67,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(this.authenticationConfig).passwordEncoder(passwordEncoder());
     }
 
+    @Override
+    public void configure(org.springframework.security.config.annotation.web.builders.WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/swagger-ui/**", "/v3/api-docs/**");
+    }
 }
