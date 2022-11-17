@@ -39,15 +39,8 @@ release:maven:
   image: docker:latest
   services:
     - name: docker:dind
-      alias: thedockerhost
-  variables:
-    DOCKER_HOST: tcp://thedockerhost:2375/
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
   before_script:
-    - docker version
-    - "docker info"
-    - echo $CI_REGISTRY_PASSWORD | "docker login -u $CI_REGISTRY --password-stdin"
+    - echo $CI_REGISTRY_PASSWORD | "docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
   script:
     - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/backend:latest"
@@ -59,15 +52,8 @@ release:vite:
   image: docker:latest
   services:
     - name: docker:dind
-      alias: thedockerhost
-  variables:
-    DOCKER_HOST: tcp://thedockerhost:2375/
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
   before_script:
-    - "docker version"
-    - "docker info"
-    - echo $CI_REGISTRY_PASSWORD | "docker login -u $CI_REGISTRY --password-stdin"
+    - echo $CI_REGISTRY_PASSWORD | "docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
   script:
     - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest"
