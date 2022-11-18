@@ -215,12 +215,13 @@ public class ProductController {
     @RequestMapping(params = {"city" , "checkInDate" , "checkOutDate"})
     public ResponseEntity<List<ProductViewDTO>>  findByCityIdAndCheckInDateAndCheckOutDate (@RequestParam Long city, @RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception{
         SimpleDateFormat dateFormatter = new SimpleDateFormat ("yyyy-MM-dd");
-        //System.out.println("\n" + "ENTRO EN CITY AND DATE");
+        System.out.println("\n" + "ENTRO EN CITY AND DATE");
         //System.out.println(city +" | "+ checkInDate +" | "+ checkOutDate);
         Date formattedCheckInDate = dateFormatter.parse(checkInDate);
         Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
         //System.out.println(city + " | " + formattedCheckInDate + " | " + formattedCheckOutDate + "\n");
         List<ProductViewDTO> searchedProductByCityCheckInDateCheckOutDate = productService.searchProductsByCityCheckInDateCheckOutDate(city, formattedCheckInDate, formattedCheckOutDate);
+        //List<ProductViewDTO> searchedProductByCityCheckInDateCheckOutDate = productService.searchProductsByCityExcludingDates(city, formattedCheckInDate, formattedCheckOutDate);
         if (!searchedProductByCityCheckInDateCheckOutDate.isEmpty()){
             logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " en las fechas especificadas.");
             return ResponseEntity.ok(searchedProductByCityCheckInDateCheckOutDate);

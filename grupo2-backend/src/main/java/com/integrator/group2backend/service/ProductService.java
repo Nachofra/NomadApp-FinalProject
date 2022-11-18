@@ -5,13 +5,9 @@ import com.integrator.group2backend.entities.*;
 import com.integrator.group2backend.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,6 +64,40 @@ public class ProductService {
         List<ProductViewDTO> dtoProductFoundByCityCheckInDateCheckOutDate = mapList(productFoundByCityCheckInDateCheckOutDate, ProductViewDTO.class);
         return dtoProductFoundByCityCheckInDateCheckOutDate;
     }
+    /*public List<ProductViewDTO> searchProductsByCityExcludingDates(Long city, Date checkInDate, Date checkOutDate){
+        List<Product> productFoundByCityId = productRepository.findByCityId(city);
+        List<Product> productFoundByCityCheckInDateCheckOutDate = productRepository.searchProductByCityCheckInDateCheckOutDate(city, checkInDate, checkOutDate);
+        List<Product> mergedList = new ArrayList<>();
+        List<Product> finalList = new ArrayList<>();
+        mergedList.addAll(productFoundByCityId);
+        mergedList.addAll(productFoundByCityCheckInDateCheckOutDate);
+        System.out.println("\nMerged List\n" + mergedList);
+        for (Product finalElement : mergedList){
+            System.out.println(finalElement.getId());
+        }
+        /*for (Product productCity : productFoundByCityId) {
+            System.out.println("Comparo con el array principal. Ciudad con id ");
+            System.out.println(productCity.getId());
+            for (Product productDate : productFoundByCityCheckInDateCheckOutDate) {
+                System.out.println("Chequeo las reservas de la ciudad con id ");
+                System.out.println(productDate.getId());
+                if (productCity.equals(productDate)){
+                    System.out.println("Encontre una coincidencia. ELIMINAR.");
+
+                }
+            }
+        }
+        mergedList.sort(Comparator.comparing(Product::getId));
+        System.out.println("\nFinal List\n" + mergedList);
+        for (Product mergedElement : mergedList){
+            if (mergedElement.getId() == ){
+
+            }
+        }
+        List<ProductViewDTO> dtoFinalList = mapList(finalList, ProductViewDTO.class);
+        System.out.println("\n" + dtoFinalList);
+        return dtoFinalList;
+    }*/
 
     @Autowired
     ModelMapper modelMapper;
