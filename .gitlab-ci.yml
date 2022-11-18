@@ -99,7 +99,7 @@ vite:deploy:
     - apk update && apk add openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
+    - echo "$SSH_PRIVATE_KEY_FRONTEND" | tr -d '\r' | ssh-add - > /dev/null
     - chmod 600  ~/.ssh/id_rsa
   script:
     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
