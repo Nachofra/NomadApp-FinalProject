@@ -46,7 +46,7 @@ release:maven:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ""
   script:
-    - "docker build -f /dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull  ."
+    - "docker build -f dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull  ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest"
   after_script:
     - "docker logout ${CI_REGISTRY}"
@@ -65,7 +65,7 @@ release:vite:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ""
   script:
-    - "docker build -f /dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
+    - "docker build -f dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
   after_script:
     - "docker logout ${CI_REGISTRY}"
