@@ -4,20 +4,27 @@ import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Category;
 import com.integrator.group2backend.entities.City;
 import com.integrator.group2backend.entities.Product;
-import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.service.CategoryService;
 import com.integrator.group2backend.service.CityService;
-import com.integrator.group2backend.service.ReservationService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.integrator.group2backend.service.ProductService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.integrator.group2backend.service.ReservationService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
@@ -27,8 +34,9 @@ public class ProductController {
     private final CityService cityService;
     private final CategoryService categoryService;
     private final ReservationService reservationService;
+
     @Autowired
-    public ProductController(ProductService productService, CityService cityService, CategoryService categoryService, ReservationService reservationService){
+    public ProductController(ProductService productService, CityService cityService, CategoryService categoryService, ReservationService reservationService) {
         this.productService = productService;
         this.cityService = cityService;
         this.categoryService = categoryService;
@@ -46,6 +54,7 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @GetMapping("/random")
     public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts() {
         List<ProductViewDTO> searchedProducts = productService.listRandomAllProducts();
@@ -57,6 +66,7 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     /*@GetMapping
     public ResponseEntity<List<ProductViewDTO>> listAllProducts(@RequestParam Map<String, String> allParams) {
         List<ProductViewDTO> searchedProducts = new ArrayList<>();
@@ -105,53 +115,53 @@ public class ProductController {
         }
     }*/
     @GetMapping("/{id}")
-    public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId){
+    public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId) {
         Optional<Product> productFound = productService.searchProductById(productId);
-        if(productFound.isPresent()){
+        if (productFound.isPresent()) {
             logger.info("Se encontro correctamente el producto con id " + productId);
             return ResponseEntity.ok(productService.convertToDto(productFound.get()));
-        }else{
+        } else {
             logger.error("El producto especificado no existe con id " + productId);
             return ResponseEntity.badRequest().build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product addedProduct = productService.addProduct(product);
         logger.info("Se agrego un producto");
         return ResponseEntity.ok(addedProduct);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product){
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product) {
         boolean productExists = productService.searchProductById(productId).isPresent();
-        if(productExists){
+        if (productExists) {
             product.setId(productId);
             Product updatedProduct = productService.updateProduct(product);
             logger.info("Se actualizo correctamente el producto con id " + productId);
             return ResponseEntity.ok(updatedProduct);
-        }else{
+        } else {
             logger.error("El producto especificado no existe con id " + productId);
             return ResponseEntity.badRequest().build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId){
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId) {
         boolean productExist = productService.searchProductById(productId).isPresent();
-        if(productExist){
+        if (productExist) {
             productService.deleteProduct(productId);
             logger.info("El producto con id " + productId + " ha sido borrado");
             return ResponseEntity.ok("El producto con id " + productId + " ha sido borrado");
-        }else{
+        } else {
             logger.error("El producto con id " + productId + " no existe en la base de datos");
             return ResponseEntity.ok("El producto con id " + productId + " no existe en la base de datos");
         }
     }
 
     @GetMapping("/city/{id}")
-    public ResponseEntity<List<ProductViewDTO>> getProductByCityId(@PathVariable Long id){
+    public ResponseEntity<List<ProductViewDTO>> getProductByCityId(@PathVariable Long id) {
         Optional<City> city = this.cityService.getCityById(id);
         if (!city.isPresent()) {
             logger.error("La ciudad con id " + id + " no existe en la base de datos");
@@ -161,7 +171,7 @@ public class ProductController {
     }
 
     @GetMapping("/category/{id}")
-    public ResponseEntity<List<ProductViewDTO>> getProductByCategoryId(@PathVariable Long id){
+    public ResponseEntity<List<ProductViewDTO>> getProductByCategoryId(@PathVariable Long id) {
         Optional<Category> category = this.categoryService.searchCategoryById(id);
         if (!category.isPresent()) {
             logger.error("La categoría con id " + id + " no existe en la base de datos");
@@ -169,43 +179,47 @@ public class ProductController {
         }
         return ResponseEntity.ok(this.productService.listProductByCategoryId(id));
     }
+
     @RequestMapping(params = "category")
-    public ResponseEntity<List<ProductViewDTO>>  searchProductByCategoryId (@RequestParam Long category){
+    public ResponseEntity<List<ProductViewDTO>> searchProductByCategoryId(@RequestParam Long category) {
         List<ProductViewDTO> searchedProductsByCategory = productService.listProductByCategoryId(category);
-        if (!searchedProductsByCategory.isEmpty()){
+        if (!searchedProductsByCategory.isEmpty()) {
             logger.info("Se encontraron los productos correspondientes a la Categoria con ID " + category);
             return ResponseEntity.ok(searchedProductsByCategory);
         }
         logger.error("NO se encontraron los productos correspondientes a la Categoria con ID " + category);
         return ResponseEntity.badRequest().build();
     }
+
     @RequestMapping(params = "city")
-    public ResponseEntity<List<ProductViewDTO>>  searchProductByCityId (@RequestParam String city){
+    public ResponseEntity<List<ProductViewDTO>> searchProductByCityId(@RequestParam String city) {
         List<ProductViewDTO> searchedProductsByCityId = productService.listProductByCityId(Long.parseLong(city));
-        if (!searchedProductsByCityId.isEmpty()){
+        if (!searchedProductsByCityId.isEmpty()) {
             logger.info("Se encontraron los productos correspondientes a la Ciudad con ID " + city);
             return ResponseEntity.ok(searchedProductsByCityId);
         }
         logger.error("No se encontraron los productos correspondientes a la Ciudad con ID " + city);
         return ResponseEntity.badRequest().build();
     }
-    @RequestMapping(params = {"city" , "category"})
-    public ResponseEntity<List<ProductViewDTO>>  searchProductByCityIdAndCategoryId (@RequestParam Long city, @RequestParam Long category){
+
+    @RequestMapping(params = {"city", "category"})
+    public ResponseEntity<List<ProductViewDTO>> searchProductByCityIdAndCategoryId(@RequestParam Long city, @RequestParam Long category) {
         List<ProductViewDTO> searchedProductsByCityIdAndCategoryId = productService.listProductByCityIdAndCategoryId(city, category);
-        if (!searchedProductsByCityIdAndCategoryId.isEmpty()){
+        if (!searchedProductsByCityIdAndCategoryId.isEmpty()) {
             logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " y a la Categoria con ID " + category);
             return ResponseEntity.ok(searchedProductsByCityIdAndCategoryId);
         }
         logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city + " y a la Categoria con ID " + category);
         return ResponseEntity.badRequest().build();
     }
-    @RequestMapping(params = {"city_id" , "checkInDate" , "checkOutDate"})
-    public ResponseEntity<List<ProductViewDTO>>  findByCityIdAndCheckInDateAndCheckOutDate (@RequestParam Long city_id, @RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception {
+
+    @RequestMapping(params = {"city_id", "checkInDate", "checkOutDate"})
+    public ResponseEntity<List<ProductViewDTO>> findByCityIdAndCheckInDateAndCheckOutDate(@RequestParam Long city_id, @RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date formattedCheckInDate = formatter.parse(checkInDate);
         Date formattedCheckOutDate = formatter.parse(checkOutDate);
         List<ProductViewDTO> searchedProductByCityIdCheckInDateCheckOutDate = productService.searchProductsByCityIdCheckInDateCheckOutDate(city_id, formattedCheckInDate, formattedCheckOutDate);
-        if (!searchedProductByCityIdCheckInDateCheckOutDate.isEmpty()){
+        if (!searchedProductByCityIdCheckInDateCheckOutDate.isEmpty()) {
             logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city_id + " en las fechas especificadas.");
             return ResponseEntity.ok(searchedProductByCityIdCheckInDateCheckOutDate);
         }

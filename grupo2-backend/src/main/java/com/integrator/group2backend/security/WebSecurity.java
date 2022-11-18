@@ -13,18 +13,18 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private final AuthenticationConfig authenticationConfig;
-    //private final RestAuthEntryPoint restAuthEntryPoint;
+    private AuthenticationConfig authenticationConfig;
+    private RestAuthEntryPoint restAuthEntryPoint;
+
     @Autowired
-    public WebSecurity(AuthenticationConfig authenticationConfig) {
+    public WebSecurity(AuthenticationConfig authenticationConfig, RestAuthEntryPoint restAuthEntryPoint) {
         this.authenticationConfig = authenticationConfig;
-        //this.restAuthEntryPoint = restAuthEntryPoint;
+        this.restAuthEntryPoint = restAuthEntryPoint;
     }
 
     @Bean
@@ -34,9 +34,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        JWTAuthenticationFilter jwtFilter = new JWTAuthenticationFilter(authenticationManager());
-        jwtFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
-
         httpSecurity.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class); //permito que pasen las peticiones OPTIONS
         httpSecurity
                 .csrf().disable().authorizeRequests()
@@ -44,10 +41,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/user/verify").permitAll()//permito verificacion sin token
 
                 .anyRequest().authenticated().and()                    //filtra todas las peticiones para validar token
-                .addFilter(jwtFilter)
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
-                .exceptionHandling().and()
-                //.authenticationEntryPoint(this.restAuthEntryPoint).and()     //si no pasa sale con error 401
+                .exceptionHandling()
+                .authenticationEntryPoint(this.restAuthEntryPoint).and()     //si no pasa sale con error 401
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         HeadersConfigurer<HttpSecurity> headers = httpSecurity.headers();
