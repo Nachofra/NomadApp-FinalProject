@@ -43,10 +43,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         httpSecurity.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class); //permito que pasen las peticiones OPTIONS
         httpSecurity
                 .csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/user/register").permitAll()//permito post sin token
-                .antMatchers(HttpMethod.GET, "/user/verify").permitAll()//permito verificacion sin token
 
-                .anyRequest().authenticated().and()                    //filtra todas las peticiones para validar token
+                .antMatchers("/reservation/**").authenticated().and()                    //Solo usamos JWT en Reservation endpoint
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 .exceptionHandling()
