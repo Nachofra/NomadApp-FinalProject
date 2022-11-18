@@ -194,11 +194,11 @@ public class ProductServiceTest {
     public void testSearchProductsByCityIdCheckInDateCheckOutDateWithEmptyList() {
         Date datefrom = new Date();
         Date dateTo = new Date();
-        Mockito.when(this.productRepository.searchProductByCityIdCheckInDateCheckOutDate(eq(1L), eq(datefrom), eq(dateTo))).thenReturn(Collections.emptyList());
+        Mockito.when(this.productRepository.searchProductByCityCheckInDateCheckOutDate(eq(1L), eq(datefrom), eq(dateTo))).thenReturn(Collections.emptyList());
 
-        this.productService.searchProductsByCityIdCheckInDateCheckOutDate(1L, datefrom, dateTo);
+        this.productService.searchProductsByCityCheckInDateCheckOutDate(1L, datefrom, dateTo);
 
-        Mockito.verify(this.productRepository, times(1)).searchProductByCityIdCheckInDateCheckOutDate(eq(1L), eq(datefrom), eq(dateTo));
+        Mockito.verify(this.productRepository, times(1)).searchProductByCityCheckInDateCheckOutDate(eq(1L), eq(datefrom), eq(dateTo));
         Mockito.verify(this.modelMapper, times(0)).map(any(), any());
     }
 
@@ -208,11 +208,11 @@ public class ProductServiceTest {
         Date dateTo = new Date();
         Product p = new Product();
 
-        Mockito.when(this.productRepository.searchProductByCityIdCheckInDateCheckOutDate(eq(1L), eq(datefrom), eq(dateTo))).thenReturn(Collections.singletonList(p));
+        Mockito.when(this.productRepository.searchProductByCityCheckInDateCheckOutDate(eq(1L), eq(datefrom), eq(dateTo))).thenReturn(Collections.singletonList(p));
 
-        this.productService.searchProductsByCityIdCheckInDateCheckOutDate(1L, datefrom, dateTo);
+        this.productService.searchProductsByCityCheckInDateCheckOutDate(1L, datefrom, dateTo);
 
-        Mockito.verify(this.productRepository, times(1)).searchProductByCityIdCheckInDateCheckOutDate(eq(1L), eq(datefrom), eq(dateTo));
+        Mockito.verify(this.productRepository, times(1)).searchProductByCityCheckInDateCheckOutDate(eq(1L), eq(datefrom), eq(dateTo));
         Mockito.verify(this.modelMapper, times(1)).map(any(), any());
     }
 
