@@ -46,10 +46,6 @@ release:maven:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ""
   script:
-    - ls
-    - cd grupo2-backend/
-    - ls
-    - cd /
     - "docker build -f /dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull  ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest"
   after_script:
@@ -69,10 +65,6 @@ release:vite:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ""
   script:
-    - ls
-    - cd grupo2-frontend/
-    - ls
-    - cd /
     - "docker build -f /dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
   after_script:
