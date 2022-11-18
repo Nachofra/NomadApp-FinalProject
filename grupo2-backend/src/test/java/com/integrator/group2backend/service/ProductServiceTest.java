@@ -104,7 +104,25 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void listRandomAllProducts() {
+    public void testListRandomAllProductsWithNoEmptyList() {
+        Product p = new Product();
+        Mockito.when(this.productRepository.findAll()).thenReturn(Collections.singletonList(p));
+        Mockito.when(this.modelMapper.map(eq(p), eq(ProductViewDTO.class))).thenReturn(new ProductViewDTO());
+
+        this.productService.listRandomAllProducts();
+
+        Mockito.verify(this.productRepository, times(1)).findAll();
+        Mockito.verify(this.modelMapper, times(1)).map(eq(p), eq(ProductViewDTO.class));
+    }
+
+    @Test
+    public void testListRandomAllProductsWithEmptyList() {
+        Mockito.when(this.productRepository.findAll()).thenReturn(Collections.emptyList());
+
+        this.productService.listRandomAllProducts();
+
+        Mockito.verify(this.productRepository, times(1)).findAll();
+        Mockito.verify(this.modelMapper, times(0)).map(any(), any());
     }
 
     @Test
@@ -150,11 +168,30 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void listProductByCategoryId() {
+    public void testListProductByCategoryIdWhenNoEmptyList() {
+        Product p = new Product();
+        Mockito.when(this.productRepository.findByCategoryId(1L)).thenReturn(Collections.singletonList(p));
+        Mockito.when(this.modelMapper.map(eq(p), eq(ProductViewDTO.class))).thenReturn(new ProductViewDTO());
+
+        this.productService.listProductByCategoryId(1L);
+
+        Mockito.verify(this.productRepository, times(1)).findByCategoryId(eq(1L));
+        Mockito.verify(this.modelMapper, times(1)).map(eq(p), eq(ProductViewDTO.class));
     }
 
     @Test
-    public void testSearchProductsByCityIdCheckInDateCheckOutDateWithEmtyList() {
+    public void testListProductByCategoryIdWithEmptyList() {
+        Mockito.when(this.productRepository.findByCategoryId(1L)).thenReturn(Collections.emptyList());
+
+        this.productService.listProductByCategoryId(1L);
+
+        Mockito.verify(this.productRepository, times(1)).findByCategoryId(eq(1L));
+        Mockito.verify(this.modelMapper, times(0)).map(any(), any());
+    }
+
+
+    @Test
+    public void testSearchProductsByCityIdCheckInDateCheckOutDateWithEmptyList() {
         Date datefrom = new Date();
         Date dateTo = new Date();
         Mockito.when(this.productRepository.searchProductByCityIdCheckInDateCheckOutDate(eq(1L), eq(datefrom), eq(dateTo))).thenReturn(Collections.emptyList());
@@ -166,7 +203,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void testSearchProductsByCityIdCheckInDateCheckOutDateWhenNoEmtyList() {
+    public void testSearchProductsByCityIdCheckInDateCheckOutDateWhenNoEmptyList() {
         Date datefrom = new Date();
         Date dateTo = new Date();
         Product p = new Product();
