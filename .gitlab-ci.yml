@@ -61,9 +61,9 @@ deploy:maven:
     - chmod 600  ~/.ssh/id_rsa
     - mv grupo2-backend/target/*.war .
   script:
-    - ssh -o StrictHostKeyChecking=no ubuntu@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/shutdown.sh; sudo rm -r /tmp/backend-backups/*; sudo mv /tmp/apache-tomcat-9.0.68/webapps/* /tmp/backend-backups/; sudo mkdir /tmp/apache-tomcat-9.0.68/webapps/ROOT/"
-    - scp -o StrictHostKeyChecking=no *.war ubuntu@$BACKEND_IPADDRESS:/tmp/apache-tomcat-9.0.68/webapps
-    - ssh -o StrictHostKeyChecking=no ubuntu@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/startup.sh"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/shutdown.sh; sudo rm -r /tmp/backend-backups/*; sudo mv /tmp/apache-tomcat-9.0.68/webapps/* /tmp/backend-backups/; sudo mkdir /tmp/apache-tomcat-9.0.68/webapps/ROOT/"
+    - scp -o StrictHostKeyChecking=no *.war $SERVER_USER@$BACKEND_IPADDRESS:/tmp/apache-tomcat-9.0.68/webapps
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/startup.sh"
 
 deploy:vite:
   stage: deploy
@@ -78,7 +78,7 @@ deploy:vite:
     - chmod 600  ~/.ssh/id_rsa
     - zip -r builded-frontend.zip grupo2-frontend/dist
   script:
-    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop; sudo rm -r /tmp/frontend-backups/*; sudo mv /var/www/html/* /tmp/frontend-backups/"
-    - scp -o StrictHostKeyChecking=no builded-frontend.zip ubuntu@$FRONTEND_IPADDRESS:/var/www/html
-    - ssh -o StrictHostKeyChecking=no ubuntu@$FRONTEND_IPADDRESS "cd /var/www/html/; sudo unzip builded-frontend.zip; sudo mv grupo2-frontend/dist/* .; sudo rm -vr builded-frontend.zip grupo2-frontend/; sudo /etc/init.d/apache2 start"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop; sudo rm -r /tmp/frontend-backups/*; sudo mv /var/www/html/* /tmp/frontend-backups/"
+    - scp -o StrictHostKeyChecking=no builded-frontend.zip $SERVER_USER@$FRONTEND_IPADDRESS:/var/www/html
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "cd /var/www/html/; sudo unzip builded-frontend.zip; sudo mv grupo2-frontend/dist/* .; sudo rm -vr builded-frontend.zip grupo2-frontend/; sudo /etc/init.d/apache2 start"
 
