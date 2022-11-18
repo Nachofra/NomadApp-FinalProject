@@ -58,7 +58,7 @@ public class UserService {
 
         content = content.replace("[[name]]", user.getUsername());
 
-        String verifyURL = siteURL + "/user/verify?code=" + user.getVerificationCode();
+        String verifyURL = siteURL + "/verify-confirmation?code=" + user.getVerificationCode();
 
         content = content.replace("[[URL]]", verifyURL);
 
