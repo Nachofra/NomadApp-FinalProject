@@ -99,7 +99,6 @@ vite:deploy:
     - apk update && apk add openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - cat "$SSH_PRIVATE_KEY_FRONTEND"
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
     - chmod 600  ~/.ssh/id_rsa
   script:
