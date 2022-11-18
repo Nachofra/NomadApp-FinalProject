@@ -47,7 +47,7 @@ release:maven:
     DOCKER_TLS_CERTDIR: ""
   script:
     - ls
-    - cd /grupo2-backend
+    - cd grupo2-backend/
     - ls
     - cd /
     - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull ."
@@ -70,7 +70,7 @@ release:vite:
     DOCKER_TLS_CERTDIR: ""
   script:
     - ls
-    - cd /grupo2-frontend
+    - cd grupo2-frontend/
     - ls
     - cd /
     - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
