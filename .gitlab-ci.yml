@@ -47,6 +47,9 @@ release:maven:
     DOCKER_TLS_CERTDIR: ""
   script:
     - ls
+    - cd /grupo2-backend/target/*.war
+    - ls
+    - cd /
     - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest"
   after_script:
