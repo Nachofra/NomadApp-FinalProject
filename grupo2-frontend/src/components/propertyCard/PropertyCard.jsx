@@ -7,7 +7,9 @@ export const PropertyCard = ({
     property
 }) => {
   return (
-    <Link to={`/product/${property.id}`} 
+    <Link 
+    to={`/product/${property.id}`} 
+    state={{product: property}}
     className='w-full max-w-xs rounded-xl
     flex flex-col bg-white shadow-sm p-2 group'>
         <picture className='w-full h-60 overflow-hidden rounded-lg'>

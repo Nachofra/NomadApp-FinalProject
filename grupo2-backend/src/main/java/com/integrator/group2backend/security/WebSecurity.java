@@ -1,5 +1,5 @@
 package com.integrator.group2backend.security;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +32,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public ObjectMapper objectMapper() {
+        // This bean is created if needed
+        return new ObjectMapper();
+    }
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class); //permito que pasen las peticiones OPTIONS
@@ -59,6 +65,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(this.authenticationConfig).passwordEncoder(passwordEncoder());
     }
 
-
-
+    @Override
+    public void configure(org.springframework.security.config.annotation.web.builders.WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/swagger-ui/**", "/v3/api-docs/**");
+    }
 }

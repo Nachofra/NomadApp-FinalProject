@@ -2,7 +2,7 @@ import { CheckBadgeIcon } from '@heroicons/react/24/outline'
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Calendar } from '../../components/Calendar/Calendar'
 import { Datalist, DatalistItem } from '../../components/datalist'
 import { Input } from '../../components/input/Input'
@@ -28,7 +28,9 @@ export const Reserve = () => {
     const { filters } = useSearchContext()
 
     const navigate = useNavigate();
-    const [ data, setData ] = useState();
+    const {state} = useLocation()
+
+    const [ data, setData ] = useState(state?.product)
     const {id} = useParams();
 
     useEffect(() => {
@@ -44,7 +46,7 @@ export const Reserve = () => {
             loadDone();
           }
           
-          fetchData();
+          if ( !data ) { fetchData() };
     }, [])
 
     // const [modal, setModal ] = useState(false);

@@ -2,16 +2,25 @@ import React, { useState } from 'react'
 import DeskNavBarModal from './components/DeskNavBarModal'
 import { FetchRoutes, PublicRoutes } from '../../../guard/Routes'
 import { useUserContext } from '../../../context/UserContext'
-import { UserInitials } from './components/UserInitials'
-import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 import { Bars2Icon, XMarkIcon } from '@heroicons/react/20/solid'
-import {motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { MobileOpen } from './components/MobileOpen'
+import { DropDown } from '../../drop-down'
+import {
+  ArrowRightOnRectangleIcon,
+  CalendarDaysIcon,
+  Cog6ToothIcon,
+  UserIcon
+} from '@heroicons/react/24/outline'
+import { DropLink } from '../../drop-down/DropLink'
 
 export const HeaderNav = ({transparent}) => {
   const { user, logout } = useUserContext();
+
   const [open, setOpen] = useState(false);
+
+  const handleLogout = () => { logout(); setOpen(false); }
 
   return (
     <section 
@@ -37,7 +46,7 @@ export const HeaderNav = ({transparent}) => {
             </div>
             <AnimatePresence initial={false} mode="wait" >
               {open &&  
-                  <MobileOpen user={user} />
+                  <MobileOpen user={user} handleLogout={handleLogout} />
               }
             </AnimatePresence>
           </div>
@@ -49,18 +58,59 @@ export const HeaderNav = ({transparent}) => {
             {
               user ?
               <>
-                <h2 className='mr-4 text-xl'>Hola <span className='font-bold'>{user.firstName}</span></h2>
+                <DropDown
+                button={
+                  <h2 className='text-xl'>Hola <span className='font-bold'>{user.firstName}</span></h2>
+                }
+                >
+                  <div className='px-1 py-1 '>
+                    <DropLink
+                      activeClassName='bg-violet-500 text-white'
+                      inactiveClassName='text-gray-600'
+                    >
+                      <UserIcon className='mr-2 h-5 w-5' aria-hidden='true' />
+                      Profile
+                    </DropLink>
+                    <DropLink
+                      activeClassName='bg-violet-500 text-white'
+                      inactiveClassName='text-gray-600'
+                    >
+                      <CalendarDaysIcon
+                        className='mr-2 h-5 w-5'
+                        aria-hidden='true'
+                      />
+                      My reservations
+                    </DropLink>
+                    <DropLink
+                      activeClassName='bg-violet-500 text-white'
+                      inactiveClassName='text-gray-600'
+                    >
+                      <Cog6ToothIcon
+                        className='mr-2 h-5 w-5'
+                        aria-hidden='true'
+                      />
+                      Settings
+                    </DropLink>
+                  </div>
 
-                <UserInitials initials={user?.firstName[0] + user?.lastName[0]} />
-                <Link to={PublicRoutes.HOME}>
-                  <ArrowRightOnRectangleIcon
-                  className='w-8 h-8 text-red-400'
+                  <div className='px-1 py-1'>
+                    <DropLink
                     onClick={()=>{logout()}}
-                  />
-                </Link>
+                      to={PublicRoutes.HOME}
+                      activeClassName='bg-red-500 text-white'
+                      inactiveClassName='text-red-400'
+                    >
+                      <ArrowRightOnRectangleIcon
+                        className='mr-2 h-5 w-5'
+                        aria-hidden='true'
+                      />
+                      Log out
+                    </DropLink>
+                  </div>
+                </DropDown>
               </>
               :
-              <>
+              <div className='flex items-center gap-4'>
                 <DeskNavBarModal
                 alt
                 route={PublicRoutes.REGISTER}
@@ -70,7 +120,7 @@ export const HeaderNav = ({transparent}) => {
                 route={PublicRoutes.LOGIN}
                 placeholder="Sign In">
                 </DeskNavBarModal>
-              </> 
+              </div> 
             }
             </div>
           </nav>
