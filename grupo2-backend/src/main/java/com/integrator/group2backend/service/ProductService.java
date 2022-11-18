@@ -12,10 +12,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-
-    private final ModelMapper modelMapper;
     private final ProductRepository productRepository;
-    public ProductService(ProductRepository productRepository, ModelMapper modelMapper){
+    public ProductService(ProductRepository productRepository, ModelMapper modelMapper) {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
     }
@@ -67,42 +65,39 @@ public class ProductService {
         List<ProductViewDTO> dtoProductFoundByCityCheckInDateCheckOutDate = mapList(productFoundByCityCheckInDateCheckOutDate, ProductViewDTO.class);
         return dtoProductFoundByCityCheckInDateCheckOutDate;
     }
-    /*public List<ProductViewDTO> searchProductsByCityExcludingDates(Long city, Date checkInDate, Date checkOutDate){
+    public List<ProductViewDTO> searchProductsByCityExcludingDates(Long city, Date checkInDate, Date checkOutDate){
         List<Product> productFoundByCityId = productRepository.findByCityId(city);
         List<Product> productFoundByCityCheckInDateCheckOutDate = productRepository.searchProductByCityCheckInDateCheckOutDate(city, checkInDate, checkOutDate);
-        List<Product> mergedList = new ArrayList<>();
-        List<Product> finalList = new ArrayList<>();
-        mergedList.addAll(productFoundByCityId);
-        mergedList.addAll(productFoundByCityCheckInDateCheckOutDate);
-        System.out.println("\nMerged List\n" + mergedList);
-        for (Product finalElement : mergedList){
-            System.out.println(finalElement.getId());
-        }
-        /*for (Product productCity : productFoundByCityId) {
-            System.out.println("Comparo con el array principal. Ciudad con id ");
-            System.out.println(productCity.getId());
+        List<Product> auxList = new ArrayList<>();
+        auxList.addAll(productFoundByCityId);
+        for (Product productCity : productFoundByCityId) {
             for (Product productDate : productFoundByCityCheckInDateCheckOutDate) {
-                System.out.println("Chequeo las reservas de la ciudad con id ");
-                System.out.println(productDate.getId());
                 if (productCity.equals(productDate)){
-                    System.out.println("Encontre una coincidencia. ELIMINAR.");
-
+                    auxList.remove(productCity);
                 }
             }
         }
-        mergedList.sort(Comparator.comparing(Product::getId));
-        System.out.println("\nFinal List\n" + mergedList);
-        for (Product mergedElement : mergedList){
-            if (mergedElement.getId() == ){
-
+        List<ProductViewDTO> dtoFinalList = mapList(auxList, ProductViewDTO.class);
+        return dtoFinalList;
+    }
+    public List<ProductViewDTO> searchProductByCityCategoryCheckInDateCheckOutDate(Long city, Long category, Date checkInDate, Date checkOutDate){
+        List<Product> productFoundByCityIdAndCategoryId = productRepository.findByCityIdAndCategoryId(city, category);
+        List<Product> productFoundByCityCheckInDateCheckOutDate = productRepository.searchProductByCityCategoryCheckInDateCheckOutDate(city, category, checkInDate, checkOutDate);
+        List<Product> auxList = new ArrayList<>();
+        auxList.addAll(productFoundByCityIdAndCategoryId);
+        for (Product productCityCategory : productFoundByCityIdAndCategoryId) {
+            for (Product productDate : productFoundByCityCheckInDateCheckOutDate) {
+                if (productCityCategory.equals(productDate)){
+                    auxList.remove(productCityCategory);
+                }
             }
         }
-        List<ProductViewDTO> dtoFinalList = mapList(finalList, ProductViewDTO.class);
-        System.out.println("\n" + dtoFinalList);
+        List<ProductViewDTO> dtoFinalList = mapList(auxList, ProductViewDTO.class);
         return dtoFinalList;
-    }*/
+    }
 
-
+    @Autowired
+    ModelMapper modelMapper;
     public ProductViewDTO convertToDto(Product product) {
         ProductViewDTO productViewDTO = modelMapper.map(product, ProductViewDTO.class);
         return productViewDTO;

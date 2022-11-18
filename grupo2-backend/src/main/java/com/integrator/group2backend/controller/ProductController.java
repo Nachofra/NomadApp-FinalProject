@@ -4,23 +4,17 @@ import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Category;
 import com.integrator.group2backend.entities.City;
 import com.integrator.group2backend.entities.Product;
-import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.service.CategoryService;
 import com.integrator.group2backend.service.CityService;
 import com.integrator.group2backend.service.ReservationService;
-import org.hibernate.type.DateType;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.integrator.group2backend.service.ProductService;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/product")
@@ -215,18 +209,27 @@ public class ProductController {
     @RequestMapping(params = {"city" , "checkInDate" , "checkOutDate"})
     public ResponseEntity<List<ProductViewDTO>>  findByCityIdAndCheckInDateAndCheckOutDate (@RequestParam Long city, @RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception{
         SimpleDateFormat dateFormatter = new SimpleDateFormat ("yyyy-MM-dd");
-        System.out.println("\n" + "ENTRO EN CITY AND DATE");
-        //System.out.println(city +" | "+ checkInDate +" | "+ checkOutDate);
         Date formattedCheckInDate = dateFormatter.parse(checkInDate);
         Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
-        //System.out.println(city + " | " + formattedCheckInDate + " | " + formattedCheckOutDate + "\n");
-        List<ProductViewDTO> searchedProductByCityCheckInDateCheckOutDate = productService.searchProductsByCityCheckInDateCheckOutDate(city, formattedCheckInDate, formattedCheckOutDate);
-        //List<ProductViewDTO> searchedProductByCityCheckInDateCheckOutDate = productService.searchProductsByCityExcludingDates(city, formattedCheckInDate, formattedCheckOutDate);
+        List<ProductViewDTO> searchedProductByCityCheckInDateCheckOutDate = productService.searchProductsByCityExcludingDates(city, formattedCheckInDate, formattedCheckOutDate);
         if (!searchedProductByCityCheckInDateCheckOutDate.isEmpty()){
             logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " en las fechas especificadas.");
             return ResponseEntity.ok(searchedProductByCityCheckInDateCheckOutDate);
         }
         logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city + " en las fechas especificadas.");
+        return ResponseEntity.badRequest().build();
+    }
+    @RequestMapping(params = {"city" , "category" , "checkInDate" , "checkOutDate"})
+    public ResponseEntity<List<ProductViewDTO>>  findProductByCityCategoryCheckInDateCheckOutDate (@RequestParam Long city, @RequestParam Long category, @RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception{
+        SimpleDateFormat dateFormatter = new SimpleDateFormat ("yyyy-MM-dd");
+        Date formattedCheckInDate = dateFormatter.parse(checkInDate);
+        Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+        List<ProductViewDTO> searchedProductByCityCategoryCheckInDateCheckOutDate = productService.searchProductByCityCategoryCheckInDateCheckOutDate(city, category, formattedCheckInDate, formattedCheckOutDate);
+        if (!searchedProductByCityCategoryCheckInDateCheckOutDate.isEmpty()){
+            logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " y Categoria con ID " + category + " en las fechas especificadas.");
+            return ResponseEntity.ok(searchedProductByCityCategoryCheckInDateCheckOutDate);
+        }
+        logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city + " y Categoria con ID " + category + " en las fechas especificadas.");
         return ResponseEntity.badRequest().build();
     }
 }

@@ -6,8 +6,8 @@ import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("/reservation")
@@ -57,4 +57,18 @@ public class ReservationController {
             return ResponseEntity.badRequest().build();
         }
     }
+    @RequestMapping(params = {"checkInDate" , "checkOutDate"})
+    public ResponseEntity<List<Reservation>> findReservationsByCheckInDateAndCheckOutDate(@RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception{
+        SimpleDateFormat dateFormatter = new SimpleDateFormat ("yyyy-MM-dd");
+        Date formattedCheckInDate = dateFormatter.parse(checkInDate);
+        Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+        List<Reservation> reservationsFounded = reservationService.findReservationsByCheckInDateAndCheckOutDate(formattedCheckInDate,formattedCheckOutDate);
+        if(!reservationsFounded.isEmpty()){
+            logger.info("Se encontraron reservas en el rango de fechas correspondiente.");
+            return ResponseEntity.ok(reservationsFounded);
+        }
+        logger.error("Error al buscar reservas en el rango de fechas correspondiente.");
+        return ResponseEntity.badRequest().build();
+    }
+
 }
