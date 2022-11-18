@@ -38,7 +38,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException{
+    public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
         String toAddress = user.getEmail();
         String fromAddress = "NomadApp@outlook.com";
         String senderName = "Nomad App";
