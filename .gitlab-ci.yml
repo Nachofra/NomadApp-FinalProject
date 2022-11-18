@@ -50,7 +50,7 @@ release:maven:
     - cd grupo2-backend/
     - ls
     - cd /
-    - "docker build -f Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull  ."
+    - "docker build -f /dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull  ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest"
   after_script:
     - "docker logout ${CI_REGISTRY}"
@@ -73,7 +73,7 @@ release:vite:
     - cd grupo2-frontend/
     - ls
     - cd /
-    - "docker build -f Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
+    - "docker build -f /dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
   after_script:
     - "docker logout ${CI_REGISTRY}"
