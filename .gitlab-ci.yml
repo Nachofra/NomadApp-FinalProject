@@ -42,7 +42,7 @@ release:maven:
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
   variables:
-    DOCKER_HOST: tcp://doxketL2375/
+    DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ""
   script:
@@ -51,17 +51,23 @@ release:maven:
   after_script:
     - "docker logout ${CI_REGISTRY}"
   tags:
-    - docker
+    - deployment_backend
 
-# release:vite:
-#   stage: release
-#   image: docker:latest
-#   services:
-#     - name: docker:dind
-#   before_script:
-#     - docker login gitlab.ctd.academy:5050 -u gitlab_docker_token -p $GITLAB_DOCKER_TOKEN
-#   script:
-#     - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest --pull ."
-#     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/frontend:latest"
-#   after_script:
-#     - "docker logout ${CI_REGISTRY}"
+release:vite:
+  stage: release
+  image: docker
+  services:
+    - docker:dind
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - "docker build -f  dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
+    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
+  after_script:
+    - "docker logout ${CI_REGISTRY}"
+  tags:
+    - deployment_frontend
