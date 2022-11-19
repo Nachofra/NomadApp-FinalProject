@@ -3,19 +3,19 @@ stages:
   - release
   - deploy
 
-# build:maven:
-#   stage: build
-#   image: maven:3.8.6-openjdk-18
-#   cache:
-#     paths:
-#       - grupo2-backend/target/
-#   script:
-#     - cd "grupo2-backend/"
-#     - echo -e "$DOTENV_CONFIG_BACKEND" > src/main/resources/.env
-#     - mvn clean install
-#   artifacts:
-#     paths:
-#       - grupo2-backend/target/*.war
+build:maven:
+  stage: build
+  image: maven:3.8.6-openjdk-18
+  cache:
+    paths:
+      - grupo2-backend/target/
+  script:
+    - cd "grupo2-backend/"
+    - echo -e "$DOTENV_CONFIG_BACKEND" > src/main/resources/.env
+    - mvn clean install
+  artifacts:
+    paths:
+      - grupo2-backend/target/*.war
 
 build:vite:
   stage: build
@@ -35,24 +35,24 @@ build:vite:
     paths:
       - grupo2-frontend/dist
 
-# release:maven:
-#   stage: release
-#   image: docker
-#   services:
-#     - docker:dind
-#   variables:
-#     DOCKER_HOST: tcp://docker:2375/
-#     DOCKER_DRIVER: overlay2
-#     DOCKER_TLS_CERTDIR: ""
-#   before_script:
-#     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
-#   script:
-#     - "docker build -f dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull  ."
-#     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest"
-#   after_script:
-#     - "docker logout ${CI_REGISTRY}"
-#   tags:
-#     - deployment_backend
+release:maven:
+  stage: release
+  image: docker
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
+  script:
+    - "docker build -f dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull  ."
+    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest"
+  after_script:
+    - "docker logout ${CI_REGISTRY}"
+  tags:
+    - deployment_backend
 
 release:vite:
   stage: release
@@ -73,23 +73,23 @@ release:vite:
   tags:
     - deployment_frontend
 
-# deploy:maven:
-#   image: alpine:latest
-#   stage: deploy
-#   before_script:
-#     - apk update && apk add openssh-client
-#     - mkdir -p ~/.ssh
-#     - chmod 700 ~/.ssh
-#     - echo -e "$SSH_PRIVATE_KEY_BACKEND" > ~/.ssh/id_rsa
-#     - cat ~/.ssh/id_rsa
-#     - chmod 600  ~/.ssh/id_rsa
-#   script:
-#     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
-#     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
-#     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker container rm -f backend-api-instance || true"
-#     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker run -d -p 8080:8080 --name backend-api-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
-#   tags:
-#     - deployment_backend
+deploy:maven:
+  image: alpine:latest
+  stage: deploy
+  before_script:
+    - apk update && apk add openssh-client
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "$SSH_PRIVATE_KEY_BACKEND" > ~/.ssh/id_rsa
+    - cat ~/.ssh/id_rsa
+    - chmod 600  ~/.ssh/id_rsa
+  script:
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker container rm -f backend-api-instance || true"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker run -d -p 8080:8080 --name backend-api-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
+  tags:
+    - deployment_backend
 
 deploy:vite:
   image: alpine:latest
@@ -98,13 +98,13 @@ deploy:vite:
     - apk update && apk add openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
-    - cat ~/.ssh/id_rsa
-    - chmod 600  ~/.ssh/id_rsa
+    - touch "0222FTC1-grupo2-frontend-key.pem"
+    - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > "0222FTC1-grupo2-frontend-key.pem"
+    - chmod 600 "0222FTC1-grupo2-frontend-key.pem"
   script:
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "docker container rm -f frontend-instance || true"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker container rm -f frontend-instance || true"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
   tags:
   - deployment_frontend
