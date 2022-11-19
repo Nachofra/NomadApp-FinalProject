@@ -3,6 +3,10 @@ stages:
   - release
   - deploy
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+
 build:maven:
   stage: build
   image: maven:3.8.6-openjdk-18
