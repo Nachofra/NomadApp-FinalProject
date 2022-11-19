@@ -1,2 +1,2 @@
 FROM nginx:1.23
-COPY /grupo2-frontend/dist/* /usr/share/nginx/html
+COPY /grupo2-frontend/dist/* /usr/share/nginx/html/
