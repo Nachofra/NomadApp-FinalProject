@@ -1,2 +1,2 @@
-FROM httpd:2.4
-COPY /grupo2-frontend/dist/* /usr/local/apache2/htdocs/
+FROM nginx:1.23
+COPY /grupo2-frontend/dist/* /usr/share/nginx/html
