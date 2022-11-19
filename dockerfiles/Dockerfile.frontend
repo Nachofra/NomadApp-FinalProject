@@ -1,0 +1,4 @@
+FROM nginx:stable-alpine
+COPY /grupo2-frontend/dist/* /usr/share/nginx/html/
+EXPOSE 80
+CMD ["ngnix", "-g", "daemon off;"]
