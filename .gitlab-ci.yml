@@ -73,7 +73,7 @@ release:vite:
   tags:
     - deployment_frontend
 
-# maven:deploy:
+# deploy:maven:
 #   image: alpine:latest
 #   stage: deploy
 #   before_script:
@@ -91,7 +91,7 @@ release:vite:
 #   tags:
 #     - deployment_backend
 
-vite:deploy:
+deploy:vite:
   image: alpine:latest
   stage: deploy
   before_script:
@@ -102,6 +102,7 @@ vite:deploy:
     - cat ~/.ssh/id_rsa
     - chmod 600  ~/.ssh/id_rsa
   script:
+    - ssh -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "touch hola.txt"
     - ssh -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
     - ssh -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
     - ssh -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "docker container rm -f frontend-instance || true"
