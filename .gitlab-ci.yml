@@ -98,6 +98,7 @@ deploy:vite:
     - apk update && apk add openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+    - touch "~/0222FTC1-grupo2-frontend-key.pem"
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > "~/0222FTC1-grupo2-frontend-key.pem"
     - chmod 600 "~/0222FTC1-grupo2-frontend-key.pem"
   script:
