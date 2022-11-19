@@ -68,6 +68,7 @@ release:vite:
   script:
     - cd grupo2-frontend/dist
     - ls
+    - cd /
     - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
   after_script:
