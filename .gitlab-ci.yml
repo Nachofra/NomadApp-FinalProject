@@ -73,23 +73,6 @@ release:vite:
   tags:
     - deployment_frontend
 
-maven:deploy:
-  image: alpine:latest
-  stage: deploy
-  before_script:
-    - apk update && apk add openssh-client
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo -e "$SSH_PRIVATE_KEY_BACKEND" > ~/.ssh/id_rsa
-    - chmod 600  ~/.ssh/id_rsa
-  script:
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker container rm -f backend-api-instance || true"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker run -d -p 8080:8080 --name backend-api-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
-  tags:
-    - deployment_backend
-
 vite:deploy:
   image: alpine:latest
   stage: deploy
@@ -106,3 +89,20 @@ vite:deploy:
     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
   tags:
   - deployment_frontend
+
+maven:deploy:
+  image: alpine:latest
+  stage: deploy
+  before_script:
+    - apk update && apk add openssh-client
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "$SSH_PRIVATE_KEY_BACKEND" > ~/.ssh/id_rsa
+    - chmod 600  ~/.ssh/id_rsa
+  script:
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker container rm -f backend-api-instance || true"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker run -d -p 8080:8080 --name backend-api-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
+  tags:
+    - deployment_backend
