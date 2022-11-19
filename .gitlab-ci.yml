@@ -98,9 +98,9 @@ deploy:vite:
     - apk update && apk add openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - touch "~/0222FTC1-grupo2-frontend-key.pem"
-    - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > "~/0222FTC1-grupo2-frontend-key.pem"
-    - chmod 600 "~/0222FTC1-grupo2-frontend-key.pem"
+    - touch "0222FTC1-grupo2-frontend-key.pem"
+    - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > "0222FTC1-grupo2-frontend-key.pem"
+    - chmod 600 "0222FTC1-grupo2-frontend-key.pem"
   script:
     - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
     - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
