@@ -75,10 +75,11 @@ deploy:vite:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
-    - chmod 600  ~/.ssh/id_rsa
+    - chmod og=  ~/.ssh/id_rsa
+    - chmod og= $SSH_PRIVATE_KEY_FRONTEND
     - zip -r builded-frontend.zip grupo2-frontend/dist
   script:
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop; sudo rm -r /tmp/frontend-backups/*; sudo mv /var/www/html/* /tmp/frontend-backups/"
-    - scp -o StrictHostKeyChecking=no builded-frontend.zip $SERVER_USER@$FRONTEND_IPADDRESS:/var/www/html
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "cd /var/www/html/; sudo unzip builded-frontend.zip; sudo mv grupo2-frontend/dist/* .; sudo rm -vr builded-frontend.zip grupo2-frontend/; sudo /etc/init.d/apache2 start"
+    - ssh -i $SSH_PRIVATE_KEY_FRONTEND -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop; sudo rm -r /tmp/frontend-backups/*; sudo mv /var/www/html/* /tmp/frontend-backups/"
+    - scp -i $SSH_PRIVATE_KEY_FRONTEND -o StrictHostKeyChecking=no builded-frontend.zip $SERVER_USER@$FRONTEND_IPADDRESS:/var/www/html
+    - ssh -i $SSH_PRIVATE_KEY_FRONTEND -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "cd /var/www/html/; sudo unzip builded-frontend.zip; sudo mv grupo2-frontend/dist/* .; sudo rm -vr builded-frontend.zip grupo2-frontend/; sudo /etc/init.d/apache2 start"
 
