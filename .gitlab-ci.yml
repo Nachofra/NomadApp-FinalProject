@@ -102,9 +102,9 @@ deploy:vite:
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > "0222FTC1-grupo2-frontend-key.pem"
     - chmod 600 "0222FTC1-grupo2-frontend-key.pem"
   script:
-    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
-    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
-    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "docker container rm -f frontend-instance || true"
-    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker container rm -f frontend-instance || true"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
   tags:
   - deployment_frontend
