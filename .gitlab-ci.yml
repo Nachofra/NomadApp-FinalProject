@@ -96,11 +96,18 @@ deploy:vite:
   stage: deploy
   before_script:
     - apk update && apk add openssh-client
+    # - mkdir -p ~/.ssh
+    # - chmod 700 ~/.ssh
+    # - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
+    # - cat ~/.ssh/id_rsa
+    # - chmod 600  ~/.ssh/id_rsa
+
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY_FRONTEND" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
-    - cat ~/.ssh/id_rsa
-    - chmod 600  ~/.ssh/id_rsa
+    - ssh-keyscan 3.138.60.134 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
     - ssh -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "touch hola.txt"
     - ssh -o StrictHostKeyChecking=no ubuntu@3.138.60.134 "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
