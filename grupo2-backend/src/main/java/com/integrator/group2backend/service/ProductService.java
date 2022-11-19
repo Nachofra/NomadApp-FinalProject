@@ -13,10 +13,13 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final ModelMapper modelMapper;
+
     public ProductService(ProductRepository productRepository, ModelMapper modelMapper) {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
     }
+
     public Optional<Product> searchProductById(Long productId){
         return productRepository.findById(productId);
     }
@@ -96,8 +99,8 @@ public class ProductService {
         return dtoFinalList;
     }
 
-    @Autowired
-    ModelMapper modelMapper;
+
+
     public ProductViewDTO convertToDto(Product product) {
         ProductViewDTO productViewDTO = modelMapper.map(product, ProductViewDTO.class);
         return productViewDTO;

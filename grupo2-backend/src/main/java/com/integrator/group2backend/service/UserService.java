@@ -1,8 +1,10 @@
 package com.integrator.group2backend.service;
 
+import com.integrator.group2backend.dto.CurrentUserDTO;
 import com.integrator.group2backend.entities.User;
 import com.integrator.group2backend.repository.UserRepository;
 import net.bytebuddy.utility.RandomString;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,10 +22,13 @@ public class UserService {
 
     private final JavaMailSender mailSender;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender) {
+    private final ModelMapper modelMapper;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
+        this.modelMapper = modelMapper;
     }
 
     public User addUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException {
@@ -79,5 +84,10 @@ public class UserService {
             return true;
         }
 
+    }
+
+    public CurrentUserDTO getCurrentUser(String email) {
+        User currentUser = this.userRepository.findByEmail(email);
+        return this.modelMapper.map(currentUser, CurrentUserDTO.class);
     }
 }
