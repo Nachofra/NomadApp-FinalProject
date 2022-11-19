@@ -1,6 +1,6 @@
 stages:
   - build
-  - test
+  - release
   - deploy
 
 workflow:
@@ -39,46 +39,77 @@ build:vite:
     paths:
       - grupo2-frontend/dist
 
-test:maven:
-  stage: test
-  image: maven:3.8.6-openjdk-18
-  cache:
-    paths:
-    - grupo2-backend/target/
+release:maven:
+  stage: release
+  image: docker
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
   script:
-    - cd "grupo2-backend/"
-    - mvn test
+    - "docker build -f dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull  ."
+    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest"
+  after_script:
+    - "docker logout ${CI_REGISTRY}"
+  tags:
+    - deployment_backend
+
+release:vite:
+  stage: release
+  image: docker
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""  
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
+  script:
+    - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
+    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
+  after_script:
+    - "docker logout ${CI_REGISTRY}"
+  tags:
+    - deployment_frontend
 
 deploy:maven:
+  image: alpine:latest
   stage: deploy
-  image: ubuntu:22.04
   before_script:
-    - apt-get update
-    - apt-get install openssh-client -y
+    - apk update && apk add openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "$SSH_PRIVATE_KEY_BACKEND" > ~/.ssh/id_rsa
+    - cat ~/.ssh/id_rsa
     - chmod 600  ~/.ssh/id_rsa
-    - mv grupo2-backend/target/*.war .
   script:
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/shutdown.sh; sudo rm -r /tmp/backend-backups/*; sudo mv /tmp/apache-tomcat-9.0.68/webapps/* /tmp/backend-backups/; sudo mkdir /tmp/apache-tomcat-9.0.68/webapps/ROOT/"
-    - scp -o StrictHostKeyChecking=no *.war $SERVER_USER@$BACKEND_IPADDRESS:/tmp/apache-tomcat-9.0.68/webapps
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "sudo /tmp/apache-tomcat-9.0.68/bin/startup.sh"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker container rm -f backend-api-instance || true"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker run -d -p 8080:8080 --name backend-api-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
+  tags:
+    - deployment_backend
 
 deploy:vite:
+  image: alpine:latest
   stage: deploy
-  image: ubuntu:22.04
   before_script:
-    - apt-get update
-    - apt-get install openssh-client -y
-    - apt-get install zip -y && apt-get install unzip -y
+    - apk update && apk add openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
-    - chmod 600  ~/.ssh/id_rsa
-    - zip -r builded-frontend.zip grupo2-frontend/dist
+    - touch "0222FTC1-grupo2-frontend-key.pem"
+    - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > "0222FTC1-grupo2-frontend-key.pem"
+    - chmod 600 "0222FTC1-grupo2-frontend-key.pem"
   script:
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "sudo /etc/init.d/apache2 stop; sudo rm -r /tmp/frontend-backups/*; sudo mv /var/www/html/* /tmp/frontend-backups/"
-    - scp -o StrictHostKeyChecking=no builded-frontend.zip $SERVER_USER@$FRONTEND_IPADDRESS:/var/www/html
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_IPADDRESS "cd /var/www/html/; sudo unzip builded-frontend.zip; sudo mv grupo2-frontend/dist/* .; sudo rm -vr builded-frontend.zip grupo2-frontend/; sudo /etc/init.d/apache2 start"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker container rm -f frontend-instance || true"
+    - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+  tags:
+  - deployment_frontend
 
