@@ -46,7 +46,7 @@ public class UserService {
 
     public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
         String toAddress = user.getEmail();
-        String fromAddress = "NomadApp@outlook.com";
+        String fromAddress = "noreply@nomadapp.com.ar";
         String senderName = "Nomad App";
         String subject = "Please verify your registration";
         String content = "Dear [[name]],<br>"
