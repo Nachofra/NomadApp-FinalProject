@@ -110,4 +110,3 @@ deploy:vite:
     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_DOMAIN "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
   tags:
   - deployment_frontend
-
