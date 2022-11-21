@@ -5,7 +5,7 @@ export const HomeCategories = ({categories}) => {
     const {filters, setFilters, applyCategory } = useSearchContext();
 
     return (
-        <section className='w-full flex flex-col mb-20' >
+        <section className='w-full flex flex-col' >
             <h2 className='text-2xl font-medium mb-6'>
                 Search from one of our categories
             </h2>

@@ -3,11 +3,19 @@ import {motion} from 'framer-motion';
 import DeskNavBarModal from './DeskNavBarModal';
 import { PublicRoutes } from '../../../../guard/Routes';
 import { Link } from 'react-router-dom';
-import { ArrowRightOnRectangleIcon } from '@heroicons/react/20/solid';
+import {
+  ArrowRightOnRectangleIcon,
+  CalendarDaysIcon,
+  Cog6ToothIcon,
+  UserIcon
+} from '@heroicons/react/24/outline'
+import { useUserContext } from '../../../../context/UserContext';
+import { CollapsableMenu } from '../../../collapsableMenu/CollapsableMenu';
 
-export const MobileOpen = ({user}) => {
+export const MobileOpen = ({user, handleLogout}) => {
+
   return (
-    <motion.nav className='flex flex-col'
+    <motion.nav className='flex flex-col w-full'
         initial={{
         height: 0,
         opacity: 0,
@@ -38,21 +46,45 @@ export const MobileOpen = ({user}) => {
         },
         }}
         >
-            <div className=' py-10 w-full flex flex-col items-center space-y-4'>
+            <div className=' py-10 w-full flex flex-col items-end gap-4 px-4'>
             {
                 user ?
                 <>
-                    <h2 className='mr-10 text-xl'>Hola <span className='font-bold'>{user.firstName}</span></h2>
+                    <h2 className='text-xl'>Hi <span className='font-bold'>{user.firstName}</span></h2>
 
-                    <Link to={PublicRoutes.HOME}>
-                    <ArrowRightOnRectangleIcon
-                    className='w-8 h-8 text-red-400'
-                        onClick={()=>{logout()}}
-                    />
-                    </Link>
+                    <CollapsableMenu
+                    question="My account"
+                    questionClassName="ml-auto mr-4"
+                    wrapperClassName="flex flex-col items-end gap-4 pr-4 border-r-4 border-gray-200"
+                    >
+                        <Link className='flex items-center gap-2 '>
+                            <p className='md:text-lg'>Profile</p>
+                            <UserIcon className='w-4 h-4 md:w-6 md:h-6' />
+                        </Link>
+                        <Link className='flex items-center gap-2'>
+                            <p className='md:text-lg'>My reserves</p>
+                            <CalendarDaysIcon className='w-4 h-4 md:w-6 md:h-6' />
+                        </Link>
+                        <Link className='flex items-center gap-2'>
+                            <p className='md:text-lg'>Settings</p>
+                            <Cog6ToothIcon className='w-4 h-4 md:w-6 md:h-6' />
+                        </Link>
+
+                        <Link 
+                        to={PublicRoutes.HOME}
+                        onClick={ handleLogout }
+                        className="flex items-center"
+                        >
+                        <p className='text-red-400 mr-2'>Logout</p>
+                        <ArrowRightOnRectangleIcon
+                        className='w-6 h-6 text-red-400'
+                        />
+                        </Link>
+
+                    </CollapsableMenu>
                 </>
                 :
-                <>
+                <div className='flex w-full items-center justify-center gap-4'>
                     <DeskNavBarModal
                     alt
                     route={PublicRoutes.REGISTER}
@@ -62,7 +94,7 @@ export const MobileOpen = ({user}) => {
                     route={PublicRoutes.LOGIN}
                     placeholder="Sign In">
                     </DeskNavBarModal>
-                </> 
+                </div> 
             }
         </div>
     </motion.nav>

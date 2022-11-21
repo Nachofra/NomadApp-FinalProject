@@ -4,10 +4,9 @@ import { useSearchContext } from '../../../../context/SearchContext'
 import { PropertyTypeSelect } from '../components/PropertyTypeSelect'
 import { CountSelect } from '../components/CountSelect'
 import { CollapsableMenu } from '../../../collapsableMenu/CollapsableMenu'
-import listCategory from '@/staticJSON/listCategory.json'
 export const MobileNavFilters = ({open, setOpen}) => {
 
-    const {filters, setFilters, applyCategory} = useSearchContext()
+    const {filters, categories, setFilters, applyCategory} = useSearchContext()
 
   return (
     <MobileNavModal setOpen={setOpen} open={open}>
@@ -45,11 +44,11 @@ export const MobileNavFilters = ({open, setOpen}) => {
                     <div className='flex items-center justify-start
                     pt-4 overflow-auto  snap-x snap-mandatory  scrollbar-none'>
                         <div className="flex space-x-6 snap-x snap-mandatory">
-                        {listCategory.map((category, i) => (
+                        {categories.map((category, i) => (
                             <PropertyTypeSelect
                                 key={i}
                                 name={category.title}
-                                illustration={category.illustration}
+                                illustration={category.categoryIllustration.url}
                                 onClick={() => applyCategory(category.id)}
                                 selected={filters?.category === category.id} 
                             />

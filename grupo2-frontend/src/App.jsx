@@ -4,9 +4,9 @@ import { Auth, Home, Product } from './views'
 import { RouteNotFound } from './utilities/RouteNotFound'
 import { AuthGuard } from './guard/AuthGuard'
 import { Route } from 'react-router-dom'
-import { PublicRoutes } from './guard/Routes'
+import { PrivateRoutes, PublicRoutes } from './guard/Routes'
+import { Reserve } from './views/reserve/Reserve'
 import './App.css'
-
 
 function App() {
   return (
@@ -14,8 +14,10 @@ function App() {
       <Route path={PublicRoutes.HOME} element={<Home />} />
       <Route path={PublicRoutes.AUTH} element={<Auth />} />
       <Route path={PublicRoutes.PRODUCT} element={<Product />} />
-      
-      <Route element={<AuthGuard />}></Route>
+      <Route path={PrivateRoutes.RESERVE} element={<Reserve />} />
+
+      <Route element={<AuthGuard />}>
+      </Route>
   </RouteNotFound>
   )
 }

@@ -7,8 +7,8 @@ export const PublicRoutes = {
   }
   
   export const PrivateRoutes = {
-    SUBMIT : '/submit',
-    COLLECTION : '/collection',
+    RESERVE : '/product/:id/reserve',
+    RESERVEID : id => `/product/${id}/reserve`
   }
 
   export const FetchRoutes = {

@@ -22,14 +22,14 @@ public class Group2BackendApplication extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder){
 		return builder.sources(Group2BackendApplication.class);
 	}
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://3.145.140.39", "http://nomadapp.com.ar", "http://www.nomadapp.com.ar", "http://localhost:5173").allowedMethods("*").allowedHeaders("*");
-			}
-		};
-	}
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//		return new WebMvcConfigurer() {
+//			@Override
+//			public void addCorsMappings(CorsRegistry registry) {
+//				registry.addMapping("/**").allowedOrigins("http://18.217.21.141", "http://ec2-18-217-21-141.us-east-2.compute.amazonaws.com", "http://localhost:5173").allowedMethods("*").allowedHeaders("*");
+//			}
+//		};
+//	}
 
 }

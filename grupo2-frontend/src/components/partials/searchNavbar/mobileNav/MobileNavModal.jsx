@@ -44,7 +44,7 @@ export const MobileNavModal = ({open, setOpen, children}) => {
         }}
     >
         <div className='flex flex-col items-start w-full overflow-y-auto scrollbar-none h-screen max-h-[70vh]'>
-            <div className=' w-full px-2 py-4 pb-20'>
+            <div className='w-full px-4 py-4 pb-20'>
                 
                 {children}
                 <button

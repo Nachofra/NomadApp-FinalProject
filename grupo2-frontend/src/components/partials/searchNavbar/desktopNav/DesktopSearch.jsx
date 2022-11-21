@@ -1,13 +1,14 @@
 import React from 'react'
-import { AdjustmentsHorizontalIcon, ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
-import { MapPinIcon, QuestionMarkCircleIcon, UserGroupIcon, CalendarDaysIcon } from '@heroicons/react/24/outline'
+import {  ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
+import { MapPinIcon, UserGroupIcon, CalendarDaysIcon } from '@heroicons/react/24/outline'
 import { useSearchContext } from '../../../../context/SearchContext'
 import DeskSearchbarModal from './components/DeskSearchbarModal'
 import { Calendar } from '../../../Calendar/Calendar'
 import { DeskFiltersPanel } from './components/DeskFiltersPanel'
 import { PropertyTypeSelect } from '../components/PropertyTypeSelect'
 import { LocationDatalist } from '../components/LocationDatalist'
-export const DesktopSearch = () => {
+import { AnimatePresence, motion } from 'framer-motion'
+export const DesktopSearch = ({hide}) => {
 
   const {filters, 
     categories,
@@ -22,18 +23,23 @@ Date.prototype.formatMMDDYYYY = function(){
   "/" +  this.getFullYear();
 }
 
-const handleDate = date => date? date.formatMMDDYYYY() : 'Any';
+const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
 
   return (
-    <section className='w-screen fixed bottom-4 flex items-center justify-center'> 
+    <AnimatePresence initial={false} mode="wait">
+    {!hide && 
+    <motion.section
+    initial={{ y: -50, opacity: 0 }}
+    animate={{ y: 0, opacity: 1 }}
+    exit={{ y: -50, opacity: 0 }}
+    className='w-screen fixed bottom-4 flex items-center justify-center'> 
       <div
         className={`w-[94vw] max-w-[900px]  
         shadow-xl cursor-pointer h-auto relative
         flex justify-center items-center p-6
-        rounded-xl bg-shape-navbar
+        rounded-xl bg-shape-navbar gap-4
         ring-1 ring-violet-700 ring-opacity-5`}
       > 
-
         <DeskSearchbarModal
           active={filters.location !== null}
           icon={<MapPinIcon className='shrink-0 w-7 h-7 text-violet-700' />}
@@ -43,13 +49,13 @@ const handleDate = date => date? date.formatMMDDYYYY() : 'Any';
           <div className='w-96 flex flex-col items-center'>
             <p className='text-violet-700 font-semibold uppercase text-3xl'>Find places</p>
             <p className='mb-4 text-lg text-gray-600'>Select one from the list</p>
-          <LocationDatalist flowTop />
+          <LocationDatalist flowTop origin={filters} setOrigin={setFilters}  />
           </div>
         </DeskSearchbarModal>
         <DeskSearchbarModal
           active={filters.date.from !== null | filters.date.to !== null}
           icon={<CalendarDaysIcon className='w-7 h-7 text-violet-700' />}
-          text={`${handleDate(filters.date.from)} - ${handleDate(filters.date.to)}`}
+          text={`${handleDateFormat(filters.date.from)} - ${handleDateFormat(filters.date.to)}`}
           placeholder="Any date - any date"
         >
           <div className='h-full w-16 p-6'>
@@ -108,6 +114,7 @@ const handleDate = date => date? date.formatMMDDYYYY() : 'Any';
         w-6 h-6 text-violet-700' 
         /> */}
       </div>
-    </section>
+    </motion.section>
+    }</AnimatePresence>  
   )
 }
