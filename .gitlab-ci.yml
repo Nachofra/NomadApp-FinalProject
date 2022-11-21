@@ -82,6 +82,7 @@ deploy:maven:
   stage: deploy
   before_script:
     - apk update && apk add openssh-client
+    - chmod og= $SSH_PRIVATE_KEY_BACKEND
     # - mkdir -p ~/.ssh
     # - chmod 700 ~/.ssh
     # - echo -e "$SSH_PRIVATE_KEY_BACKEND" > ~/.ssh/id_rsa
@@ -99,6 +100,7 @@ deploy:vite:
   stage: deploy
   before_script:
     - apk update && apk add openssh-client
+    - chmod og= $SSH_PRIVATE_KEY_FRONTEND
     # - mkdir -p ~/.ssh
     # - chmod 700 ~/.ssh
     # - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
