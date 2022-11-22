@@ -70,7 +70,7 @@ release:vite:
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
   script:
-    - echo -e "$NGINX_CONF" > ./default.conf
+    - echo -e "$NGINX_CONF" > ./nginx.conf
     - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
   after_script:
