@@ -1,6 +1,7 @@
 package com.integrator.group2backend.service;
 
 import com.integrator.group2backend.dto.ReservationDTO;
+import com.integrator.group2backend.dto.ReservationSimpleDTO;
 import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.repository.ProductRepository;
@@ -47,5 +48,9 @@ public class ReservationService {
         Date formattedCheckInDate = dateFormatter.parse(checkInDate);
         Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
         return this.mapperService.mapList(this.reservationRepository.findReservationsByCheckInDateAndCheckOutDate(formattedCheckInDate, formattedCheckOutDate), ReservationDTO.class);
+    }
+
+    public List<ReservationSimpleDTO> findByProductId(Long productId) {
+        return this.mapperService.mapList(this.reservationRepository.findReservationByProductId(productId), ReservationSimpleDTO.class);
     }
 }
