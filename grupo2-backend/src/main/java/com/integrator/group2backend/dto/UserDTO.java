@@ -1,13 +1,11 @@
 package com.integrator.group2backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.integrator.group2backend.entities.City;
 import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.entities.Roles;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
