@@ -1,8 +1,5 @@
 package com.integrator.group2backend.service;
 
-import com.integrator.group2backend.dto.ProductViewDTO;
-import com.integrator.group2backend.entities.PolicyItem;
-import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
@@ -18,8 +15,7 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
     public List<Reservation> listAllReservations(){
-        List<Reservation> searchedReservations = reservationRepository.findAll();
-        return searchedReservations;
+        return reservationRepository.findAll();
     }    public Optional<Reservation> searchReservationById(Long id){
         return reservationRepository.findById(id);
     }
@@ -30,7 +26,6 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
     public List<Reservation> findReservationsByCheckInDateAndCheckOutDate(Date checkInDate, Date checkOutDate){
-        List<Reservation> reservationFoundByCheckInDateAndCheckOutDate = reservationRepository.findReservationsByCheckInDateAndCheckOutDate(checkInDate,checkOutDate);
-        return reservationFoundByCheckInDateAndCheckOutDate;
+        return reservationRepository.findReservationsByCheckInDateAndCheckOutDate(checkInDate,checkOutDate);
     }
 }
