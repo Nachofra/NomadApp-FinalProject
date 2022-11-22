@@ -6,6 +6,7 @@ import { AuthGuard } from './guard/AuthGuard'
 import { Route } from 'react-router-dom'
 import { PrivateRoutes, PublicRoutes } from './guard/Routes'
 import { Reserve } from './views/reserve/Reserve'
+import { VerifyConfirmation } from './views/verify-confirmation/VerifyConfirmation'
 import './App.css'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Route path={PublicRoutes.HOME} element={<Home />} />
       <Route path={PublicRoutes.AUTH} element={<Auth />} />
       <Route path={PublicRoutes.PRODUCT} element={<Product />} />
+      <Route path={PublicRoutes.VERIFYCONFIRM} element={<VerifyConfirmation />} />
       <Route path={PrivateRoutes.RESERVE} element={<Reserve />} />
 
       <Route element={<AuthGuard />}>
