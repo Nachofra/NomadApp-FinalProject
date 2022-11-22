@@ -1,7 +1,7 @@
 stages:
-  - build
-  - release
-  # - deploy
+  # - build
+  # - release
+  - deploy
 
 # workflow:
 #   rules:
@@ -21,23 +21,23 @@ stages:
 #     paths:
 #       - grupo2-backend/target/*.war
 
-build:vite:
-  stage: build
-  image: node:16.5.0
-  cache:
-    key:
-      files:
-        - grupo2-frontend/package-lock.json
-      prefix: npm
-    paths:
-      - grupo2-frontend/node_modules/
-  script:
-    - cd "grupo2-frontend/"
-    - npm install
-    - npm run build
-  artifacts:
-    paths:
-      - grupo2-frontend/dist
+# build:vite:
+#   stage: build
+#   image: node:16.5.0
+#   cache:
+#     key:
+#       files:
+#         - grupo2-frontend/package-lock.json
+#       prefix: npm
+#     paths:
+#       - grupo2-frontend/node_modules/
+#   script:
+#     - cd "grupo2-frontend/"
+#     - npm install
+#     - npm run build
+#   artifacts:
+#     paths:
+#       - grupo2-frontend/dist
 
 # release:maven:
 #   stage: release
@@ -58,25 +58,25 @@ build:vite:
 #   tags:
 #     - deployment_backend
 
-release:vite:
-  stage: release
-  image: docker
-  services:
-    - docker:dind
-  variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""  
-  before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
-  script:
-    - echo -e "$NGINX_CONF" > ./nginx.conf
-    - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
-    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
-  after_script:
-    - "docker logout ${CI_REGISTRY}"
-  tags:
-    - deployment_frontend
+# release:vite:
+#   stage: release
+#   image: docker
+#   services:
+#     - docker:dind
+#   variables:
+#     DOCKER_HOST: tcp://docker:2375/
+#     DOCKER_DRIVER: overlay2
+#     DOCKER_TLS_CERTDIR: ""  
+#   before_script:
+#     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
+#   script:
+#     - echo -e "$NGINX_CONF" > ./nginx.conf
+#     - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
+#     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
+#   after_script:
+#     - "docker logout ${CI_REGISTRY}"
+#   tags:
+#     - deployment_frontend
 
 # deploy:maven:
 #   image: alpine:latest
@@ -95,19 +95,19 @@ release:vite:
 #   tags:
 #     - deployment_backend
 
-# deploy:vite:
-#   image: alpine:latest
-#   stage: deploy
-#   before_script:
-#     - apk update && apk add openssh-client
-#     - mkdir -p ~/.ssh
-#     - chmod 700 ~/.ssh
-#     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
-#     - chmod 600  ~/.ssh/id_rsa
-#   script:
-#     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
-#     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
-#     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "docker container rm -f frontend-instance || true"
-#     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
-#   tags:
-#     - deployment_frontend
+deploy:vite:
+  image: alpine:latest
+  stage: deploy
+  before_script:
+    - apk update && apk add openssh-client
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
+    - chmod 600  ~/.ssh/id_rsa
+  script:
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "docker container rm -f frontend-instance || true"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+  tags:
+    - deployment_frontend
