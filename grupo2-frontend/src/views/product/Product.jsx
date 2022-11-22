@@ -8,7 +8,7 @@ import { ArrowRightIcon, MapPinIcon, PhotoIcon, StarIcon } from '@heroicons/reac
 import { FeatureItem } from '../../components/featureItem/FeatureItem'
 import { ImageSlider } from '../../components/imageSlider/ImageSlider'
 import { ImageGallery } from '../../components/imageGallery/ImageGallery'
-import Modal from '../../components/modal/Modal'
+import {Modal} from '../../components/modal/Modal'
 import { Calendar } from '../../components/Calendar/Calendar'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import { PolicyList } from './components/PolicyList'
@@ -31,8 +31,6 @@ export const Product = () => {
     const [ data, setData ] = useState(state?.product)
     const {id} = useParams();
 
-    console.log(state?.product)
-
     useEffect(() => {
         const fetchData = async () =>{
           startLoading();
@@ -45,7 +43,7 @@ export const Product = () => {
             }
             loadDone();
           }
-          
+
           if ( !data ) { fetchData() };
     }, [])
 
