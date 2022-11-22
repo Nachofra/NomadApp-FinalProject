@@ -6,17 +6,12 @@ const useUserContext = () => useContext(userContext);
 
 function UserProvider({ children }) {
   const [registeredUser, setRegisteredUser ] = useState(null)
-  const [user, setUser] = useState({
-    firstName: "Francisco",
-    lastName: "Alamino",
-    email: "usuario@gmail.com",
-    password: "usuario",
-    confirmPassword: "usuario",
-  });
+  const [user, setUser] = useState(null);
 
   function register(user){
     setRegisteredUser(user)
   }
+
   function login() {
     setUser(registeredUser);
   }
