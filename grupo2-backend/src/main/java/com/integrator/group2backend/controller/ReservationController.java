@@ -1,6 +1,7 @@
 package com.integrator.group2backend.controller;
 
 import com.integrator.group2backend.dto.ReservationDTO;
+import com.integrator.group2backend.dto.ReservationSimpleDTO;
 import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.service.ReservationService;
 import com.integrator.group2backend.utils.MapperService;
@@ -71,6 +72,18 @@ public class ReservationController {
             return ResponseEntity.ok(reservationsFounded);
         }
         logger.error("Error al buscar reservas en el rango de fechas correspondiente.");
+        return ResponseEntity.badRequest().build();
+    }
+
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<List<ReservationSimpleDTO>> getReservationByProductId(@PathVariable("id") Long productId){
+        List<ReservationSimpleDTO> reservationFound = reservationService.findByProductId(productId);
+        if(!reservationFound.isEmpty()){
+            logger.info("Se listaron todas las reservas del producto con id " + productId);
+            return ResponseEntity.ok(reservationFound);
+        }
+        logger.error("Error al listar todas las reservas del producto con id " + productId);
         return ResponseEntity.badRequest().build();
     }
 
