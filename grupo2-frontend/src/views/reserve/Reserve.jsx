@@ -2,11 +2,12 @@ import { CheckBadgeIcon } from '@heroicons/react/24/outline'
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { redirect, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Calendar } from '../../components/Calendar/Calendar'
 import { Datalist, DatalistItem } from '../../components/datalist'
 import { Input } from '../../components/input/Input'
 import { BaseLayout } from '../../components/layout/BaseLayout'
+import { Modal } from '../../components/modal/Modal'
 import { Footer, HeaderNav } from '../../components/partials'
 import { useLoadingViewContext } from '../../context/LoadingViewContext'
 import { useSearchContext } from '../../context/SearchContext'
@@ -18,57 +19,90 @@ import { checkinList } from './utilities/checkinList'
 
 export const Reserve = () => {
 
-    const {
-        status,
-        startLoading,
-        loadDone,
-        triggerError,
-      } = useLoadingViewContext()
+  const { width } = useWindowDimensions();
+  const navigate = useNavigate();
+  const { filters } = useSearchContext()
+  const {state} = useLocation()
 
-    const { filters } = useSearchContext()
+  Date.prototype.formatMMDDYYYYhypens = function(){
+    return this.getFullYear() + 
+    "-" +  (this.getMonth() + 1) +
+    "-" +  this.getDate();
+  }
+    
+  const handleDateFormat = date => date? date.formatMMDDYYYYhypens() : null;
 
-    const navigate = useNavigate();
-    const {state} = useLocation()
+  const {
+      status,
+      startLoading,
+      loadDone,
+      triggerError,
+    } = useLoadingViewContext()
 
-    const [ data, setData ] = useState(state?.product)
-    const {id} = useParams();
+  const [ data, setData ] = useState(state?.product)
+  const {id} = useParams();
 
-    useEffect(() => {
-        const fetchData = async () =>{
-          startLoading();
-            try {
-              const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
-              setData(data);
-            } catch (error) {
-              console.error(error.message);
-              triggerError()
-            }
-            loadDone();
+  useEffect(() => {
+      const fetchData = async () =>{
+        startLoading();
+          try {
+            const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
+            setData(data);
+          } catch (error) {
+            console.error(error.message);
+            triggerError()
           }
-          
-          if ( !data ) { fetchData() };
-    }, [])
+          loadDone();
+        }
+        
+        if ( !data ) { fetchData() };
+  }, [])
 
-    // const [modal, setModal ] = useState(false);
+    const [modal, setModal ] = useState(false);
 
-    const { width } = useWindowDimensions();
+  const initialStateForm = {
+    id: '',
+    name: '',
+    email: '',
+    lastName: '',
+    city: '',
+    dateFrom: filters.date.from,
+    dateTo: filters.date.to,
+    checkin: null
+  }
 
-    const initialStateForm = {
-      id: '',
-      name: '',
-      email: '',
-      lastName: '',
-      city: '',
-      dateFrom: filters.date.from,
-      dateTo: filters.date.to,
-      checkin: ''
-    }
+  const [formFields, setFormFields] = useState(initialStateForm)
 
-    const [formFields, setFormFields] = useState(initialStateForm)
+  const handleDates = ( dateFrom, dateTo )=> {
+    setFormFields({...formFields, dateFrom:dateFrom, dateTo:dateTo})
+  }
 
-    const handleDates = ( dateFrom, dateTo )=> {
-      setFormFields({...formFields, dateFrom:dateFrom, dateTo:dateTo})
-    }
+  const postRequest = async () => {
+      try {
+        startLoading();
+        const { data } = await axios.post(`${FetchRoutes.BASEURL}/reservation`,
+        {
+          checkInTime: checkin?.time,
+          checkInDate: handleDateFormat(dateFrom),
+          checkOutDate: handleDateFormat(dateTo),
+          product: { id: id },
+          user: { id: 'z' }
+        })
+
+        console.log(data)
+        login(data);
+        //if everything ok
+        //
+
+      } catch (error) {
+        console.error(error.message);
+        
+      } finally{ loadDone() };
+  }
+
+  const handleSubmit = () => {
+    setModal(true)
+  }
 
     if (data) { return (
     <>
@@ -158,7 +192,7 @@ export const Reserve = () => {
             <div className='flex items-center mb-4'>
               <CheckBadgeIcon className='w-8 h-8 text-gray-700 mr-1'/>
               <p className='text-gray-700 text-lg'>
-                {formFields.checkin.value ? 
+                {formFields.checkin?.value ? 
                 `The place will be ready around ${formFields.checkin.value} and ${formFields.checkin.end}` :
                 'Please select any checkin hour'}
               </p>
@@ -185,7 +219,7 @@ export const Reserve = () => {
           </div>
         </div>
 
-        <ReserveCard data={data} dates={{from: formFields.dateFrom, to: formFields.dateTo}} />
+        <ReserveCard data={data} dates={{from: formFields.dateFrom, to: formFields.dateTo}} handleSubmit={handleSubmit} />
       </div>
       
     </BaseLayout>
@@ -203,6 +237,16 @@ export const Reserve = () => {
       </div>
     </BaseLayout>
     <Footer />
+    <Modal
+      isOpen={modal}
+      closeModal={() => navigate('/')}
+    >
+      <div className='w-screen h-screen max-w-[90vw] md:max-w-lg max-h-96 
+      bg-white rounded-lg flex flex-col items-center p-4'>
+        <p className='text-xl md:text-2xl font-medium mb-2 text-gray-800'>Reservation made</p>
+        <p className='md:text-lg text-gray-600'>We have sent you an email with all the details</p>
+      </div>
+    </Modal>
     </>
   )}
 
