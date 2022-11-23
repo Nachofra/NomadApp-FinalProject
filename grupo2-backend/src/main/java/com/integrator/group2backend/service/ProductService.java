@@ -200,6 +200,8 @@ public class ProductService {
                 logger.info("Se filtraron los productos disponibles en las fechas especificadas.");
                 return mapperService.mapList(auxList, ProductViewDTO.class);
             }
+            logger.error("No hay reservas disponibles para los filtros y fechas especificadas.");
+            return mapperService.mapList(auxList, ProductViewDTO.class);
         }
         if (foundByCustomFilter.isEmpty()){
             logger.error("No se encontraron los productos correspondientes a los filtros utilizados.");
