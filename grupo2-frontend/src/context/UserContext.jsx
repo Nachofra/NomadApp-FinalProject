@@ -1,22 +1,32 @@
 import React, { createContext, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const userContext = createContext(null);
 
 const useUserContext = () => useContext(userContext);
 
 function UserProvider({ children }) {
-  const [registeredUser, setRegisteredUser ] = useState(null)
-  const [user, setUser] = useState(null);
+  
+  const navigate = useNavigate()
 
+// Retrieve the object from storage
+const retrievedObject = localStorage.getItem('userSession');
+
+  const [user, setUser] = useState(JSON.parse(retrievedObject));
+  
   function register(user){
     setRegisteredUser(user)
   }
 
-  function login() {
-    setUser(registeredUser);
+  function login(data) {
+    localStorage.setItem('userSession', JSON.stringify(data));
+
+    setUser(data);
   }
   function logout() {
     setUser(null);
+    localStorage.removeItem('userSession')
+    navigate('/')
   }
   function update(newUser) {
     setUser((prevUser) => ({
@@ -29,7 +39,6 @@ function UserProvider({ children }) {
     <userContext.Provider
       value={{
         user,
-        registeredUser,
         login,
         register,
         logout,
