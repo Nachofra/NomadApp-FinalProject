@@ -8,6 +8,7 @@ import { PrivateRoutes, PublicRoutes } from './guard/Routes'
 import { Reserve } from './views/reserve/Reserve'
 import { VerifyConfirmation } from './views/verify-confirmation/VerifyConfirmation'
 import './App.css'
+import { DefaultError } from './views/defaultError/DefaultError'
 
 function App() {
   return (
@@ -16,9 +17,10 @@ function App() {
       <Route path={PublicRoutes.AUTH} element={<Auth />} />
       <Route path={PublicRoutes.PRODUCT} element={<Product />} />
       <Route path={PublicRoutes.VERIFYCONFIRM} element={<VerifyConfirmation />} />
-      <Route path={PrivateRoutes.RESERVE} element={<Reserve />} />
+      <Route path={PublicRoutes.DEFAULTERROR} element={<DefaultError />} />
 
       <Route element={<AuthGuard />}>
+        <Route path={PrivateRoutes.RESERVE} element={<Reserve />} />
       </Route>
   </RouteNotFound>
   )
