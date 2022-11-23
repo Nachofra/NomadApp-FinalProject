@@ -1,7 +1,6 @@
 package com.integrator.group2backend.customFilters;
 
 import com.integrator.group2backend.entities.Product;
-import com.integrator.group2backend.entities.Reservation;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,9 +25,6 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
         CriteriaQuery<Product> queryProduct = cb.createQuery(Product.class);
         Root<Product> productRoot = queryProduct.from(Product.class);
-
-        /*CriteriaQuery<Reservation> queryReservation = cb.createQuery(Reservation.class);
-        Root<Reservation> reservationRoot = queryReservation.from(Reservation.class);*/
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -73,27 +68,13 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             predicates.add(cb.le(maxPricePath, maxPrice));
             logger.info("Filtro por precio maximo aplicado.");
         }
-        /*
-        if (!checkInDate.equals(null)){
-            Path<Date> checkInDatePath = reservationRoot.get("checkInDate");
-            predicates.add(cb.greaterThanOrEqualTo(checkInDatePath, checkInDate));
-            logger.info("Filtro por fecha de inicio de la reserva aplicado.");
-        }
-        if (!checkOutDate.equals(null)){
-            Path<Date> checkOutDatePath = reservationRoot.get("checkOutDate");
-            predicates.add(cb.lessThanOrEqualTo(checkOutDatePath, checkOutDate));
-            logger.info("Filtro por fecha de finalizacion de la reserva aplicado.");
-        }
-        */
-        if (predicates.isEmpty()){
-            logger.info("Se listaron todos los productos");
-            queryProduct.select(productRoot);
-        }else {
+        if (!predicates.isEmpty()){
             logger.info("Los filtros fueron aplicados.");
             queryProduct.select(productRoot).where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+        }else {
+            logger.info("Se listaron todos los productos");
+            queryProduct.select(productRoot);
         }
-        System.out.println(entityManager.createQuery(queryProduct));
-        System.out.println(entityManager.createQuery(queryProduct).getResultList());
         return entityManager.createQuery(queryProduct).getResultList();
     }
 }
