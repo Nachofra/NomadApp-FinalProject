@@ -1,27 +1,38 @@
 package com.integrator.group2backend.controller;
 
+import com.integrator.group2backend.dto.CurrentUserDTO;
+import com.integrator.group2backend.dto.UserVerifyCodeDTO;
 import com.integrator.group2backend.entities.User;
 import com.integrator.group2backend.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    @Value("${frontendUrl}")
+    private String frontendUrl;
+
     private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/verify")
-    public ResponseEntity<String> verifyUser(@RequestParam("code") String code) {
-        if (userService.verify(code)) {
+    @PostMapping("/verify")
+    public ResponseEntity<String> verifyUser(@RequestBody UserVerifyCodeDTO userVerifyCodeDTO) {
+        if (userService.verify(userVerifyCodeDTO.getCode())) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(401).build();
@@ -29,12 +40,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody User user, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
-        return new ResponseEntity<>(userService.addUser(user, getSiteURL(request)), HttpStatus.CREATED);
+    public ResponseEntity<User> createUser(@RequestBody User user) throws UnsupportedEncodingException, MessagingException {
+        return new ResponseEntity<>(userService.addUser(user, frontendUrl), HttpStatus.CREATED);
     }
 
-    private String getSiteURL(HttpServletRequest request) {
-        String siteURL = request.getRequestURL().toString();
-        return siteURL.replace(request.getServletPath(), "");
+
+    @GetMapping("/current")
+    public ResponseEntity<CurrentUserDTO> getLoggedUser(Authentication authentication) { // Authentication Spring inyecta y tiene los datos del user correspondiente al token
+        return new ResponseEntity<>(this.userService.getCurrentUser(authentication.getName()), HttpStatus.OK);
     }
 }

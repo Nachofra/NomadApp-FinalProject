@@ -1,30 +1,63 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PublicRoutes } from "../../guard/Routes";
+import { FetchRoutes, PublicRoutes } from "../../guard/Routes";
 import { useUserContext } from "../../context/UserContext";
 import Email from "../../components/login/Email";
 import PasswordValidation from "../../components/login/passwordAndConfirmPassword/PasswordValidation";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-export const SignIn = (props) => {
+export const SignIn = ({setStatus, ...props}) => {
 
   const navigate = useNavigate();
-  const { login, registeredUser }  = useUserContext();
-  const [ ingressedUser, setIngressedUser] = useState({ email: "", password: "" });
+  const { login }  = useUserContext();
+  const [ fields, setFields] = useState({ 
+    email: "", 
+    password: "" 
+  });
   const [ usuarioIncorrecto, setUsuarioIncorrecto ] = useState(false);
+
+  const regex = new RegExp("[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+")
+
+  const postUser = async () => {
+      try {
+        setStatus('LOADING');
+        const { data } = await axios.post(`${FetchRoutes.BASEURL}/user/login`,
+        {
+          email: fields.email,
+          password: fields.password
+        })
+
+        console.log(data)
+        login(data);
+        //if everything ok
+        navigate(PublicRoutes.HOME);
+
+      } catch (error) {
+        console.error(error.message);
+        navigate(PublicRoutes.LOGIN, { state:{
+          error :{
+            title: 'Something went wrong', 
+            description: 'Please verify your credentials and try again. If the problem persist, contact support.'
+          }
+        }});
+      } finally{ setStatus('IDLE') };
+  }
+
+  function verifyCredentials (){
+    return regex.test(fields.email)
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
-    if(registeredUser?.email === ingressedUser.email && registeredUser?.password === ingressedUser.password){
-      login()
-      navigate(PublicRoutes.HOME);
-    }else{
-      setUsuarioIncorrecto(true);
+    if(verifyCredentials()){
+      postUser();
+    }
+    if(!verifyCredentials()){
+      console.log('validation error')
     }
   }
-
-  console.log(props.heading)
 
   return (
     <>      
@@ -35,8 +68,8 @@ export const SignIn = (props) => {
       </>
       }
       <form onSubmit={handleSubmit}>
-        <Email email={ingressedUser.email} setUser={setIngressedUser} />
-        <PasswordValidation password={ingressedUser.password} setUser={setIngressedUser} />
+        <Email email={fields.email} setUser={setFields} />
+        <PasswordValidation password={fields.password} setUser={setFields} />
         {usuarioIncorrecto && <p>Por favor vuelva a intentarlo, sus credenciales son inválidas</p>}
         <div className="flex items-center justify-center mt-4">
           {/* <a href="#" className="text-sm text-gray-600 hover:text-gray-500">Forget Password?</a> */}

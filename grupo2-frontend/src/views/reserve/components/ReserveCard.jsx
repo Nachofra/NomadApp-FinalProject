@@ -1,7 +1,7 @@
 import { MapPinIcon, StarIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 
-export const ReserveCard = ({data, dates}) => {
+export const ReserveCard = ({data, dates, handleSubmit}) => {
 
     Date.prototype.formatMMDDYYYY = function(){
         return (this.getMonth() + 1) + 
@@ -10,8 +10,6 @@ export const ReserveCard = ({data, dates}) => {
     }
         
     const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
-
-    
 
   return (
     <article className='flex flex-col justify-start items-start
@@ -58,7 +56,9 @@ export const ReserveCard = ({data, dates}) => {
             <p className='text-lg font-medium text-gray-700'>Check Out</p>
             <p className='text-lg'>{handleDateFormat(dates.to)}</p>
         </div>
-        <button className='w-full bg-violet-700 py-4 flex items-center justify-center rounded-lg'>
+        <button
+        onClick={handleSubmit}
+        className='w-full bg-violet-700 py-4 flex items-center justify-center rounded-lg'>
             <p className='text-white font-semibold text-lg'>Confirm reserve</p>
         </button>
         </div>

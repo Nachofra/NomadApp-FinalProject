@@ -3,7 +3,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,12 +19,12 @@ import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     private AuthenticationConfig authenticationConfig;
-    private RestAuthEntryPoint restAuthEntryPoint;
+//    private RestAuthEntryPoint restAuthEntryPoint;
 
     @Autowired
-    public WebSecurity(AuthenticationConfig authenticationConfig, RestAuthEntryPoint restAuthEntryPoint) {
+    public WebSecurity(AuthenticationConfig authenticationConfig) {
         this.authenticationConfig = authenticationConfig;
-        this.restAuthEntryPoint = restAuthEntryPoint;
+        //this.restAuthEntryPoint = restAuthEntryPoint;
     }
 
     @Bean
@@ -40,15 +40,18 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        JWTAuthenticationFilter jwtFilter = new JWTAuthenticationFilter(authenticationManager());
+        jwtFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
+
         httpSecurity.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class); //permito que pasen las peticiones OPTIONS
         httpSecurity
                 .csrf().disable().authorizeRequests()
 
                 .antMatchers("/reservation/**").authenticated().and()                    //Solo usamos JWT en Reservation endpoint
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilter(jwtFilter)
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
-                .exceptionHandling()
-                .authenticationEntryPoint(this.restAuthEntryPoint).and()     //si no pasa sale con error 401
+                .exceptionHandling().and()
+//                .authenticationEntryPoint(this.restAuthEntryPoint)   //si no pasa sale con error 401
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         HeadersConfigurer<HttpSecurity> headers = httpSecurity.headers();

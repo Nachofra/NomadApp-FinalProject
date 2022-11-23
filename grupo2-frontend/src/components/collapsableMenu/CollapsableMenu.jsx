@@ -42,7 +42,7 @@ export const CollapsableMenu = ({question, className,questionClassName, wrapperC
           </motion.div>
         </AnimatePresence>
       </div>
-      <AnimatePresence>
+      <AnimatePresence initial={false} mode="wait">
         {isOpen && (
           <motion.div
             initial={{

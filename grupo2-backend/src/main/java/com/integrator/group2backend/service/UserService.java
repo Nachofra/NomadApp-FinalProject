@@ -1,8 +1,11 @@
 package com.integrator.group2backend.service;
 
+import com.integrator.group2backend.dto.CurrentUserDTO;
 import com.integrator.group2backend.entities.User;
 import com.integrator.group2backend.repository.UserRepository;
+import com.integrator.group2backend.utils.MapperService;
 import net.bytebuddy.utility.RandomString;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,10 +23,13 @@ public class UserService {
 
     private final JavaMailSender mailSender;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender) {
+    private final MapperService mapperService;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender, MapperService mapperService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
+        this.mapperService = mapperService;
     }
 
     public User addUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException {
@@ -40,7 +46,7 @@ public class UserService {
 
     public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
         String toAddress = user.getEmail();
-        String fromAddress = "NomadApp@outlook.com";
+        String fromAddress = "noreply@nomadapp.com.ar";
         String senderName = "Nomad App";
         String subject = "Please verify your registration";
         String content = "Dear [[name]],<br>"
@@ -58,7 +64,7 @@ public class UserService {
 
         content = content.replace("[[name]]", user.getUsername());
 
-        String verifyURL = siteURL + "/user/verify?code=" + user.getVerificationCode();
+        String verifyURL = siteURL + "/verify-confirmation?code=" + user.getVerificationCode();
 
         content = content.replace("[[URL]]", verifyURL);
 
@@ -79,5 +85,10 @@ public class UserService {
             return true;
         }
 
+    }
+
+    public CurrentUserDTO getCurrentUser(String email) {
+        User currentUser = this.userRepository.findByEmail(email);
+        return this.mapperService.convert(currentUser, CurrentUserDTO.class);
     }
 }

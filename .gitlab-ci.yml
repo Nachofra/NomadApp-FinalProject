@@ -85,6 +85,7 @@ deploy:maven:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "$SSH_PRIVATE_KEY_BACKEND" > ~/.ssh/id_rsa
+<<<<<<< HEAD
     - cat ~/.ssh/id_rsa
     - chmod 600  ~/.ssh/id_rsa
   script:
@@ -92,6 +93,14 @@ deploy:maven:
     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker container rm -f backend-api-instance || true"
     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_IPADDRESS "docker run -d -p 8080:8080 --name backend-api-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
+=======
+    - chmod 600  ~/.ssh/id_rsa
+  script:
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_DOMAIN "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_DOMAIN "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_DOMAIN "docker container rm -f backend-api-instance || true"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_DOMAIN "docker run -d -p 8080:8080 --name backend-api-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
+>>>>>>> 48723e40433ec6493be0ad085d513e28f89941c4
   tags:
     - deployment_backend
 
@@ -102,6 +111,7 @@ deploy:vite:
     - apk update && apk add openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+<<<<<<< HEAD
     - touch "0222FTC1-grupo2-frontend-key.pem"
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > "0222FTC1-grupo2-frontend-key.pem"
     - chmod 600 "0222FTC1-grupo2-frontend-key.pem"
@@ -110,5 +120,14 @@ deploy:vite:
     - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
     - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker container rm -f frontend-instance || true"
     - ssh -i "0222FTC1-grupo2-frontend-key.pem" -o StrictHostKeyChecking=no ubuntu@ec2-3-138-60-134.us-east-2.compute.amazonaws.com "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+=======
+    - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
+    - chmod 600  ~/.ssh/id_rsa
+  script:
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_DOMAIN "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_DOMAIN "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_DOMAIN "docker container rm -f frontend-instance || true"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_DOMAIN "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+>>>>>>> 48723e40433ec6493be0ad085d513e28f89941c4
   tags:
   - deployment_frontend
