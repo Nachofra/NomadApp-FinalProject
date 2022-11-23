@@ -91,10 +91,7 @@ deploy:maven:
     - echo -e "$SSH_PRIVATE_KEY_BACKEND" > ~/.ssh/id_rsa
     - chmod 600  ~/.ssh/id_rsa
   script:
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_SERVER_IP "cd /docker/letsencrypt-docker-tomcat/src/production"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_SERVER_IP "sudo docker-compose down"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_SERVER_IP "docker-compose pull"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_SERVER_IP "docker-compose up -d"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_SERVER_IP "cd /docker/letsencrypt-docker-tomcat/src/production; sudo docker-compose down; sudo docker-compose pull; sudo docker-compose up -d"
   tags:
     - deployment_backend
 
@@ -108,9 +105,6 @@ deploy:vite:
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
     - chmod 600  ~/.ssh/id_rsa
   script:
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "cd /docker/letsencrypt-docker-nginx/src/production"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "sudo docker-compose down"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "docker-compose pull"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "docker-compose up -d"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "cd /docker/letsencrypt-docker-nginx/src/production; sudo docker-compose down; sudo docker-compose pull; sudo docker-compose up -d"
   tags:
     - deployment_frontend
