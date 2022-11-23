@@ -5,7 +5,7 @@ stages:
 
 workflow:
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+    - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
 
 build:maven:
   stage: build
@@ -51,6 +51,8 @@ release:maven:
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
   script:
+    - echo -e "$SERVER_XML" > ./server.xml
+    - cat ./server.xml
     - "docker build -f dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull  ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest"
   after_script:
@@ -66,10 +68,12 @@ release:vite:
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""  
+    DOCKER_TLS_CERTDIR: ""
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
   script:
+    - echo -e "$NEW_NGINX_CONF" > ./nginx.conf
+    - cat ./nginx.conf
     - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
   after_script:
@@ -87,10 +91,7 @@ deploy:maven:
     - echo -e "$SSH_PRIVATE_KEY_BACKEND" > ~/.ssh/id_rsa
     - chmod 600  ~/.ssh/id_rsa
   script:
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_DOMAIN "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_DOMAIN "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_DOMAIN "docker container rm -f backend-api-instance || true"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_DOMAIN "docker run -d -p 8080:8080 --name backend-api-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}backend"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$BACKEND_SERVER_IP "cd /docker/letsencrypt-docker-tomcat/src/production; sudo docker-compose down; sudo docker-compose pull; sudo docker-compose up -d"
   tags:
     - deployment_backend
 
@@ -104,9 +105,6 @@ deploy:vite:
     - echo -e "$SSH_PRIVATE_KEY_FRONTEND" > ~/.ssh/id_rsa
     - chmod 600  ~/.ssh/id_rsa
   script:
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_DOMAIN "echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_DOMAIN "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_DOMAIN "docker container rm -f frontend-instance || true"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_DOMAIN "docker run -d -p 80:80 --name frontend-instance ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$FRONTEND_SERVER_IP "cd /docker/letsencrypt-docker-nginx/src/production; sudo docker-compose down; sudo docker-compose pull; sudo docker-compose up -d"
   tags:
-  - deployment_frontend
+    - deployment_frontend
