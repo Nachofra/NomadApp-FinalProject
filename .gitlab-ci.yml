@@ -1,66 +1,45 @@
 stages:
   - build
   - release
-  # - deploy
+  - deploy
 
 # workflow:
 #   rules:
 #     - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
 
-build:maven:
-  stage: build
-  image: maven:3.8.6-openjdk-18
-  cache:
-    paths:
-      - grupo2-backend/target/
-  script:
-    - cd "grupo2-backend/"
-    - echo -e "$DOTENV_CONFIG_BACKEND" > src/main/resources/.env
-    - mvn clean install
-  artifacts:
-    paths:
-      - grupo2-backend/target/*.war
-
-# build:vite:
+# build:maven:
 #   stage: build
-#   image: node:16.5.0
+#   image: maven:3.8.6-openjdk-18
 #   cache:
-#     key:
-#       files:
-#         - grupo2-frontend/package-lock.json
-#       prefix: npm
 #     paths:
-#       - grupo2-frontend/node_modules/
+#       - grupo2-backend/target/
 #   script:
-#     - cd "grupo2-frontend/"
-#     - npm install
-#     - npm run build
+#     - cd "grupo2-backend/"
+#     - echo -e "$DOTENV_CONFIG_BACKEND" > src/main/resources/.env
+#     - mvn clean install
 #   artifacts:
 #     paths:
-#       - grupo2-frontend/dist
+#       - grupo2-backend/target/*.war
 
-release:maven:
-  stage: release
-  image: docker
-  services:
-    - docker:dind
-  variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-  before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
+build:vite:
+  stage: build
+  image: node:16.5.0
+  cache:
+    key:
+      files:
+        - grupo2-frontend/package-lock.json
+      prefix: npm
+    paths:
+      - grupo2-frontend/node_modules/
   script:
-    - echo -e "$SERVER_XML" > ./server.xml
-    - cat ./server.xml
-    - "docker build -f dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull  ."
-    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest"
-  after_script:
-    - "docker logout ${CI_REGISTRY}"
-  tags:
-    - deployment_backend
+    - cd "grupo2-frontend/"
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - grupo2-frontend/dist
 
-# release:vite:
+# release:maven:
 #   stage: release
 #   image: docker
 #   services:
@@ -68,19 +47,40 @@ release:maven:
 #   variables:
 #     DOCKER_HOST: tcp://docker:2375/
 #     DOCKER_DRIVER: overlay2
-#     DOCKER_TLS_CERTDIR: ""  
-#     NGINX_CONF: '$$TMP_DIR'
+#     DOCKER_TLS_CERTDIR: ""
 #   before_script:
 #     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
 #   script:
-#     - echo -e "$NEW_NGINX_CONF" > ./nginx.conf
-#     - cat ./nginx.conf
-#     - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
-#     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
+#     - echo -e "$SERVER_XML" > ./server.xml
+#     - cat ./server.xml
+#     - "docker build -f dockerfiles/Dockerfile.backend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest --pull  ."
+#     - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}backend:latest"
 #   after_script:
 #     - "docker logout ${CI_REGISTRY}"
 #   tags:
-#     - deployment_frontend
+#     - deployment_backend
+
+release:vite:
+  stage: release
+  image: docker
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""  
+    # NGINX_CONF: '$$TMP_DIR'
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER "$CI_REGISTRY" --password-stdin
+  script:
+    - echo -e "$NEW_NGINX_CONF" > ./nginx.conf
+    - cat ./nginx.conf
+    - "docker build -f dockerfiles/Dockerfile.frontend -t ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest --pull ."
+    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}frontend:latest"
+  after_script:
+    - "docker logout ${CI_REGISTRY}"
+  tags:
+    - deployment_frontend
 
 # deploy:maven:
 #   image: alpine:latest
