@@ -1,13 +1,21 @@
 import { MapPinIcon, StarIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 
-export const ReserveCard = ({data, dates, handleSubmit}) => {
-
+export const ReserveCard = ({data, dates, handleSubmit, days, fieldError}) => {
     Date.prototype.formatMMDDYYYY = function(){
         return (this.getMonth() + 1) + 
         "/" +  this.getDate() +
         "/" +  this.getFullYear();
     }
+
+    const priceFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+        // These options are needed to round to whole numbers if that's what you want.
+        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+      });
         
     const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
 
@@ -22,7 +30,7 @@ export const ReserveCard = ({data, dates, handleSubmit}) => {
             <img 
             src={data.images[0].url} 
             alt={data.images[0].name}
-            className="w-full max-h-80 object-cover rounded-lg overflow-hidden"
+            className="w-full h-full max-h-80 object-cover rounded-lg overflow-hidden"
             />
         </div>
         <div className='flex flex-col p-4 w-full'>
@@ -51,16 +59,31 @@ export const ReserveCard = ({data, dates, handleSubmit}) => {
             <p className='text-lg font-medium text-gray-700'>Check In</p>
             <p className='text-lg'>{handleDateFormat(dates.from)}</p>
         </div>
-        <div className='flex items-center justify-between mt-4 mb-8
+        <div className='flex items-center justify-between mt-4 mb-6
         pb-2 border-b-2 border-violet-700'>
             <p className='text-lg font-medium text-gray-700'>Check Out</p>
             <p className='text-lg'>{handleDateFormat(dates.to)}</p>
         </div>
+        <div className='flex flex-col items-end w-full'>
+            <div className='w-full flex items-center justify-between mb-1'>
+                <p className='text-lg font-medium text-gray-700'>Total price*</p>
+                <div className='flex items-center'>
+                    <span className='text-sm font-thin mr-2'>{`(Daily ${priceFormatter.format(data.dailyPrice)})`}</span>   
+                    <p className='text-lg font-medium'>
+                    {days ? priceFormatter.format(data.dailyPrice * days) : 'Select dates'}</p>
+                </div>
+            </div>
+        </div>
         <button
         onClick={handleSubmit}
-        className='w-full bg-violet-700 py-4 flex items-center justify-center rounded-lg'>
-            <p className='text-white font-semibold text-lg'>Confirm reserve</p>
+        className={`w-full bg-violet-700 py-4 
+        flex items-center justify-center rounded-lg
+        ${fieldError ? 'border-2 border-red-400' : ''}`}
+        > 
+            <p className='text-white font-semibold text-lg'>
+                Confirm reserve</p>
         </button>
+        {fieldError && <p className='text-sm text-red-400 text-end mt-2'>*Please fill all the fields</p>}
         </div>
     </article>
   )

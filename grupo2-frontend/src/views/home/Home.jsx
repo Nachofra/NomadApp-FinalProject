@@ -14,6 +14,7 @@ import { HeroSearchSection } from './components/HeroSearchSection'
 import useScrollPosition from '../../hooks/useScrollPosition'
 import axios from 'axios'
 import './home.scss'
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 export const Home = () => {
 
   // const [categories, setCategories] = useState(null);
@@ -61,7 +62,7 @@ export const Home = () => {
           setFeedStatus('LOADING');
             try {
               const { data : feed }  = await axios.get(
-                `${FetchRoutes.BASEURL}/product${!user ? '/random?' : '?'}${filters.category ? `category=${filters.category}` : ''}${filters.location ? `&city=${filters.location.id}` : ''}`
+                `${FetchRoutes.BASEURL}/product${!user ? '/random?' : '?'}${filters.location ? `&city=${filters.location.id}` : ''} ${filters.category ? `category=${filters.category}` : ''}`
                 );
 
               setIndex(feed)
@@ -94,6 +95,7 @@ export const Home = () => {
           <HomeCategories categories={categories} />
         </BaseLayout>
         <BaseLayout
+          anchor="main-feed"
           padding='pt-0 pb-8 '
           className='flex flex-col items-center justify-center'
         >
@@ -120,7 +122,21 @@ export const Home = () => {
           <LoadingSpinner />
           
         }
-
+        { (index?.length === 0 & feedStatus === 'OK') &
+          <div className='w-screen max-w-[90vw] md:max-w-lg max-h-96 
+          bg-white rounded-lg flex flex-col items-center p-4 shadow-xl'>
+            <MagnifyingGlassIcon className='w-20 h-20 mb-4 text-violet-700' />
+    
+            <p className='text-xl md:text-2xl font-medium mb-2 text-gray-800'>Reservation made</p>
+            <p className='md:text-lg text-gray-600 mb-4'>We have sent you an email with all the details</p>
+            <button
+            onClick={() => navigate('/')}
+            className="py-3 w-32 text-white bg-violet-700
+            rounded-md text-lg font-medium">
+              Awesome!
+            </button>
+          </div>
+        } 
           {(showCount < index?.length && feedStatus === 'OK') &&
           <button 
           onClick={() => setShowCount(showCount + 10)}
