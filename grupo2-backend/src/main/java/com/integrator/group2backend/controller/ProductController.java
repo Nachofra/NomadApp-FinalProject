@@ -1,8 +1,6 @@
 package com.integrator.group2backend.controller;
 
 import com.integrator.group2backend.dto.ProductViewDTO;
-import com.integrator.group2backend.entities.Category;
-import com.integrator.group2backend.entities.City;
 import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.service.CategoryService;
 import com.integrator.group2backend.service.CityService;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,10 +49,10 @@ public class ProductController {
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         return ResponseEntity.ok(productService.addProduct(product));
     }
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<ProductViewDTO>> listAllProducts() {
         return productService.listAllProducts();
-    }
+    }*/
 
     @GetMapping("/random")
     public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts() {
@@ -93,7 +90,7 @@ public class ProductController {
         }
         return ResponseEntity.ok("El producto con id " + productId + " no existe en la base de datos");
     }
-    @GetMapping("/city/{id}")
+    /*@GetMapping("/city/{id}")
     public ResponseEntity<List<ProductViewDTO>> getProductByCityId(@PathVariable Long id) {
         Optional<City> city = this.cityService.getCityById(id);
         if (city.isEmpty()) {
@@ -144,7 +141,18 @@ public class ProductController {
         }
         return ResponseEntity.ok(searchProductByFilter);
     }
-
+*/
+    @RequestMapping//(params = {"rooms", "beds", "bathrooms", "guests", "city", "category", "minPrice", "maxPrice", "checkInDate", "checkOutDate"})
+    public ResponseEntity<List<ProductViewDTO>> findProductsByCustomFilter(
+            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds, @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests, @RequestParam(required = false) Long city,
+            @RequestParam(required = false) Long category,@RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice, @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate)
+            throws Exception{
+        List<ProductViewDTO> searchedProductsByCustomFilter = productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate);
+        if (searchedProductsByCustomFilter.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(searchedProductsByCustomFilter);
+    }
     @RequestMapping(params = {"city", "checkInDate", "checkOutDate"})
     public ResponseEntity<List<ProductViewDTO>> findByCityIdAndCheckInDateAndCheckOutDate(@RequestParam Long city, @RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -158,10 +166,10 @@ public class ProductController {
     @RequestMapping(params = {"city", "category", "checkInDate", "checkOutDate"})
     public ResponseEntity<List<ProductViewDTO>> findProductByCityCategoryCheckInDateCheckOutDate(@RequestParam Long city, @RequestParam Long category, @RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        List<ProductViewDTO> searchedProductByCityCategoryCheckInDateCheckOutDate = productService.searchProductsByCityExcludingDates(city, dateFormatter.parse(checkInDate), dateFormatter.parse(checkOutDate));
+        List<ProductViewDTO> searchedProductByCityCategoryCheckInDateCheckOutDate = productService.searchProductByCityCategoryCheckInDateCheckOutDate(city, category, dateFormatter.parse(checkInDate), dateFormatter.parse(checkOutDate));
         if (searchedProductByCityCategoryCheckInDateCheckOutDate.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(productService.searchProductByCityCategoryCheckInDateCheckOutDate(city, category, dateFormatter.parse(checkInDate), dateFormatter.parse(checkOutDate)));
+        return ResponseEntity.ok(searchedProductByCityCategoryCheckInDateCheckOutDate);
     }
 }

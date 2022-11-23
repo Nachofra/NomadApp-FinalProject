@@ -1,5 +1,6 @@
 package com.integrator.group2backend.repository;
 
+import com.integrator.group2backend.customFilters.ProductRepositoryCustom;
 import com.integrator.group2backend.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> , ProductRepositoryCustom {
     List<Product> findByCityId(Long id);
     List<Product> findByCategoryId(Long id);
     List<Product> findByCityIdAndCategoryId(Long city_id, Long category_id);

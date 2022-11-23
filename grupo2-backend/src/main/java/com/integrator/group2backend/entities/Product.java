@@ -29,6 +29,10 @@ public class Product {
     private Float latitude;
     private Float longitude;
 
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    private City city;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
@@ -44,10 +48,6 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "policy_id")
     )
     private Set<Policy> policies;
-
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "city_id", referencedColumnName = "id")
-    private City city;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(

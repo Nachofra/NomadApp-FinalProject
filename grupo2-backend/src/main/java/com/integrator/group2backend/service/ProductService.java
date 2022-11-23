@@ -19,7 +19,6 @@ import java.util.Optional;
 public class ProductService {
     public static final Logger logger = Logger.getLogger(ProductService.class);
     private final ProductRepository productRepository;
-
     private final MapperService mapperService;
 
     public ProductService(ProductRepository productRepository, MapperService mapperService) {
@@ -48,9 +47,8 @@ public class ProductService {
             return ResponseEntity.badRequest().build();
         }
         logger.info("Se listaron todos los productos aleatoriamente");
-        List<ProductViewDTO> dtoSearchedProducts = this.mapperService.mapList(searchedProducts, ProductViewDTO.class);
-        Collections.shuffle(dtoSearchedProducts);
-        return ResponseEntity.ok(dtoSearchedProducts);
+        Collections.shuffle(searchedProducts);
+        return ResponseEntity.ok(this.mapperService.mapList(searchedProducts, ProductViewDTO.class));
     }
     public Optional<Product> searchProductById(Long productId) {
         Optional<Product> product = productRepository.findById(productId);
@@ -167,5 +165,20 @@ public class ProductService {
         }
         logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " y Categoria con ID " + category + " en las fechas especificadas.");
         return mapperService.mapList(auxList, ProductViewDTO.class);
+    }
+    public List<ProductViewDTO> customProductFilter(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id, Float minPrice, Float maxPrice, String checkInDate, String checkOutDate) throws Exception{
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date formattedCheckInDate = null;
+        Date formattedCheckOutDate = null;
+        if (checkInDate != null){
+            formattedCheckInDate = dateFormatter.parse(checkInDate);
+            formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+        }
+        List<Product> foundByCustomFilter = productRepository.customDynamicQuery(rooms, beds, bathrooms, guests, city_id, category_id, minPrice, maxPrice, formattedCheckInDate, formattedCheckOutDate);
+        if (foundByCustomFilter.isEmpty()){
+            logger.error("No se encontraron los productos correspondientes a los filtros utilizados.");
+            return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
+        }
+        return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
     }
 }
