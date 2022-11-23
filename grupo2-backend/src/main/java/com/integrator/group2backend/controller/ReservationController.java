@@ -64,18 +64,6 @@ public class ReservationController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @RequestMapping(params = {"checkInDate" , "checkOutDate"})
-    public ResponseEntity<List<ReservationDTO>> findReservationsByCheckInDateAndCheckOutDate(@RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception{
-        List<ReservationDTO> reservationsFounded = reservationService.findReservationsByCheckInDateAndCheckOutDate(checkInDate, checkOutDate);
-        if(!reservationsFounded.isEmpty()){
-            logger.info("Se encontraron reservas en el rango de fechas correspondiente.");
-            return ResponseEntity.ok(reservationsFounded);
-        }
-        logger.error("Error al buscar reservas en el rango de fechas correspondiente.");
-        return ResponseEntity.badRequest().build();
-    }
-
-
     @GetMapping("/product/{id}")
     public ResponseEntity<List<ReservationSimpleDTO>> getReservationByProductId(@PathVariable("id") Long productId){
         List<ReservationSimpleDTO> reservationFound = reservationService.findByProductId(productId);
@@ -86,5 +74,14 @@ public class ReservationController {
         logger.error("Error al listar todas las reservas del producto con id " + productId);
         return ResponseEntity.badRequest().build();
     }
-
+    @RequestMapping(params = {"checkInDate" , "checkOutDate"})
+    public ResponseEntity<List<ReservationDTO>> findReservationsByCheckInDateAndCheckOutDate(@RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception{
+        List<ReservationDTO> reservationsFounded = reservationService.findReservationsByCheckInDateAndCheckOutDate(checkInDate, checkOutDate);
+        if(!reservationsFounded.isEmpty()){
+            logger.info("Se encontraron reservas en el rango de fechas correspondiente.");
+            return ResponseEntity.ok(reservationsFounded);
+        }
+        logger.error("Error al buscar reservas en el rango de fechas correspondiente.");
+        return ResponseEntity.badRequest().build();
+    }
 }
