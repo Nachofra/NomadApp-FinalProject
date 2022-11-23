@@ -167,18 +167,45 @@ public class ProductService {
         return mapperService.mapList(auxList, ProductViewDTO.class);
     }
     public List<ProductViewDTO> customProductFilter(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id, Float minPrice, Float maxPrice, String checkInDate, String checkOutDate) throws Exception{
+        List<Product> foundByCustomFilter = productRepository.customDynamicQuery(rooms, beds, bathrooms, guests, city_id, category_id, minPrice, maxPrice);
+        //List<Product> foundByCustomFilter = productRepository.customDynamicQuery(rooms, beds, bathrooms, guests, city_id, category_id, minPrice, maxPrice, formattedCheckInDate, formattedCheckOutDate);
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         Date formattedCheckInDate = null;
         Date formattedCheckOutDate = null;
-        if (checkInDate != null){
+
+        if (checkInDate != null && checkOutDate != null){
+            System.out.println("Filtramos por fechas");
             formattedCheckInDate = dateFormatter.parse(checkInDate);
             formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+            List<Product> foundByDates = productRepository.searchProductByCheckInDateCheckOutDate(formattedCheckInDate,formattedCheckOutDate);
+            List<Product> auxList = new ArrayList<>();
+            auxList.addAll(foundByCustomFilter);
+            System.out.println("Found by dates");
+            System.out.println(foundByDates);
+            System.out.println("Aux list before filter");
+            System.out.println(auxList);
+            for (Product productFilter : foundByCustomFilter) {
+                System.out.println("Buscamos en el custom filter");
+                for (Product productDate : foundByDates) {
+                    System.out.println("Buscamos coincidencias con las fechas");
+                    if (productFilter.equals(productDate)) {
+                        System.out.println("Encontramos coincidencias");
+                        auxList.remove(productFilter);
+                    }
+                }
+            }
+            System.out.println("Aux list after filter");
+            System.out.println(auxList);
+            if (!auxList.isEmpty()){
+                logger.info("Se filtraron los productos disponibles en las fechas especificadas.");
+                return mapperService.mapList(auxList, ProductViewDTO.class);
+            }
         }
-        List<Product> foundByCustomFilter = productRepository.customDynamicQuery(rooms, beds, bathrooms, guests, city_id, category_id, minPrice, maxPrice, formattedCheckInDate, formattedCheckOutDate);
         if (foundByCustomFilter.isEmpty()){
             logger.error("No se encontraron los productos correspondientes a los filtros utilizados.");
             return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
         }
+        logger.info("Se filtraron los productos sin fechas.");
         return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
     }
 }

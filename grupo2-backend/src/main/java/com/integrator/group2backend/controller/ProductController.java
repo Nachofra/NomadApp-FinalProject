@@ -141,18 +141,6 @@ public class ProductController {
         }
         return ResponseEntity.ok(searchProductByFilter);
     }
-*/
-    @RequestMapping//(params = {"rooms", "beds", "bathrooms", "guests", "city", "category", "minPrice", "maxPrice", "checkInDate", "checkOutDate"})
-    public ResponseEntity<List<ProductViewDTO>> findProductsByCustomFilter(
-            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds, @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests, @RequestParam(required = false) Long city,
-            @RequestParam(required = false) Long category,@RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice, @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate)
-            throws Exception{
-        List<ProductViewDTO> searchedProductsByCustomFilter = productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate);
-        if (searchedProductsByCustomFilter.isEmpty()){
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(searchedProductsByCustomFilter);
-    }
     @RequestMapping(params = {"city", "checkInDate", "checkOutDate"})
     public ResponseEntity<List<ProductViewDTO>> findByCityIdAndCheckInDateAndCheckOutDate(@RequestParam Long city, @RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -171,5 +159,27 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(searchedProductByCityCategoryCheckInDateCheckOutDate);
+    }
+*/
+    @RequestMapping//(params = {"rooms", "beds", "bathrooms", "guests", "city", "category", "minPrice", "maxPrice", "checkInDate", "checkOutDate"})
+    public ResponseEntity<List<ProductViewDTO>> findProductsByCustomFilter(
+            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds, @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests, @RequestParam(required = false) Long city,
+            @RequestParam(required = false) Long category,@RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice, @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate)
+            throws Exception{
+        System.out.println("rooms " + rooms);
+        System.out.println("beds " + beds);
+        System.out.println("bathrooms " + bathrooms);
+        System.out.println("guests " + guests);
+        System.out.println("city id " + city);
+        System.out.println("category id " + category);
+        System.out.println("minPrice " + minPrice);
+        System.out.println("maxPrice " + maxPrice);
+        System.out.println("checkInDate " + checkInDate);
+        System.out.println("checkOutDate " + checkOutDate);
+        List<ProductViewDTO> searchedProductsByCustomFilter = productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate);
+        if (searchedProductsByCustomFilter.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(searchedProductsByCustomFilter);
     }
 }

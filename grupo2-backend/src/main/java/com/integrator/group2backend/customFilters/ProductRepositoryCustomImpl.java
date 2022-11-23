@@ -19,7 +19,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<Product> customDynamicQuery(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city, Long category, Float minPrice, Float maxPrice, Date checkInDate, Date checkOutDate) {
+//    public List<Product> customDynamicQuery(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city, Long category, Float minPrice, Float maxPrice, Date checkInDate, Date checkOutDate) {
+      public List<Product> customDynamicQuery(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city, Long category, Float minPrice, Float maxPrice) {
 
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -27,8 +28,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         CriteriaQuery<Product> queryProduct = cb.createQuery(Product.class);
         Root<Product> productRoot = queryProduct.from(Product.class);
 
-        CriteriaQuery<Reservation> queryReservation = cb.createQuery(Reservation.class);
-        Root<Reservation> reservationRoot = queryReservation.from(Reservation.class);
+        /*CriteriaQuery<Reservation> queryReservation = cb.createQuery(Reservation.class);
+        Root<Reservation> reservationRoot = queryReservation.from(Reservation.class);*/
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -73,7 +74,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             logger.info("Filtro por precio maximo aplicado.");
         }
         /*
-        if (!checkInDate.){
+        if (!checkInDate.equals(null)){
             Path<Date> checkInDatePath = reservationRoot.get("checkInDate");
             predicates.add(cb.greaterThanOrEqualTo(checkInDatePath, checkInDate));
             logger.info("Filtro por fecha de inicio de la reserva aplicado.");
@@ -82,7 +83,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             Path<Date> checkOutDatePath = reservationRoot.get("checkOutDate");
             predicates.add(cb.lessThanOrEqualTo(checkOutDatePath, checkOutDate));
             logger.info("Filtro por fecha de finalizacion de la reserva aplicado.");
-        }*/
+        }
+        */
         if (predicates.isEmpty()){
             logger.info("Se listaron todos los productos");
             queryProduct.select(productRoot);
@@ -90,6 +92,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             logger.info("Los filtros fueron aplicados.");
             queryProduct.select(productRoot).where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
         }
+        System.out.println(entityManager.createQuery(queryProduct));
+        System.out.println(entityManager.createQuery(queryProduct).getResultList());
         return entityManager.createQuery(queryProduct).getResultList();
     }
 }

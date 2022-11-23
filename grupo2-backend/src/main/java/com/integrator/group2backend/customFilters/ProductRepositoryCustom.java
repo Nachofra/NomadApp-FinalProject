@@ -7,5 +7,7 @@ import java.util.Date;
 import java.util.List;
 @Repository
 public interface ProductRepositoryCustom {
-    List<Product> customDynamicQuery(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id, Float minPrice, Float maxPrice, Date checkInDate, Date checkOutDate);
+    //List<Product> customDynamicQuery(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id, Float minPrice, Float maxPrice, Date checkInDate, Date checkOutDate);
+    List<Product> customDynamicQuery(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id, Float minPrice, Float maxPrice);
+
 }
