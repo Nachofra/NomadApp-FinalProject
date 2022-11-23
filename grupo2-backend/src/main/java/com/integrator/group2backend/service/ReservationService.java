@@ -18,13 +18,13 @@ import java.util.Optional;
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
     private final MapperService mapperService;
 
-    public ReservationService(ReservationRepository reservationRepository, MapperService mapperService, ProductRepository productRepository) {
+    public ReservationService(ReservationRepository reservationRepository, MapperService mapperService, ProductService productService) {
         this.reservationRepository = reservationRepository;
         this.mapperService = mapperService;
-        this.productRepository = productRepository;
+        this.productService = productService;
     }
     public List<ReservationDTO> listAllReservations() {
         List<Reservation> searchedReservations = reservationRepository.findAll();
@@ -33,16 +33,21 @@ public class ReservationService {
     public Optional<Reservation> searchReservationById(Long id) {
         return reservationRepository.findById(id);
     }
+
+
     public List<ReservationDTO> findReservationByUserId(Long user_id) {
         return this.mapperService.mapList(this.reservationRepository.findReservationByUserId(user_id), ReservationDTO.class);
     }
+
+
     public ReservationDTO addReservation(Reservation reservation) {
-        Product p = this.productRepository.findById(reservation.getProduct().getId()).get();
+        Product p = this.productService.searchProductById(reservation.getProduct().getId()).get();
         Double priceForDay = p.getDailyPrice().doubleValue();
         Integer days = (int) (reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime()) / 86400000;
         reservation.setFinalPrice(days * priceForDay);
         return this.mapperService.convert(this.reservationRepository.save(reservation), ReservationDTO.class);
     }
+
     public List<ReservationDTO> findReservationsByCheckInDateAndCheckOutDate(String checkInDate, String checkOutDate) throws ParseException {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         Date formattedCheckInDate = dateFormatter.parse(checkInDate);
