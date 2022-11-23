@@ -11,11 +11,12 @@ import axios from "axios";
 export const SignIn = ({setStatus, ...props}) => {
 
   const navigate = useNavigate();
-  const { login }  = useUserContext();
+  const { login, user }  = useUserContext();
   const [ fields, setFields] = useState({ 
     email: "", 
     password: "" 
   });
+  
   const [ usuarioIncorrecto, setUsuarioIncorrecto ] = useState(false);
 
   const regex = new RegExp("[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+")
@@ -23,14 +24,13 @@ export const SignIn = ({setStatus, ...props}) => {
   const postUser = async () => {
       try {
         setStatus('LOADING');
-        const { data } = await axios.post(`${FetchRoutes.BASEURL}/user/login`,
+        const  { data, headers }  = await axios.post(`${FetchRoutes.BASEURL}/user/login`,
         {
           email: fields.email,
           password: fields.password
         })
 
-        console.log(data)
-        login(data);
+        login({...data, authorization: headers.authorization});
         //if everything ok
         navigate(PublicRoutes.HOME);
 
@@ -42,7 +42,7 @@ export const SignIn = ({setStatus, ...props}) => {
             description: 'Please verify your credentials and try again. If the problem persist, contact support.'
           }
         }});
-      } finally{ setStatus('IDLE') };
+      } finally{ setStatus('IDLE'); console.log(user)};
   }
 
   function verifyCredentials (){

@@ -23,33 +23,52 @@ export const Product = () => {
         startLoading,
         loadDone,
         triggerError,
-      } = useLoadingViewContext()
+      } = useLoadingViewContext();
 
-    const {filters, handleDates} = useSearchContext()
+      const [date, setDate] = useState({
+        from: null,
+        to: null,
+      })
+
+      const handleDates = ( dateFrom, dateTo )=> {
+        setDate({ from:dateFrom, to:dateTo})
+      }
+
+    // const {filters, handleDates} = useSearchContext()
     const {state} = useLocation()
 
     const [ data, setData ] = useState(state?.product)
     const {id} = useParams();
 
+    const fetchData = async () =>{
+        startLoading();
+        try {
+        const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
+        setData(data);
+        } catch (error) {
+        console.error(error.message);
+        triggerError()
+        }
+        loadDone();
+    }
     useEffect(() => {
-        const fetchData = async () =>{
-          startLoading();
-            try {
-              const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
-              setData(data);
-            } catch (error) {
-              console.error(error.message);
-              triggerError()
-            }
-            loadDone();
-          }
+        
 
           if ( !data ) { fetchData() };
+          if ( data ) { loadDone() };
+
     }, [])
 
     const [modal, setModal ] = useState(false);
 
     const { width } = useWindowDimensions();
+
+    const [error, setError] = useState(false);
+    
+    const validateDates = () => date?.to && date?.from
+
+    const handleReserve = () => validateDates() ? navigate(PrivateRoutes.RESERVEID(data.id), {state: {product: data, dates: date}}) : setError(true)
+    
     
   if (data) {return (
     <>
@@ -175,23 +194,24 @@ export const Product = () => {
         <div className='flex flex-col w-full items-center justify-center gap-4
         md:gap-6 lg:flex-row lg:justify-start'>
             <Calendar
-            startDate={filters.date.from}
-            endDate={filters.date.to}
+            startDate={date.from}
+            endDate={date.to}
             afterChange={(dateFrom, dateTo) => { handleDates(dateFrom, dateTo)}}
             monthsDisplayed={width > 660 ? 2 : 1 }
             />
             <div className='gap-2 flex flex-col items-center md:flex-row 
             lg:px-4 lg:py-10 lg:border-2 lg:border-violet-700 lg:rounded-lg
-            lg:bg-white lg:mx-auto'>
-                <p className='text-gray-600 md:mr-2'>Select the date and start your reservation</p>
-                <Link
-                to={ PrivateRoutes.RESERVEID(data.id)}
-                state={{product: data}}
-                className='flex items-center px-4 py-3 bg-violet-700 rounded-lg'
+            lg:bg-white lg:mx-auto' >
+                <p className={`${error ? 'text-red-400' : 'text-gray-600'} transition-colors md:mr-2`}>
+                    Select the date to start your reservation</p>
+                <button
+                onClick={handleReserve}
+                className={`${error ? 'border-red-400 border-2' : ''}
+                flex items-center px-4 py-3 bg-violet-700 rounded-lg`}
                 >
                     <p className='mr-2 text-white font-medium'>Continue</p>
                     <ArrowRightIcon className='w-6 h-6 text-white' />
-                </Link>
+                </button>
             </div>
         </div>
     </BaseLayout>
