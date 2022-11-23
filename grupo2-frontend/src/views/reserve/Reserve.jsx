@@ -1,4 +1,4 @@
-import { CheckBadgeIcon } from '@heroicons/react/24/outline'
+import { CheckBadgeIcon, CheckCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
@@ -10,7 +10,7 @@ import { BaseLayout } from '../../components/layout/BaseLayout'
 import { Modal } from '../../components/modal/Modal'
 import { Footer, HeaderNav } from '../../components/partials'
 import { useLoadingViewContext } from '../../context/LoadingViewContext'
-import { useSearchContext } from '../../context/SearchContext'
+import { useUserContext } from '../../context/UserContext'
 import { FetchRoutes } from '../../guard/Routes'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import { PolicyList } from '../product/components/PolicyList'
@@ -21,13 +21,15 @@ export const Reserve = () => {
 
   const { width } = useWindowDimensions();
   const navigate = useNavigate();
-  const { filters } = useSearchContext()
+  const {user} = useUserContext()
   const {state} = useLocation()
+
+  console.log(user)
 
   Date.prototype.formatMMDDYYYYhypens = function(){
     return this.getFullYear() + 
-    "-" +  (this.getMonth() + 1) +
-    "-" +  this.getDate();
+    "-" +  ("0" + (this.getMonth() + 1)).slice(-2) +
+    "-" +  ("0" + this.getDate()).slice(-2);
   }
     
   const handleDateFormat = date => date? date.formatMMDDYYYYhypens() : null;
@@ -35,30 +37,33 @@ export const Reserve = () => {
   const {
       status,
       startLoading,
-      loadDone,
-      triggerError,
+      loadDone
     } = useLoadingViewContext()
 
   const [ data, setData ] = useState(state?.product)
   const {id} = useParams();
 
+  const fetchData = async () =>{
+    startLoading();
+      try {
+        const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
+        setData(data);
+      } catch (error) {
+        console.error(error.message);
+        triggerError()
+      } finally { loadDone() }
+      
+    }
+
   useEffect(() => {
-      const fetchData = async () =>{
-        startLoading();
-          try {
-            const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
-            setData(data);
-          } catch (error) {
-            console.error(error.message);
-            triggerError()
-          }
-          loadDone();
-        }
-        
         if ( !data ) { fetchData() };
+        if ( data ) { loadDone() };
+
   }, [])
 
-    const [modal, setModal ] = useState(false);
+  const [modal, setModal ] = useState(false);
+  const [errorModal, setErrorModal ] = useState(false);
+  const [error, setError ] = useState(false);
 
   const initialStateForm = {
     id: '',
@@ -66,8 +71,8 @@ export const Reserve = () => {
     email: '',
     lastName: '',
     city: '',
-    dateFrom: filters.date.from,
-    dateTo: filters.date.to,
+    dateFrom: state?.dates?.from,
+    dateTo: state?.dates?.to,
     checkin: null
   }
 
@@ -77,32 +82,36 @@ export const Reserve = () => {
     setFormFields({...formFields, dateFrom:dateFrom, dateTo:dateTo})
   }
 
+  const validateFields = () => !!formFields.dateFrom && !!formFields.dateTo && !!formFields.checkin 
+
+  const days = (formFields.dateFrom && formFields.dateTo) ? (formFields.dateTo.getTime() - formFields.dateFrom.getTime()) / 86400000 : null;
+
+
   const postRequest = async () => {
       try {
         startLoading();
-        const { data } = await axios.post(`${FetchRoutes.BASEURL}/reservation`,
+        await axios.post(`${FetchRoutes.BASEURL}/reservation`,
         {
-          checkInTime: checkin?.time,
-          checkInDate: handleDateFormat(dateFrom),
-          checkOutDate: handleDateFormat(dateTo),
+          checkInTime: formFields.checkin?.time,
+          checkInDate: handleDateFormat(formFields.dateFrom),
+          checkOutDate: handleDateFormat(formFields.dateTo),
           product: { id: id },
-          user: { id: 'z' }
-        })
+          user: { id: user.id }
+        },
+        { headers: { Authorization : user.authorization }})
 
-        console.log(data)
-        login(data);
         //if everything ok
-        //
+        setModal(true)
 
       } catch (error) {
         console.error(error.message);
-        
+        setErrorModal(true)
       } finally{ loadDone() };
   }
 
-  const handleSubmit = () => {
-    setModal(true)
-  }
+  function handleSubmit ()  {
+    validateFields() ? postRequest() : setError(true) 
+  } 
 
     if (data) { return (
     <>
@@ -219,7 +228,7 @@ export const Reserve = () => {
           </div>
         </div>
 
-        <ReserveCard data={data} dates={{from: formFields.dateFrom, to: formFields.dateTo}} handleSubmit={handleSubmit} />
+        <ReserveCard fieldError={error} data={data} dates={{from: formFields.dateFrom, to: formFields.dateTo}} handleSubmit={handleSubmit} days={days} />
       </div>
       
     </BaseLayout>
@@ -241,10 +250,36 @@ export const Reserve = () => {
       isOpen={modal}
       closeModal={() => navigate('/')}
     >
-      <div className='w-screen h-screen max-w-[90vw] md:max-w-lg max-h-96 
-      bg-white rounded-lg flex flex-col items-center p-4'>
+      <div className='w-screen max-w-[90vw] md:max-w-lg max-h-96 
+      bg-white rounded-lg flex flex-col items-center p-4 shadow-xl'>
+        <CheckCircleIcon className='w-20 h-20 mb-4 text-violet-700' />
+
         <p className='text-xl md:text-2xl font-medium mb-2 text-gray-800'>Reservation made</p>
-        <p className='md:text-lg text-gray-600'>We have sent you an email with all the details</p>
+        <p className='md:text-lg text-gray-600 mb-4'>We have sent you an email with all the details</p>
+        <button
+        onClick={() => navigate('/')}
+        className="py-3 w-32 text-white bg-violet-700
+        rounded-md text-lg font-medium">
+          Awesome!
+        </button>
+      </div>
+    </Modal>
+    <Modal
+      isOpen={errorModal}
+      closeModal={() => { setErrorModal(false); fetchData(); }}
+    >
+      <div className='w-screen max-w-[90vw] md:max-w-lg max-h-96 
+      bg-white rounded-lg flex flex-col items-center p-4 shadow-xl'>
+        <ExclamationTriangleIcon className='w-20 h-20 mb-4 text-yellow-500' />
+
+        <p className='text-xl md:text-2xl font-medium mb-2 text-gray-800'>Something went wrong</p>
+        <p className='md:text-lg text-gray-600 mb-4'>Please check the dates selected and try again</p>
+        <button
+        onClick={() => { setErrorModal(false); fetchData(); }}
+        className="py-3 w-32 text-white bg-violet-700
+        rounded-md text-lg font-medium">
+          Awesome!
+        </button>
       </div>
     </Modal>
     </>
