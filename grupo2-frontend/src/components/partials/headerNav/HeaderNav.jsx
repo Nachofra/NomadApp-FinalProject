@@ -26,10 +26,10 @@ export const HeaderNav = ({transparent}) => {
     <section 
     className='top-0 fixed z-50
     w-screen flex items-center justify-between' >
-        <div className={`w-screen cursor-pointer h-auto relative
+        <div className={`w-screen cursor-pointer h-[70px] lg:h-24 relative
         flex justify-end items-end p-4 lg:p-6 transition-all
         ring-1 ring-violet-700 ring-opacity-5 
-        ${transparent && !open ? '' : 'bg-white mb-5 shadow-md'}`} >
+        ${transparent && !open ? '' : 'bg-white  shadow-md'}`} >
           <div className='flex flex-col items-center lg:hidden h-auto w-full'>
             <div className='flex items-center justify-between w-full'>
               <Link to={PublicRoutes.HOME} >
