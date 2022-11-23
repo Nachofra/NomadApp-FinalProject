@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -44,7 +45,7 @@ public class ProductServiceTest {
 
     @Test
     public void testSearchProductById() {
-        Mockito.when(this.productRepository.findById(eq(1L))).thenReturn((null));
+        Mockito.when(this.productRepository.findById(eq(1L))).thenReturn((Optional.empty()));
         this.productService.searchProductById(1L);
         Mockito.verify(this.productRepository, times(1)).findById(eq(1L));
     }
@@ -101,7 +102,7 @@ public class ProductServiceTest {
         this.productService.listAllProducts();
 
         Mockito.verify(this.productRepository, times(1)).findAll();
-        Mockito.verify(this.mapperService, times(1)).mapList(eq(Collections.emptyList()), eq(ProductViewDTO.class));
+        Mockito.verify(this.mapperService, times(0)).mapList(any(), any());
     }
 
     @Test
@@ -124,7 +125,7 @@ public class ProductServiceTest {
         this.productService.listRandomAllProducts();
 
         Mockito.verify(this.productRepository, times(1)).findAll();
-        Mockito.verify(this.mapperService, times(1)).mapList(eq(Collections.emptyList()), eq(ProductViewDTO.class));
+        Mockito.verify(this.mapperService, times(0)).mapList(any(), any());
     }
 
     @Test
@@ -140,6 +141,7 @@ public class ProductServiceTest {
     @Test
     public void testDeleteProduct() {
         Mockito.doNothing().when(this.productRepository).deleteById(eq(1L));
+        Mockito.when(this.productRepository.findById(1L)).thenReturn(Optional.of(new Product()));
 
         this.productService.deleteProduct(1L);
 
