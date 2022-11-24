@@ -2,10 +2,7 @@ package com.integrator.group2backend.controller;
 
 import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Product;
-import com.integrator.group2backend.service.CategoryService;
-import com.integrator.group2backend.service.CityService;
 import com.integrator.group2backend.service.ProductService;
-import com.integrator.group2backend.service.ReservationService;
 import com.integrator.group2backend.utils.MapperService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,21 +26,14 @@ public class ProductController {
     public static final Logger logger = Logger.getLogger(ProductService.class);
 
     private final ProductService productService;
-    private final CityService cityService;
-    private final CategoryService categoryService;
-    private final ReservationService reservationService;
 
     private final MapperService mapperService;
 
     @Autowired
-    public ProductController(ProductService productService, CityService cityService, CategoryService categoryService, ReservationService reservationService, MapperService mapperService) {
+    public ProductController(ProductService productService, MapperService mapperService) {
         this.productService = productService;
-        this.cityService = cityService;
-        this.categoryService = categoryService;
-        this.reservationService = reservationService;
         this.mapperService = mapperService;
     }
-
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         return ResponseEntity.ok(productService.addProduct(product));
@@ -61,11 +50,9 @@ public class ProductController {
     public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId) {
         Optional<Product> productFound = productService.searchProductById(productId);
         if (productFound.isPresent()) {
-            logger.info("Se encontro correctamente el producto con id " + productId);
             return ResponseEntity.ok(this.mapperService.convert(productFound.get(), ProductViewDTO.class));
         } else {
-            logger.error("El producto especificado no existe con id " + productId);
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
     }
     @PutMapping("/{id}")
@@ -76,8 +63,7 @@ public class ProductController {
             Product updatedProduct = productService.updateProduct(product);
             return ResponseEntity.ok(updatedProduct);
         } else {
-            logger.error("El producto especificado no existe con id " + productId);
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
     }
     @DeleteMapping("/{id}")
@@ -87,28 +73,17 @@ public class ProductController {
             productService.deleteProduct(productId);
             return ResponseEntity.ok("El producto con id " + productId + " ha sido borrado");
         }
-        return ResponseEntity.ok("El producto con id " + productId + " no existe en la base de datos");
+        return ResponseEntity.notFound().build();
     }
     @RequestMapping
     public ResponseEntity<List<ProductViewDTO>> findProductsByCustomFilter(
-            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds, @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests, @RequestParam(required = false) Long city,
-            @RequestParam(required = false) Long category,@RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice, @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate)
+            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds,
+            @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests,
+            @RequestParam(required = false) Long city, @RequestParam(required = false) Long category,
+            @RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice,
+            @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate)
             throws Exception{
-        System.out.println("rooms " + rooms);
-        System.out.println("beds " + beds);
-        System.out.println("bathrooms " + bathrooms);
-        System.out.println("guests " + guests);
-        System.out.println("city id " + city);
-        System.out.println("category id " + category);
-        System.out.println("minPrice " + minPrice);
-        System.out.println("maxPrice " + maxPrice);
-        System.out.println("checkInDate " + checkInDate);
-        System.out.println("checkOutDate " + checkOutDate);
-        List<ProductViewDTO> searchedProductsByCustomFilter = productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate);
-        if (searchedProductsByCustomFilter.isEmpty()){
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(searchedProductsByCustomFilter);
+        return ResponseEntity.ok(productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate));
     }
     /*@GetMapping("/city/{id}")
     public ResponseEntity<List<ProductViewDTO>> getProductByCityId(@PathVariable Long id) {

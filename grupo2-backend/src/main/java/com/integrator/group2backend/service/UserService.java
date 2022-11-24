@@ -6,6 +6,7 @@ import com.integrator.group2backend.repository.UserRepository;
 import com.integrator.group2backend.utils.MapperService;
 import net.bytebuddy.utility.RandomString;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletResponse;
 import java.io.UnsupportedEncodingException;
 
 @Service
@@ -25,6 +27,9 @@ public class UserService {
 
     private final MapperService mapperService;
 
+    @Value("${fromAddress}")
+    private String fromAddress;
+
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender, MapperService mapperService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -33,20 +38,22 @@ public class UserService {
     }
 
     public User addUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if(userRepository.findByEmail(user.getEmail()) == null){
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        String randomCode = RandomString.make(64);
-        user.setVerificationCode(randomCode);
-        user.setEnabled(false);
+            String randomCode = RandomString.make(64);
+            user.setVerificationCode(randomCode);
+            user.setEnabled(false);
 
-        sendVerificationEmail(user, siteURL);
+            sendVerificationEmail(user, siteURL);
 
-        return userRepository.save(user);
+            return userRepository.save(user);
+        }
+        throw new MessagingException("The user is already created");
     }
 
     public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
         String toAddress = user.getEmail();
-        String fromAddress = "noreply@nomadapp.com.ar";
         String senderName = "Nomad App";
         String subject = "Please verify your registration";
         String content = "Dear [[name]],<br>"
@@ -58,7 +65,7 @@ public class UserService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom(fromAddress, senderName);
+        helper.setFrom(this.fromAddress, senderName);
         helper.setTo(toAddress);
         helper.setSubject(subject);
 

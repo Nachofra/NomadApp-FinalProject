@@ -39,7 +39,7 @@ public class ReservationController {
             return ResponseEntity.ok(searchedReservations);
         } else {
             logger.error("Error al listar todas las reservas.");
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
     }
     @GetMapping("/{id}")
@@ -50,7 +50,7 @@ public class ReservationController {
             return ResponseEntity.ok(this.mapperService.convert(reservationFound.get(), ReservationDTO.class));
         }else{
             logger.error("Error al listar la reserva con id " + reservationId);
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
     }
     @GetMapping("/user/{id}")
@@ -61,8 +61,18 @@ public class ReservationController {
             return ResponseEntity.ok(reservationFound);
         }else{
             logger.error("Error al listar todas las reservas ddel usuario con id " + userId);
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/product/{id}")
+    public ResponseEntity<List<ReservationSimpleDTO>> getReservationByProductId(@PathVariable("id") Long productId){
+        List<ReservationSimpleDTO> reservationFound = reservationService.findByProductId(productId);
+        if(!reservationFound.isEmpty()){
+            logger.info("Se listaron todas las reservas del producto con id " + productId);
+            return ResponseEntity.ok(reservationFound);
+        }
+        logger.error("Error al listar todas las reservas del producto con id " + productId);
+        return ResponseEntity.notFound().build();
     }
     @RequestMapping(params = {"checkInDate" , "checkOutDate"})
     public ResponseEntity<List<ReservationDTO>> findReservationsByCheckInDateAndCheckOutDate(@RequestParam String checkInDate, @RequestParam String checkOutDate) throws Exception{
@@ -72,19 +82,6 @@ public class ReservationController {
             return ResponseEntity.ok(reservationsFounded);
         }
         logger.error("Error al buscar reservas en el rango de fechas correspondiente.");
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
-
-
-    @GetMapping("/product/{id}")
-    public ResponseEntity<List<ReservationSimpleDTO>> getReservationByProductId(@PathVariable("id") Long productId){
-        List<ReservationSimpleDTO> reservationFound = reservationService.findByProductId(productId);
-        if(!reservationFound.isEmpty()){
-            logger.info("Se listaron todas las reservas del producto con id " + productId);
-            return ResponseEntity.ok(reservationFound);
-        }
-        logger.error("Error al listar todas las reservas del producto con id " + productId);
-        return ResponseEntity.badRequest().build();
-    }
-
 }
