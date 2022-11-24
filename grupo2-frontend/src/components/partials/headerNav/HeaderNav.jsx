@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import DeskNavBarModal from './components/DeskNavBarModal'
-import { FetchRoutes, PublicRoutes } from '../../../guard/Routes'
+import { FetchRoutes, PublicRoutes, PrivateRoutes } from '../../../guard/Routes'
 import { useUserContext } from '../../../context/UserContext'
 import { Link } from 'react-router-dom'
 import { Bars2Icon, XMarkIcon } from '@heroicons/react/20/solid'
@@ -72,6 +72,7 @@ export const HeaderNav = ({transparent}) => {
                       Profile
                     </DropLink>
                     <DropLink
+                    to={ PrivateRoutes.USERRESERVATIONSID(user.id) }
                       activeClassName='bg-violet-500 text-white'
                       inactiveClassName='text-gray-600'
                     >

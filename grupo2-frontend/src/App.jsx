@@ -9,6 +9,7 @@ import { Reserve } from './views/reserve/Reserve'
 import { VerifyConfirmation } from './views/verify-confirmation/VerifyConfirmation'
 import './App.css'
 import { DefaultError } from './views/defaultError/DefaultError'
+import { UserReservations } from './views/userProfile/userReservations/UserReservations'
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
 
       <Route element={<AuthGuard />}>
         <Route path={PrivateRoutes.RESERVE} element={<Reserve />} />
+        <Route path={PrivateRoutes.USERRESERVATIONS} element={<UserReservations />} />
+
       </Route>
   </RouteNotFound>
   )
