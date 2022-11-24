@@ -1,7 +1,7 @@
 import React from 'react'
 import {motion} from 'framer-motion';
 import DeskNavBarModal from './DeskNavBarModal';
-import { PublicRoutes } from '../../../../guard/Routes';
+import { PrivateRoutes, PublicRoutes } from '../../../../guard/Routes';
 import { Link } from 'react-router-dom';
 import {
   ArrowRightOnRectangleIcon,
@@ -61,7 +61,9 @@ export const MobileOpen = ({user, handleLogout}) => {
                             <p className='md:text-lg'>Profile</p>
                             <UserIcon className='w-4 h-4 md:w-6 md:h-6' />
                         </Link>
-                        <Link className='flex items-center gap-2'>
+                        <Link 
+                        to={PrivateRoutes.USERRESERVATIONSID(user.id)}
+                        className='flex items-center gap-2'>
                             <p className='md:text-lg'>My reserves</p>
                             <CalendarDaysIcon className='w-4 h-4 md:w-6 md:h-6' />
                         </Link>
