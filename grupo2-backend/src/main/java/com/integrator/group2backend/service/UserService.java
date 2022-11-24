@@ -38,7 +38,7 @@ public class UserService {
     }
 
     public User addUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException {
-        if(userRepository.findByEmail(user.getEmail()) != null){
+        if(userRepository.findByEmail(user.getEmail()) == null){
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
             String randomCode = RandomString.make(64);
