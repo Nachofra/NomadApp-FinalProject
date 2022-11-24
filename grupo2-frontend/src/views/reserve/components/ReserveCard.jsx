@@ -8,6 +8,9 @@ export const ReserveCard = ({data, dates, handleSubmit, days, fieldError}) => {
         "/" +  this.getFullYear();
     }
 
+    const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
+
+
     const priceFormatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -17,7 +20,6 @@ export const ReserveCard = ({data, dates, handleSubmit, days, fieldError}) => {
         //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
       });
         
-    const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
 
   return (
     <article className='flex flex-col justify-start items-start

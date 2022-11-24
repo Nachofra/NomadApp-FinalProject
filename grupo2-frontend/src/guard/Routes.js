@@ -10,7 +10,9 @@ export const PublicRoutes = {
 
 export const PrivateRoutes = {
     RESERVE : '/product/:id/reserve',
-    RESERVEID: (id) => `/product/${id}/reserve`
+    RESERVEID: (id) => `/product/${id}/reserve`,
+    USERRESERVATIONS: '/reservation/user/:id',
+    USERRESERVATIONSID: (id) => `/reservation/user/${id}`
 }
 
 export const FetchRoutes = {

@@ -29,7 +29,7 @@ export const VerifyConfirmation = () => {
           { code: code});
         } catch (error) {
           console.error(error.message);
-          // navigate('/bad-request')
+          navigate('/bad-request')
         } finally { loadDone() }
         
       }
