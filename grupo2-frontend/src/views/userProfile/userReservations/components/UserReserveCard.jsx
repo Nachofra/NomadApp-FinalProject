@@ -49,7 +49,7 @@ export const UserReserveCard = ({data}) => {
                     </p>
                 </div>
             </div>
-            <img className='w-10'
+            <img className='w-10 mt-8'
             src={`${FetchRoutes.BUCKET}/svg/right_thin_arrow.svg`}
             alt="right arrow"
             />
