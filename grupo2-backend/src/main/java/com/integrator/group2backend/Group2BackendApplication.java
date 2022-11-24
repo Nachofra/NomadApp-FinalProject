@@ -1,5 +1,6 @@
 package com.integrator.group2backend;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -14,6 +15,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan({"com.integrator.group2backend"})
 public class Group2BackendApplication extends SpringBootServletInitializer {
 
+	@Value("${frontendUrl}")
+	private String frontendUrl;
+
 	public static void main(String[] args) {
 		SpringApplication.run(Group2BackendApplication.class, args);
 	}
@@ -22,14 +26,14 @@ public class Group2BackendApplication extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder){
 		return builder.sources(Group2BackendApplication.class);
 	}
-//	@Bean
-//	public WebMvcConfigurer corsConfigurer() {
-//		return new WebMvcConfigurer() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry registry) {
-//				registry.addMapping("/**").allowedOrigins("http://18.217.21.141", "http://ec2-18-217-21-141.us-east-2.compute.amazonaws.com", "http://localhost:5173").allowedMethods("*").allowedHeaders("*");
-//			}
-//		};
-//	}
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedOrigins(frontendUrl).allowedMethods("*").allowedHeaders("*");
+			}
+		};
+	}
 
 }

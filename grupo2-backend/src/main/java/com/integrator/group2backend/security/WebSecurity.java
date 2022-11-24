@@ -43,7 +43,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         JWTAuthenticationFilter jwtFilter = new JWTAuthenticationFilter(authenticationManager());
         jwtFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
 
-        httpSecurity.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class); //permito que pasen las peticiones OPTIONS
+//        httpSecurity.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class); //permito que pasen las peticiones OPTIONS
         httpSecurity
                 .csrf().disable().authorizeRequests()
 
