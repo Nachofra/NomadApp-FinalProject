@@ -47,7 +47,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable().authorizeRequests()
                 .antMatchers("/user/**").permitAll()
-                .antMatchers("/reservation/**").authenticated().and()                    //Solo usamos JWT en Reservation endpoint
+                .antMatchers("/reservation/**").authenticated()                  //Solo usamos JWT en Reservation endpoint
+                .antMatchers("/reservation/product/**").permitAll().and()
                 .addFilter(jwtFilter)
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 .exceptionHandling().and()
