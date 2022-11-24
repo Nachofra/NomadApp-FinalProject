@@ -9,7 +9,8 @@ export const Calendar = ({
     setStartDate,
     setEndDate,
     monthsDisplayed,
-    afterChange
+    afterChange,
+    ...props
   }) => {
         
     function handleDateChange (dates) {
@@ -26,6 +27,7 @@ export const Calendar = ({
           minDate={new Date()}
           selectsRange
           inline
+          {...props}
         />
     )
   }

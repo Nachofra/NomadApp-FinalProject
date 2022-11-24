@@ -29,8 +29,8 @@ export const Product = () => {
       } = useLoadingViewContext();
 
       const [date, setDate] = useState({
-        from: filters.date.from,
-        to: filters.date.to,
+        from: filters.date?.from,
+        to: filters.date?.to,
       })
 
       const handleDates = ( dateFrom, dateTo )=> {
@@ -41,6 +41,10 @@ export const Product = () => {
     const {state} = useLocation()
 
     const [ data, setData ] = useState(state?.product)
+    const [avoidDates, setAvoidDates ] = useState()
+    
+    const excludeDatesHandler = excArr => excArr.map(range => ({ start: range.checkInDate, end :  range.checkOutDate}))
+    
     const {id} = useParams();
 
     const fetchData = async () =>{
@@ -48,16 +52,18 @@ export const Product = () => {
         try {
         const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
         setData(data);
+        const { data :  dates} = await axios.get(`${FetchRoutes.BASEURL}/reservation/product/${id}`);
+        setAvoidDates(excludeDatesHandler(dates));
         } catch (error) {
         console.error(error.message);
         triggerError()
         }
         loadDone();
     }
-    
+
     useEffect(() => {
-          if ( !data ) { fetchData() };
-          if ( data ) { loadDone() };
+          if ( !data || !avoidDates ) { fetchData() };
+          if ( data && avoidDates ) { loadDone() };
     }, [])
 
     const [modal, setModal ] = useState(false);
@@ -197,8 +203,21 @@ export const Product = () => {
             <Calendar
             startDate={date.from}
             endDate={date.to}
-            afterChange={(dateFrom, dateTo) => { handleDates(dateFrom, dateTo)}}
+            afterChange={(dateFrom, dateTo) => {
+                const dateFromMl = dateFrom?.getTime();
+                const dateToMl = dateTo?.getTime();
+
+                console.log(dateFromMl, dateToMl);
+                if (!dateToMl) {handleDates(dateFrom, dateTo)}
+
+                if (!avoidDates.some(elm => {
+                    return(dateFrom  < elm.start ) && (dateTo > elm.end )
+                })) {
+                    handleDates(dateFrom, dateTo)
+                
+            }}}
             monthsDisplayed={width > 660 ? 2 : 1 }
+            excludeDateIntervals={avoidDates}
             />
             <div className='gap-2 flex flex-col items-center md:flex-row 
             lg:px-4 lg:py-10 lg:border-2 lg:border-violet-700 lg:rounded-lg

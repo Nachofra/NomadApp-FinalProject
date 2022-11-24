@@ -45,8 +45,6 @@ export const SearchProvider = ({ children }) => {
   }, [filters.guests.adults,
   filters.guests.children,
   filters.guests.babies])
-
-  console.log(filters.guests.adults);
   
     const [cities, setCities ] = useState([]);
     const [categories, setCategories ] = useState([])
