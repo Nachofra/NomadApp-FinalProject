@@ -3,6 +3,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -47,8 +48,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable().authorizeRequests()
                 .antMatchers("/user/**").permitAll()
-                .antMatchers("/reservation/**").authenticated()                  //Solo usamos JWT en Reservation endpoint
-                .antMatchers("/reservation/product/**").permitAll().and()
+                .antMatchers("/reservation/product/**").permitAll()
+                .antMatchers("/reservation/**").authenticated().and() //Solo usamos JWT en Reservation endpoint
                 .addFilter(jwtFilter)
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 .exceptionHandling().and()
