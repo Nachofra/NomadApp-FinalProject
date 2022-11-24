@@ -51,12 +51,10 @@ export const Product = () => {
         }
         loadDone();
     }
+    
     useEffect(() => {
-        
-
           if ( !data ) { fetchData() };
           if ( data ) { loadDone() };
-
     }, [])
 
     const [modal, setModal ] = useState(false);
