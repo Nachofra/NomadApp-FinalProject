@@ -15,9 +15,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan({"com.integrator.group2backend"})
 public class Group2BackendApplication extends SpringBootServletInitializer {
 
-	@Value("${frontendUrl}")
-	private String frontendUrl;
-
 	public static void main(String[] args) {
 		SpringApplication.run(Group2BackendApplication.class, args);
 	}

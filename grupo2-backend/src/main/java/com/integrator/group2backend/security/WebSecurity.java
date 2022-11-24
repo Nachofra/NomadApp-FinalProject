@@ -47,31 +47,15 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         return new ObjectMapper();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(this.frontendUrl));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH",
-                "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type",
-                "x-auth-token"));
-        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
-        UrlBasedCorsConfigurationSource source = new
-                UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
-    }
-
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         JWTAuthenticationFilter jwtFilter = new JWTAuthenticationFilter(authenticationManager());
         jwtFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
 
-//        httpSecurity.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class); //permito que pasen las peticiones OPTIONS
-        httpSecurity.cors().and()
+        httpSecurity.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class); //permito que pasen las peticiones OPTIONS
+        httpSecurity
                 .csrf().disable().authorizeRequests()
-
+                .antMatchers("/user/**").permitAll()
                 .antMatchers("/reservation/**").authenticated().and()                    //Solo usamos JWT en Reservation endpoint
                 .addFilter(jwtFilter)
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
