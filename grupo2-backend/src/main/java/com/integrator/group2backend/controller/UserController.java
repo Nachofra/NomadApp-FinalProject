@@ -21,8 +21,8 @@ import java.io.UnsupportedEncodingException;
 @RequestMapping("/user")
 public class UserController {
 
-    @Value("${frontendMailUrl}")
-    private String frontendMailUrl;
+    @Value("${frontendUrl}")
+    private String frontendUrl;
 
     private final UserService userService;
 
@@ -41,7 +41,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<User> createUser(@RequestBody User user) throws UnsupportedEncodingException, MessagingException {
-        return new ResponseEntity<>(userService.addUser(user, frontendMailUrl), HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.addUser(user, frontendUrl), HttpStatus.CREATED);
     }
 
 

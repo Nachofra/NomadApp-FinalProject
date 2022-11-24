@@ -1,5 +1,8 @@
 package com.integrator.group2backend.security;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -9,11 +12,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
+@Component
 public class CorsFilter implements Filter {
 
     public CorsFilter() {
     }
+
+    @Value("${frontendUrl}")
+    private String frontendUrl;
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
@@ -21,8 +27,7 @@ public class CorsFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-
-        response.setHeader("Access-Control-Allow-Origin", "*"); //aca se cambia por el dns(nomad.com)
+        response.setHeader("Access-Control-Allow-Origin", this.frontendUrl); //aca se cambia por el dns(nomad.com)
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PATCH, DELETE, PUT");
         response.setHeader("Access-Control-Max-Age", "3600");
