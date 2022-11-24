@@ -34,7 +34,6 @@ public class ProductController {
         this.productService = productService;
         this.mapperService = mapperService;
     }
-
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         return ResponseEntity.ok(productService.addProduct(product));
@@ -51,11 +50,9 @@ public class ProductController {
     public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId) {
         Optional<Product> productFound = productService.searchProductById(productId);
         if (productFound.isPresent()) {
-            logger.info("Se encontro correctamente el producto con id " + productId);
             return ResponseEntity.ok(this.mapperService.convert(productFound.get(), ProductViewDTO.class));
         } else {
-            logger.error("El producto especificado no existe con id " + productId);
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
     }
     @PutMapping("/{id}")
@@ -66,7 +63,7 @@ public class ProductController {
             Product updatedProduct = productService.updateProduct(product);
             return ResponseEntity.ok(updatedProduct);
         } else {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
     }
     @DeleteMapping("/{id}")
@@ -76,7 +73,7 @@ public class ProductController {
             productService.deleteProduct(productId);
             return ResponseEntity.ok("El producto con id " + productId + " ha sido borrado");
         }
-        return ResponseEntity.ok("El producto con id " + productId + " no existe en la base de datos");
+        return ResponseEntity.notFound().build();
     }
     @RequestMapping
     public ResponseEntity<List<ProductViewDTO>> findProductsByCustomFilter(
