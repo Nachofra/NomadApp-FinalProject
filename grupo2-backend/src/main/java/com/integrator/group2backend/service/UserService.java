@@ -6,6 +6,7 @@ import com.integrator.group2backend.repository.UserRepository;
 import com.integrator.group2backend.utils.MapperService;
 import net.bytebuddy.utility.RandomString;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +25,9 @@ public class UserService {
     private final JavaMailSender mailSender;
 
     private final MapperService mapperService;
+
+    @Value("${fromAddress}")
+    private String fromAddress;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender, MapperService mapperService) {
         this.userRepository = userRepository;
@@ -46,7 +50,6 @@ public class UserService {
 
     public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
         String toAddress = user.getEmail();
-        String fromAddress = "noreply@nomadapp.com.ar";
         String senderName = "Nomad App";
         String subject = "Please verify your registration";
         String content = "Dear [[name]],<br>"
@@ -58,7 +61,7 @@ public class UserService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom(fromAddress, senderName);
+        helper.setFrom(this.fromAddress, senderName);
         helper.setTo(toAddress);
         helper.setSubject(subject);
 
