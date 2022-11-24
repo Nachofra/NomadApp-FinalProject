@@ -71,12 +71,13 @@ export const Reserve = () => {
   const [errorModal, setErrorModal ] = useState(false);
   const [error, setError ] = useState(false);
 
+  console.log(user)
+
   const initialStateForm = {
-    id: '',
-    name: '',
-    email: '',
-    lastName: '',
-    city: '',
+    name: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    city: `${user.city.name}, ${user.city.country.name}`,
     dateFrom: state?.dates?.from,
     dateTo: state?.dates?.to,
     checkin: null
@@ -91,7 +92,6 @@ export const Reserve = () => {
   const validateFields = () => !!formFields.dateFrom && !!formFields.dateTo && !!formFields.checkin 
 
   const days = (formFields.dateFrom && formFields.dateTo) ? (formFields.dateTo.getTime() - formFields.dateFrom.getTime()) / 86400000 : null;
-
 
   const postRequest = async () => {
       try {
@@ -150,6 +150,7 @@ export const Reserve = () => {
               id='reservation_name'
               type='text'
               placeholder='Your full name'
+              disabled
               value={formFields.name}
               onChange={(e) =>
                 setFormFields({ ...formFields, name: e.target.value })
@@ -161,6 +162,7 @@ export const Reserve = () => {
               type='text'
               placeholder='Your full last name'
               value={formFields.lastName}
+              disabled
               onChange={(e) =>
                 setFormFields({ ...formFields, lastName: e.target.value })
               }
@@ -169,6 +171,7 @@ export const Reserve = () => {
               label='Email'
               id='reservation_email'
               type='email'
+              disabled
               placeholder='We will send it here'
               value={formFields.email}
               onChange={(e) =>
@@ -179,6 +182,7 @@ export const Reserve = () => {
               label='City'
               id='reservation_city'
               type='email'
+              disabled
               placeholder='Same as adress'
               value={formFields.city}
               onChange={(e) =>
@@ -229,7 +233,7 @@ export const Reserve = () => {
             <div className='w-full max-w-sm'>
               <Datalist
                 data={checkinList}
-                value={formFields.checkin ? formFields.checkin?.value : null}
+                value={formFields.checkin ? formFields.checkin?.name : null}
                 id='reserve_checkin'
                 // label='Company / Organization'
                 placeholder='Select daytime'
@@ -237,7 +241,7 @@ export const Reserve = () => {
                 resultRenderer={(time, i) => (
                   <DatalistItem
                     key={i}
-                    name={time.value}
+                    name={time.name}
                     id={time.id}
                     value={time}
                   />)

@@ -8,8 +8,16 @@ import { UserInfo } from "../../components/login/UserInfo";
 import Email from "../../components/login/Email";
 import PasswordAndConfirmPasswordValidation from "../../components/login/passwordAndConfirmPassword/PasswordAndConfirmPasswordValidation.jsx";
 import axios from "axios";
+import { useLoadingViewContext } from "../../context/LoadingViewContext";
 
 export const SignUp = ({setStatus, ...props}) => {
+
+  const { loadDone } = useLoadingViewContext();
+
+  useEffect(() => {
+    loadDone()
+  }, [])
+  
 
   const regex = new RegExp("[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+")
   const navigate = useNavigate();
@@ -24,7 +32,7 @@ export const SignUp = ({setStatus, ...props}) => {
   });
 
   function verifyCredentials () {
-    return fields.password.length > 6 && fields.password === fields.confirmPassword && regex.test(fields.email)
+    return fields.password.length > 6 && fields.password === fields.confirmPassword && regex.test(fields.email) && fields.firstName.length >= 3 && fields.lastName.length >= 3
   }
 
   const postUser = async () => {
@@ -59,6 +67,8 @@ export const SignUp = ({setStatus, ...props}) => {
         }});
       } finally{ setStatus('IDLE') };
   }
+  
+  const [validationError, setValidationError] = useState(false)
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -66,7 +76,7 @@ export const SignUp = ({setStatus, ...props}) => {
       postUser();
     }
     if(!verifyCredentials()){
-
+      setValidationError(true)
     }
   }
 
@@ -82,6 +92,8 @@ export const SignUp = ({setStatus, ...props}) => {
         <UserInfo firstName={fields.firstName} lastName={fields.lastName} setUser={setFields} />
         <Email email={fields.email} setUser={setFields} />
         <PasswordAndConfirmPasswordValidation password={fields.password} confirmPassword={fields.confirmPassword} setUser={setFields}/>
+        {validationError && 
+        <p className="text-center text-red-400 text-sm">Please check all the fields and try again.</p>}
         <div className="flex items-center justify-center mt-4">
           <button className="w-32 py-3 leading-5 text-white text-lg 
           font-medium transition-colors duration-300 

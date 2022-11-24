@@ -30,7 +30,7 @@ export const ReserveCard = ({data, dates, handleSubmit, days, fieldError}) => {
             <img
             src={data.images[0].url} 
             alt={data.images[0].name}
-            className="w-full h-full max-h-80 object-cover rounded-lg overflow-hidden"
+            className="w-full h-full max-h-60 object-cover rounded-lg overflow-hidden"
             />
         </div>
         <div className='flex flex-col p-4 w-full'>
