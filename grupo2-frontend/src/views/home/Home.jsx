@@ -32,7 +32,7 @@ export const Home = () => {
 
   const { user } = useUserContext();
 
-  const { filters, categories } = useSearchContext()
+  const { filters, categories, reset } = useSearchContext()
 
   const scrollPosition = useScrollPosition();
   
@@ -40,17 +40,33 @@ export const Home = () => {
     return categories?.find(elm => elm.id === filters.category)
   };
 
-    useEffect(() => {
+  Date.prototype.formatMMDDYYYYhypens = function(){
+    return this.getFullYear() + 
+    "-" +  ("0" + (this.getMonth() + 1)).slice(-2) +
+    "-" +  ("0" + this.getDate()).slice(-2);
+  }
+    
+  const handleDateFormat = date => date? date.formatMMDDYYYYhypens() : null;
 
+    useEffect(() => {
+      const query = FetchRoutes.BASEURL +'/product' +
+      (!user ? '/random?' : '?')+
+      (filters.category ? `category=${filters.category}` : '')+
+      (filters.location ? `&city=${filters.location.id}` : '')+
+      (filters.price.min ? `&minPrice=${filters.price.min}` : '')+
+      (filters.price.max ? `&maxPrice=${filters.price.max}` : '')+
+      (filters.beds ? `&beds=${filters.beds}` : '')+
+      (filters.bathrooms ? `&bathrooms=${filters.bathrooms}` : '')+
+      (filters.rooms ? `&rooms=${filters.rooms}` : '')+
+      (filters.guests.total > 0 ? `&guests=${filters.guests.total}` : '')+
+      ((filters.date.from && filters.date.to) ? `&checkInDate=${handleDateFormat(filters.date.from)}&checkOutDate=${handleDateFormat(filters.date.to)}` : '')
+
+      console.log(query)
       const fetchData = async () => {
         startLoading();
           try {
-            // const { data : categoriesData } = await axios.get(`${FetchRoutes.BASEURL}/category`);
-            const { data : feed }  = await axios.get(
-              `${FetchRoutes.BASEURL}/product${!user ? '/random?' : '?'}${filters.category ? `category=${filters.category}` : ''}${filters.location ? `&city=${filters.location.id}` : ''}`
-              );
-
-            // setCategories(categoriesData);
+            const { data : feed }  = await axios.get(query);  
+            console.log('load Done')
             setIndex(feed)
           } catch (error) {
             console.error(error.message);
@@ -58,13 +74,11 @@ export const Home = () => {
           }
           loadDone();
         }
+
         const refreshData = async () =>{
           setFeedStatus('LOADING');
             try {
-              const { data : feed }  = await axios.get(
-                `${FetchRoutes.BASEURL}/product${!user ? '/random?' : '?'}${filters.location ? `&city=${filters.location.id}` : ''} ${filters.category ? `category=${filters.category}` : ''}`
-                );
-
+              const { data : feed }  = await axios.get(query);  
               setIndex(feed)
             } catch (error) {
               console.error(error.message);
@@ -73,10 +87,8 @@ export const Home = () => {
             setFeedStatus('OK');
           }
       
-        if(!index || !categories) { fetchData() } else { refreshData() };
+        if(!index) { fetchData() } else { refreshData() };
   }, [filters])
-
-
 
 
   return (
@@ -110,40 +122,43 @@ export const Home = () => {
         }
 
           {feedStatus === 'OK' ?
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 flex-wrap gap-8'>
+          <div className='w-full place-items-center grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 flex-wrap gap-8'>
 
           { index?.map(( property, i ) => 
           i < showCount ?
           <PropertyCard property={property} key={i} />
-          : null )}
-          
+          : '' )}
+
           </div> :
 
-          <LoadingSpinner />
-          
+          <div className='my-32'><LoadingSpinner /></div>
+
         }
-        { (index?.length === 0 & feedStatus === 'OK') &
+
+        { (index?.length === 0 && feedStatus === 'OK') &&
           <div className='w-screen max-w-[90vw] md:max-w-lg max-h-96 
-          bg-white rounded-lg flex flex-col items-center p-4 shadow-xl'>
+           flex flex-col items-center p-4'>
             <MagnifyingGlassIcon className='w-20 h-20 mb-4 text-violet-700' />
     
-            <p className='text-xl md:text-2xl font-medium mb-2 text-gray-800'>Reservation made</p>
-            <p className='md:text-lg text-gray-600 mb-4'>We have sent you an email with all the details</p>
+            <p className='text-xl md:text-2xl font-medium mb-2 text-gray-800'>Nothing found</p>
+            <p className='md:text-lg text-gray-600 mb-4'>Try searching by other parameters</p>
             <button
-            onClick={() => navigate('/')}
+            onClick={() => reset()}
             className="py-3 w-32 text-white bg-violet-700
             rounded-md text-lg font-medium">
-              Awesome!
+              Reset filters
             </button>
           </div>
-        } 
+        }
+
           {(showCount < index?.length && feedStatus === 'OK') &&
           <button 
           onClick={() => setShowCount(showCount + 10)}
           className='mb-36 w-32 py-2 mt-10 rounded-lg 
           text-violet-700 border-2 border-violet-700'>
               Show more
-          </button>}
+          </button>
+          }
         </BaseLayout>
         <Footer />
         <SearchNav hide={scrollPosition < 300} />
