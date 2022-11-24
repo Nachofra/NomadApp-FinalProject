@@ -15,9 +15,12 @@ import { PolicyList } from './components/PolicyList'
 import { useLoadingViewContext } from '../../context/LoadingViewContext'
 import { FetchRoutes, PrivateRoutes } from '../../guard/Routes'
 import { useSearchContext } from '../../context/SearchContext'
+import { filterProps } from 'framer-motion'
 
 export const Product = () => {
     const navigate = useNavigate();
+
+    const filters = useSearchContext()
 
     const {
         startLoading,
@@ -26,8 +29,8 @@ export const Product = () => {
       } = useLoadingViewContext();
 
       const [date, setDate] = useState({
-        from: null,
-        to: null,
+        from: filters.date.from,
+        to: filters.date.to,
       })
 
       const handleDates = ( dateFrom, dateTo )=> {
