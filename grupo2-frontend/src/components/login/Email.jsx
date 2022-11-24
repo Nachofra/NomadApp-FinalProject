@@ -3,6 +3,7 @@ import { useState } from "react";
 
 function Email({ email, setUser }) {
   const [error, setError] = useState(null);
+  
   function emailValidation() {
     const regex =
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
@@ -29,7 +30,8 @@ function Email({ email, setUser }) {
       type="email" 
       name="email" 
       value={email} 
-      onChange={handleChange} 
+      onChange={handleChange}
+      onSubmit={handleChange}
       placeholder="Email"
       className={`block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 
         bg-white border rounded-md focus:border-violet-700 focus:ring-opacity-40 

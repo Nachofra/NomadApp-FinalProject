@@ -5,10 +5,16 @@ import { FetchRoutes, PublicRoutes } from "../../guard/Routes";
 import { useUserContext } from "../../context/UserContext";
 import Email from "../../components/login/Email";
 import PasswordValidation from "../../components/login/passwordAndConfirmPassword/PasswordValidation";
-import { Link } from "react-router-dom";
 import axios from "axios";
+import { useLoadingViewContext } from "../../context/LoadingViewContext";
 
 export const SignIn = ({setStatus, ...props}) => {
+
+  const { loadDone } = useLoadingViewContext();
+
+  useEffect(() => {
+    loadDone()
+  }, [])
 
   const navigate = useNavigate();
   const { login, user }  = useUserContext();
@@ -55,7 +61,7 @@ export const SignIn = ({setStatus, ...props}) => {
       postUser();
     }
     if(!verifyCredentials()){
-      console.log('validation error')
+      setUsuarioIncorrecto(true)
     }
   }
 
@@ -70,7 +76,8 @@ export const SignIn = ({setStatus, ...props}) => {
       <form onSubmit={handleSubmit}>
         <Email email={fields.email} setUser={setFields} />
         <PasswordValidation password={fields.password} setUser={setFields} />
-        {usuarioIncorrecto && <p>Por favor vuelva a intentarlo, sus credenciales son inválidas</p>}
+        {usuarioIncorrecto && 
+        <p className="text-center text-red-400 text-sm">Please check your credentials and try again.</p>}
         <div className="flex items-center justify-center mt-4">
           {/* <a href="#" className="text-sm text-gray-600 hover:text-gray-500">Forget Password?</a> */}
           <button className="w-32 py-3 leading-5 text-white text-lg font-medium transition-colors duration-300 
