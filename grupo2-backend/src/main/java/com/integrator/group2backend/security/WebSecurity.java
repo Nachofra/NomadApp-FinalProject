@@ -46,7 +46,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         httpSecurity.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class); //permito que pasen las peticiones OPTIONS
         httpSecurity
                 .csrf().disable().authorizeRequests()
-
+                .antMatchers("/user/**").permitAll()
                 .antMatchers("/reservation/**").authenticated().and()                    //Solo usamos JWT en Reservation endpoint
                 .addFilter(jwtFilter)
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))

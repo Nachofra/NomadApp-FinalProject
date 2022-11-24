@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletResponse;
 import java.io.UnsupportedEncodingException;
 
 @Service
@@ -37,15 +38,18 @@ public class UserService {
     }
 
     public User addUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if(userRepository.findByEmail(user.getEmail()) == null){
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        String randomCode = RandomString.make(64);
-        user.setVerificationCode(randomCode);
-        user.setEnabled(false);
+            String randomCode = RandomString.make(64);
+            user.setVerificationCode(randomCode);
+            user.setEnabled(false);
 
-        sendVerificationEmail(user, siteURL);
+            sendVerificationEmail(user, siteURL);
 
-        return userRepository.save(user);
+            return userRepository.save(user);
+        }
+        throw new MessagingException("The user is already created");
     }
 
     public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
