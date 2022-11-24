@@ -62,7 +62,7 @@ export const UserReservations = () => {
           className=" mb-10"
         >
             <p className='text-end mb-4 md:mb-6 mr-2 text-gray-400 md:px-10'>{`Viewing results ${data ? data.length : 0} from ${data ? data.length : 0} `}</p>
-            <div className='w-full place-items-center grid md:px-10
+            <div className='w-full place-items-center grid md:px-2
             grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'>
                 {data?.map((reserve, i) => (
                     <UserReserveCard data={reserve} key={i} />
