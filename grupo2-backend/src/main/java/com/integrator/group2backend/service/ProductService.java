@@ -166,7 +166,7 @@ public class ProductService {
         logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " y Categoria con ID " + category + " en las fechas especificadas.");
         return mapperService.mapList(auxList, ProductViewDTO.class);
     }
-    public List<ProductViewDTO> customProductFilter(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id, Float minPrice, Float maxPrice, String checkInDate, String checkOutDate) throws Exception{
+    public List<ProductViewDTO> customProductFilter(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id, Float minPrice, Float maxPrice, String checkInDate, String checkOutDate, Boolean random) throws Exception{
         List<Product> foundByCustomFilter = productRepository.customDynamicQuery(rooms, beds, bathrooms, guests, city_id, category_id, minPrice, maxPrice);
         //List<Product> foundByCustomFilter = productRepository.customDynamicQuery(rooms, beds, bathrooms, guests, city_id, category_id, minPrice, maxPrice, formattedCheckInDate, formattedCheckOutDate);
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -196,16 +196,24 @@ public class ProductService {
             }
             /*System.out.println("Aux list after filter");
             System.out.println(auxList);*/
-            if (!auxList.isEmpty()){
-                logger.info("Se filtraron los productos disponibles en las fechas especificadas.");
+            if (auxList.isEmpty()){
+                logger.error("No hay reservas disponibles para los filtros y fechas especificadas.");
                 return mapperService.mapList(auxList, ProductViewDTO.class);
             }
-            logger.error("No hay reservas disponibles para los filtros y fechas especificadas.");
+            logger.info("Se filtraron los productos disponibles en las fechas especificadas.");
+            if (random){
+                logger.info("Se mezclo la lista auxiliar de productos.");
+                Collections.shuffle(auxList);
+            }
             return mapperService.mapList(auxList, ProductViewDTO.class);
         }
         if (foundByCustomFilter.isEmpty()){
             logger.error("No se encontraron los productos correspondientes a los filtros utilizados.");
             return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
+        }
+        if (random){
+            logger.info("Se mezclo la lista de productos.");
+            Collections.shuffle(foundByCustomFilter);
         }
         logger.info("Se filtraron los productos sin fechas.");
         return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);

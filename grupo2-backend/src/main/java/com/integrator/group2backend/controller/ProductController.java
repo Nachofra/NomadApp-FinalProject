@@ -43,8 +43,14 @@ public class ProductController {
         return productService.listAllProducts();
     }*/
     @GetMapping("/random")
-    public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts() {
-        return productService.listRandomAllProducts();
+    public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts(
+            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds,
+            @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests,
+            @RequestParam(required = false) Long city, @RequestParam(required = false) Long category,
+            @RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice,
+            @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate) throws Exception{
+        Boolean random = true;
+        return ResponseEntity.ok(productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate, random));
     }
     @GetMapping("/{id}")
     public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId) {
@@ -83,7 +89,8 @@ public class ProductController {
             @RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice,
             @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate)
             throws Exception{
-        return ResponseEntity.ok(productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate));
+        Boolean random = false;
+        return ResponseEntity.ok(productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate, random));
     }
     /*@GetMapping("/city/{id}")
     public ResponseEntity<List<ProductViewDTO>> getProductByCityId(@PathVariable Long id) {
