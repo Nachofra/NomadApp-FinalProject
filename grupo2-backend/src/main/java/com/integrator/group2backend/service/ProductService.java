@@ -180,10 +180,10 @@ public class ProductService {
             List<Product> foundByDates = productRepository.searchProductByCheckInDateCheckOutDate(formattedCheckInDate,formattedCheckOutDate);
             List<Product> auxList = new ArrayList<>();
             auxList.addAll(foundByCustomFilter);
-            System.out.println("Found by dates");
+            /*System.out.println("Found by dates");
             System.out.println(foundByDates);
             System.out.println("Aux list before filter");
-            System.out.println(auxList);
+            System.out.println(auxList);*/
             for (Product productFilter : foundByCustomFilter) {
                 System.out.println("Buscamos en el custom filter");
                 for (Product productDate : foundByDates) {
@@ -194,8 +194,8 @@ public class ProductService {
                     }
                 }
             }
-            System.out.println("Aux list after filter");
-            System.out.println(auxList);
+            /*System.out.println("Aux list after filter");
+            System.out.println(auxList);*/
             if (!auxList.isEmpty()){
                 logger.info("Se filtraron los productos disponibles en las fechas especificadas.");
                 return mapperService.mapList(auxList, ProductViewDTO.class);

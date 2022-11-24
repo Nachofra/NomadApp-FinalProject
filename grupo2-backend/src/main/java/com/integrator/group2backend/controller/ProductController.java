@@ -76,7 +76,6 @@ public class ProductController {
             Product updatedProduct = productService.updateProduct(product);
             return ResponseEntity.ok(updatedProduct);
         } else {
-            logger.error("El producto especificado no existe con id " + productId);
             return ResponseEntity.badRequest().build();
         }
     }
@@ -91,10 +90,13 @@ public class ProductController {
     }
     @RequestMapping
     public ResponseEntity<List<ProductViewDTO>> findProductsByCustomFilter(
-            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds, @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests, @RequestParam(required = false) Long city,
-            @RequestParam(required = false) Long category,@RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice, @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate)
+            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds,
+            @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests,
+            @RequestParam(required = false) Long city, @RequestParam(required = false) Long category,
+            @RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice,
+            @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate)
             throws Exception{
-        System.out.println("rooms " + rooms);
+        /*System.out.println("rooms " + rooms);
         System.out.println("beds " + beds);
         System.out.println("bathrooms " + bathrooms);
         System.out.println("guests " + guests);
@@ -103,11 +105,8 @@ public class ProductController {
         System.out.println("minPrice " + minPrice);
         System.out.println("maxPrice " + maxPrice);
         System.out.println("checkInDate " + checkInDate);
-        System.out.println("checkOutDate " + checkOutDate);
+        System.out.println("checkOutDate " + checkOutDate);*/
         List<ProductViewDTO> searchedProductsByCustomFilter = productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate);
-        if (searchedProductsByCustomFilter.isEmpty()){
-            return ResponseEntity.badRequest().build();
-        }
         return ResponseEntity.ok(searchedProductsByCustomFilter);
     }
     /*@GetMapping("/city/{id}")
