@@ -248,7 +248,7 @@ export const Reserve = () => {
     <Footer />
     <Modal
       isOpen={modal}
-      closeModal={() => navigate('/')}
+      closeModal={() => {navigate('/'); startLoading()}}
     >
       <div className='w-screen max-w-[90vw] md:max-w-lg max-h-96 
       bg-white rounded-lg flex flex-col items-center p-4 shadow-xl'>
@@ -257,7 +257,7 @@ export const Reserve = () => {
         <p className='text-xl md:text-2xl font-medium mb-2 text-gray-800'>Reservation made</p>
         <p className='md:text-lg text-gray-600 mb-4'>We have sent you an email with all the details</p>
         <button
-        onClick={() => navigate('/')}
+        onClick={() => { navigate('/'); startLoading() }}
         className="py-3 w-32 text-white bg-violet-700
         rounded-md text-lg font-medium">
           Awesome!

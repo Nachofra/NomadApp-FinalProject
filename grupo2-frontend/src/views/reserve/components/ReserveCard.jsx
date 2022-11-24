@@ -26,8 +26,8 @@ export const ReserveCard = ({data, dates, handleSubmit, days, fieldError}) => {
         <h3 className='text-2xl  text-gray-700
           font-medium text-gray-700mb-4 pt-4 pb-2 px-6'>
             Reservation details</h3>
-        <div className='p-3 border-t-2 border-b-2 border-violet-700'>
-            <img 
+        <div className='p-3 border-t-2 border-b-2 border-violet-700 w-full'>
+            <img
             src={data.images[0].url} 
             alt={data.images[0].name}
             className="w-full h-full max-h-80 object-cover rounded-lg overflow-hidden"
