@@ -20,7 +20,7 @@ import { filterProps } from 'framer-motion'
 export const Product = () => {
     const navigate = useNavigate();
 
-    const filters = useSearchContext()
+    const { filters } = useSearchContext()
 
     const {
         startLoading,
@@ -133,7 +133,7 @@ export const Product = () => {
                 <img
                 className='w-full h-full object-cover'
                 src={data.images[0].url} 
-                alt={data.images[0].name}
+                alt={data.images[0].naFme}
                 />
             </div>
             <div className='h-full max-h-[550px] w-[30%] overflow-hidden
