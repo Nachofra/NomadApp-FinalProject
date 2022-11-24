@@ -4,12 +4,18 @@ import { AdjustmentsHorizontalIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MobileNav, MobileNavOpen, MobileNavFilters } from './index'
 
-export const MobileSearch = () => {
+export const MobileSearch = ({hide}) => {
     const [open, setOpen] = useState(false)
     const [filtersTab, setFiltersTab] = useState(false)
 
     return ( 
-      <section className='w-screen fixed bottom-4 flex items-center justify-center'>
+      <AnimatePresence initial={false} mode="wait" >
+      {!hide && 
+      <motion.section
+      initial={{ y: -50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -50, opacity: 0 }}
+      className='w-screen fixed bottom-4 flex items-center justify-center'>
         <div
           className={`transition-all w-[94vw] max-w-[900px]  
           shadow-xl cursor-pointer h-auto relative
@@ -74,6 +80,7 @@ export const MobileSearch = () => {
               
             </AnimatePresence>
         </div>
-      </section>
+      </motion.section>
+      }</AnimatePresence>
     )
   }

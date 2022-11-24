@@ -3,20 +3,19 @@ import { Datalist, DatalistItem } from '../../../datalist'
 import { useSearchContext } from '../../../../context/SearchContext'
 import { MapPinIcon } from '@heroicons/react/24/outline'
 
-export const LocationDatalist = ({flowTop}) => {
+export const LocationDatalist = ({flowTop, origin, setOrigin}) => {
 
-    const {filters, setFilters } = useSearchContext()
     const { cities } = useSearchContext();
 
   return (
     <Datalist
     flowTop={flowTop}
     data={cities}
-    value={filters.location ? `${filters.location?.name},  ${filters.location?.country.name}` : null}
+    value={origin.location ? `${origin.location?.name},  ${origin.location?.country.name}` : null}
     id='locations_dsk_filter'
     // label='Company / Organization'
     placeholder='Search around the world'
-    onChange={(e) => setFilters({...filters, location: e})}
+    onChange={(e) => setOrigin({...origin, location: e})}
     resultRenderer={(city, i) => (
       <DatalistItem
         key={i}

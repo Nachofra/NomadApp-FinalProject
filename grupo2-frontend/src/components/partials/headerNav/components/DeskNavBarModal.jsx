@@ -9,7 +9,7 @@ export default function DeskNavBarModal({placeholder, route, alt}) {
   return (
     <div className="relative">
       <NavLink to={route}
-        className={({isActive})=>`mr-4
+        className={({isActive})=>`
           group inline-flex items-center rounded-md  text-base
             hover:text-opacity-100 focus:outline-none focus-visible:ring-2 
             focus-visible:ring-white focus-visible:ring-opacity-75

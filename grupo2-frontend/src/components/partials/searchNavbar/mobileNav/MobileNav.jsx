@@ -7,6 +7,7 @@ import { CalendarDaysIcon, MapPinIcon, UserGroupIcon } from '@heroicons/react/24
 export const MobileNav = ({onClick}) => {
 
     const {filters} = useSearchContext();
+    
 
   return (
 

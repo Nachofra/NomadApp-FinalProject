@@ -14,19 +14,17 @@ const statusEnum = {
 
 function LoadingViewProvider({ children }) {
     
-  const [status, setStatus] = useState(statusEnum.OK);
+  const [status, setStatus] = useState(statusEnum.LOADING);
 
   function startLoading(){
     setStatus(statusEnum.LOADING)
   }
 
   const loadDone = () => setStatus(statusEnum.OK);
-  
 
   function triggerError(){
     setStatus(statusEnum.ERROR)
   }
- 
 
   return (
     <loadingViewContext.Provider

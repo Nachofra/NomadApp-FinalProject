@@ -1,10 +1,6 @@
 import React from 'react'
-import { motion } from 'framer-motion'
-import { CheckIcon } from '@heroicons/react/24/solid'
 import { MobileNavModal } from './MobileNavModal'
 import { useSearchContext } from '@/context/SearchContext'
-import { Datalist, DatalistItem } from '../../../datalist'
-import listBlock from '@/staticJSON/listBlock.json'
 import { LocationDatalist } from '../components/LocationDatalist'
 import { CollapsableMenu } from '../../../collapsableMenu/CollapsableMenu'
 import { Calendar } from '../../../Calendar/Calendar'
@@ -19,7 +15,7 @@ export const MobileNavOpen = ({open, setOpen}) => {
         question='Find locations'
       >
         <div className='p-2 my-4'>
-        <LocationDatalist />
+        <LocationDatalist  origin={filters} setOrigin={setFilters} />
         </div>
       </CollapsableMenu>
       <CollapsableMenu
@@ -33,7 +29,7 @@ export const MobileNavOpen = ({open, setOpen}) => {
           // setEndDate={handleDateTo}
           afterChange={(dateFrom, dateTo) => { handleDates(dateFrom, dateTo)}}
           monthsDisplayed={1}
-        />
+        /> 
         </div>
       </CollapsableMenu>
     </MobileNavModal>

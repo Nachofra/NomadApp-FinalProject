@@ -2,18 +2,18 @@ import { ChevronDownIcon } from '@heroicons/react/24/solid'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { useState } from 'react'
 
-export const CollapsableMenu = (props) => {
+export const CollapsableMenu = ({question, className,questionClassName, wrapperClassName, ...props}) => {
 
     const [isOpen, setIsOpen] = useState(false)
   return (
     <article
-      className="flex flex-col text-left w-full p-3 rounded-lg h-auto cursor-pointer"
+      className="flex flex-col text-left w-full rounded-lg h-auto cursor-pointer"
     >
       <div 
-        className="flex justify-between items-center w-full"
+        className={`flex justify-between items-center w-full mb-4 ${className}`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <div className="text-xl font-semibold">{props.question}</div>
+        <div className={`text-xl font-semibold ${questionClassName}`}>{question}</div>
         <AnimatePresence initial={false} mode="wait">
           <motion.div
             initial={{
@@ -42,7 +42,7 @@ export const CollapsableMenu = (props) => {
           </motion.div>
         </AnimatePresence>
       </div>
-      <AnimatePresence>
+      <AnimatePresence initial={false} mode="wait">
         {isOpen && (
           <motion.div
             initial={{
@@ -58,7 +58,7 @@ export const CollapsableMenu = (props) => {
               opacity: 0,
             }}
             key={props.answer}
-            className="w-full"
+            className={`w-full ${wrapperClassName}`}
           >
             {props.children}
           </motion.div>

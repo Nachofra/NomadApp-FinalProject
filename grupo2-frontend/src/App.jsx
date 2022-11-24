@@ -4,9 +4,11 @@ import { Auth, Home, Product } from './views'
 import { RouteNotFound } from './utilities/RouteNotFound'
 import { AuthGuard } from './guard/AuthGuard'
 import { Route } from 'react-router-dom'
-import { PublicRoutes } from './guard/Routes'
+import { PrivateRoutes, PublicRoutes } from './guard/Routes'
+import { Reserve } from './views/reserve/Reserve'
+import { VerifyConfirmation } from './views/verify-confirmation/VerifyConfirmation'
 import './App.css'
-
+import { DefaultError } from './views/defaultError/DefaultError'
 
 function App() {
   return (
@@ -14,8 +16,12 @@ function App() {
       <Route path={PublicRoutes.HOME} element={<Home />} />
       <Route path={PublicRoutes.AUTH} element={<Auth />} />
       <Route path={PublicRoutes.PRODUCT} element={<Product />} />
-      
-      <Route element={<AuthGuard />}></Route>
+      <Route path={PublicRoutes.VERIFYCONFIRM} element={<VerifyConfirmation />} />
+      <Route path={PublicRoutes.DEFAULTERROR} element={<DefaultError />} />
+
+      <Route element={<AuthGuard />}>
+        <Route path={PrivateRoutes.RESERVE} element={<Reserve />} />
+      </Route>
   </RouteNotFound>
   )
 }

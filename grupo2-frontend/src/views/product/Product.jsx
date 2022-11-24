@@ -1,63 +1,81 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { BaseLayout } from '../../components/layout/BaseLayout'
 import { Footer, HeaderNav, SearchNav } from '../../components/partials'
-import listBlock from '@/staticJSON/listBlock.json'
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'
 import { ArrowRightIcon, MapPinIcon, PhotoIcon, StarIcon } from '@heroicons/react/24/outline'
 import { FeatureItem } from '../../components/featureItem/FeatureItem'
-import { motion } from 'framer-motion'
 import { ImageSlider } from '../../components/imageSlider/ImageSlider'
 import { ImageGallery } from '../../components/imageGallery/ImageGallery'
-import Modal from '../../components/modal/Modal'
+import {Modal} from '../../components/modal/Modal'
 import { Calendar } from '../../components/Calendar/Calendar'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import { PolicyList } from './components/PolicyList'
 import { useLoadingViewContext } from '../../context/LoadingViewContext'
-import { FetchRoutes } from '../../guard/Routes'
+import { FetchRoutes, PrivateRoutes } from '../../guard/Routes'
+import { useSearchContext } from '../../context/SearchContext'
 
 export const Product = () => {
+    const navigate = useNavigate();
 
     const {
-        status,
         startLoading,
         loadDone,
-        triggerError
-      } = useLoadingViewContext()
+        triggerError,
+      } = useLoadingViewContext();
 
-    const navigate = useNavigate();
-    const [ data, setData ] = useState()
+      const [date, setDate] = useState({
+        from: null,
+        to: null,
+      })
+
+      const handleDates = ( dateFrom, dateTo )=> {
+        setDate({ from:dateFrom, to:dateTo})
+      }
+
+    // const {filters, handleDates} = useSearchContext()
+    const {state} = useLocation()
+
+    const [ data, setData ] = useState(state?.product)
     const {id} = useParams();
 
-    console.log(data)
-
+    const fetchData = async () =>{
+        startLoading();
+        try {
+        const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
+        setData(data);
+        } catch (error) {
+        console.error(error.message);
+        triggerError()
+        }
+        loadDone();
+    }
     useEffect(() => {
-        const fetchData = async () =>{
-          startLoading();
-            try {
-              const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
-              setData(data);
-            } catch (error) {
-              console.error(error.message);
-              triggerError()
-            }
-            loadDone();
-          }
-          
-          fetchData();
+        
+
+          if ( !data ) { fetchData() };
+          if ( data ) { loadDone() };
+
     }, [])
 
     const [modal, setModal ] = useState(false);
 
     const { width } = useWindowDimensions();
+
+    const [error, setError] = useState(false);
+    
+    const validateDates = () => date?.to && date?.from
+
+    const handleReserve = () => validateDates() ? navigate(PrivateRoutes.RESERVEID(data.id), {state: {product: data, dates: date}}) : setError(true)
+    
     
   if (data) {return (
     <>
     <HeaderNav />
     <BaseLayout
-        padding='pt-20 lg:pt-24 md:px-6 lg:px-8'
-        wrapperClassName="bg-violet-800"
+        padding='mt-16 lg:mt-24 md:px-6 lg:px-8'
+        wrapperClassName="bg-violet-800 sticky top-16 lg:top-24 z-20"
         className="flex items-center justify-between"
     >
         <div className='flex flex-col items-start justify-center py-4'>
@@ -176,17 +194,21 @@ export const Product = () => {
         <div className='flex flex-col w-full items-center justify-center gap-4
         md:gap-6 lg:flex-row lg:justify-start'>
             <Calendar
-            // startDate={filters.date.from}
-            // endDate={filters.date.to}
-            // setStartDate={handleDateFrom}
-            // setEndDate={handleDateTo}
+            startDate={date.from}
+            endDate={date.to}
+            afterChange={(dateFrom, dateTo) => { handleDates(dateFrom, dateTo)}}
             monthsDisplayed={width > 660 ? 2 : 1 }
             />
             <div className='gap-2 flex flex-col items-center md:flex-row 
             lg:px-4 lg:py-10 lg:border-2 lg:border-violet-700 lg:rounded-lg
-            lg:bg-white lg:mx-auto'>
-                <p className='text-gray-600 md:mr-2'>Select the date and start your reservation</p>
-                <button className='flex items-center px-4 py-3 bg-violet-700 rounded-lg'>
+            lg:bg-white lg:mx-auto' >
+                <p className={`${error ? 'text-red-400' : 'text-gray-600'} transition-colors md:mr-2`}>
+                    Select the date to start your reservation</p>
+                <button
+                onClick={handleReserve}
+                className={`${error ? 'border-red-400 border-2' : ''}
+                flex items-center px-4 py-3 bg-violet-700 rounded-lg`}
+                >
                     <p className='mr-2 text-white font-medium'>Continue</p>
                     <ArrowRightIcon className='w-6 h-6 text-white' />
                 </button>
@@ -207,7 +229,6 @@ export const Product = () => {
         </div>
     </BaseLayout>
     <Footer />
-    <SearchNav />
 </>
   )}
 

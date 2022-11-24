@@ -13,8 +13,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Optional;
-
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 
@@ -32,9 +30,8 @@ public class CategoryServiceTest {
     }
 
 
-
     @Test
-    public void testAddCategory(){
+    public void testAddCategory() {
         Image categoryImage = new Image();
         categoryImage.setId(10L);
 
@@ -61,7 +58,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void testSearchCategoryById(){
+    public void testSearchCategoryById() {
         Mockito.when(this.categoryRepository.findById(eq(1L))).thenReturn(null);
 
         this.categoryService.searchCategoryById(1L);
@@ -71,7 +68,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void testSearchAllCategories(){
+    public void testSearchAllCategories() {
         Mockito.when(this.categoryRepository.findAll()).thenReturn(null);
 
         this.categoryService.listAllCategories();
@@ -107,7 +104,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void testUpdateCategoryWhitCategoryImageInDBButNoIlustrationImageInDB(){
+    public void testUpdateCategoryWhitCategoryImageInDBButNoIlustrationImageInDB() {
         Image categoryImage = new Image();
         categoryImage.setId(10L);
         Category oldCategory = new Category();
@@ -131,8 +128,9 @@ public class CategoryServiceTest {
         Assert.assertEquals(10L, capturedCategory.getCategoryImage().getId(), 1);
         Assert.assertEquals("url", capturedCategory.getCategoryIllustration().getURL());
     }
+
     @Test
-    public void testCategoryUpdateWhitCategoyIllustrationinDBButNoCategoryImageInDB(){
+    public void testCategoryUpdateWhitCategoyIllustrationinDBButNoCategoryImageInDB() {
         Image illustrationImage = new Image();
         illustrationImage.setId(10L);
         Category oldCategory = new Category();
@@ -158,9 +156,8 @@ public class CategoryServiceTest {
     }
 
 
-
     @Test
-    public void testUpdateCategoryWhitImagesInRequest(){
+    public void testUpdateCategoryWhitImagesInRequest() {
         Category oldCategory = new Category();
         oldCategory.setId(1L);
 
@@ -186,7 +183,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void testDeleteCategory(){
+    public void testDeleteCategory() {
         Mockito.doNothing().when(this.categoryRepository).deleteById(eq(1L));
 
         this.categoryService.deleteCategory(1L);
