@@ -205,7 +205,7 @@ export const Reserve = () => {
                     return(dateFrom  < elm.start ) && (dateTo > elm.end )
                 })) {
                     handleDates(dateFrom, dateTo)
-                
+                 
             }}}
               monthsDisplayed={width > 660 ? 2 : 1 }
               excludeDateIntervals={avoidDates}
