@@ -8,6 +8,7 @@ export const SearchContext = createContext(null)
 
 export const useSearchContext = () => useContext(SearchContext);
 
+
 export const emptyFilters = 
     {
         location: null,
@@ -20,9 +21,10 @@ export const emptyFilters =
             max: '',
         },
         guests: {
-          adults: undefined,
-          children: undefined,
-          babies: undefined
+          total: 0,
+          adults: 0,
+          children: 0,
+          babies: 0
         },
         bathrooms: null,
         rooms: null,
@@ -31,8 +33,21 @@ export const emptyFilters =
       }
 
 export const SearchProvider = ({ children }) => {
-    const [filters, setFilters] = useState(emptyFilters);
 
+  const [filters, setFilters] = useState(emptyFilters);
+
+  useEffect(() => {
+
+    const total = () =>  (filters.guests.adults ?? 0) + (filters.guests.children ?? 0) + (filters.guests.babies ?? 0);
+
+    setFilters({...filters, guests: {...filters.guests, total: total() }})
+  
+  }, [filters.guests.adults,
+  filters.guests.children,
+  filters.guests.babies])
+
+  console.log(filters.guests.adults);
+  
     const [cities, setCities ] = useState([]);
     const [categories, setCategories ] = useState([])
     

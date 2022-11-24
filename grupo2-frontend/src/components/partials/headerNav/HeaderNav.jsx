@@ -26,7 +26,7 @@ export const HeaderNav = ({transparent}) => {
     <section 
     className='top-0 fixed z-50
     w-screen flex items-center justify-between' >
-        <div className={`w-screen cursor-pointer h-[70px] lg:h-24 relative
+        <div className={`w-screen cursor-pointer min-h-[70px] lg:min-h-[96px] relative
         flex justify-end items-end p-4 lg:p-6 transition-all
         ring-1 ring-violet-700 ring-opacity-5 
         ${transparent && !open ? '' : 'bg-white  shadow-md'}`} >
@@ -60,7 +60,7 @@ export const HeaderNav = ({transparent}) => {
               <>
                 <DropDown
                 button={
-                  <h2 className='text-xl'>Hola <span className='font-bold'>{user.firstName}</span></h2>
+                  <h2 className='text-xl font-thin'>Hello <span className='font-bold'>{user.firstName}</span></h2>
                 }
                 >
                   <div className='px-1 py-1 '>

@@ -4,10 +4,11 @@ import { MapPinIcon, UserGroupIcon, CalendarDaysIcon } from '@heroicons/react/24
 import { useSearchContext } from '../../../../context/SearchContext'
 import DeskSearchbarModal from './components/DeskSearchbarModal'
 import { Calendar } from '../../../Calendar/Calendar'
-import { DeskFiltersPanel } from './components/DeskFiltersPanel'
-import { PropertyTypeSelect } from '../components/PropertyTypeSelect'
 import { LocationDatalist } from '../components/LocationDatalist'
 import { AnimatePresence, motion } from 'framer-motion'
+import { DeskFiltersButton, DeskFiltersPanel } from './components/DeskFilters'
+import { useState } from 'react'
+import { Counter } from '../../../counter/Counter'
 export const DesktopSearch = ({hide}) => {
 
   const {filters, 
@@ -25,7 +26,10 @@ Date.prototype.formatMMDDYYYY = function(){
 
 const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
 
+const [filtersModal, setFiltersModal ] = useState();
+
   return (
+    <>
     <AnimatePresence initial={false} mode="wait">
     {!hide && 
     <motion.section
@@ -58,11 +62,7 @@ const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
           text={`${handleDateFormat(filters.date.from)} - ${handleDateFormat(filters.date.to)}`}
           placeholder="Any date - any date"
         >
-          <div className='h-full w-16 p-6'>
-            <p className='absolute flex top-6 left-6
-            origin-top-right -translate-x-full -rotate-90
-            text-2xl text-violet-700 tracking-widest font-bold uppercase'>Calendar</p>
-          </div>
+
           <Calendar
             startDate={filters.date.from}
             endDate={filters.date.to}
@@ -72,15 +72,36 @@ const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
         </DeskSearchbarModal>
 
         <DeskSearchbarModal
-          active={false}
+          active={filters.guests.total > 0}
           icon={<UserGroupIcon className='w-7 h-7 text-violet-700' />}
-          text="Córdoba, Argentina"
+          text={`${filters.guests.total} guests - no pets`}
           placeholder="Any guests - no pets"
         >
-          <div className='h-full w-32'>
-            <p className='absolute flex top-6 left-6
-            origin-top-right -translate-x-full -rotate-90
-            text-2xl text-violet-700 tracking-widest font-bold uppercase'>Guests</p>
+          <div className='flex gap-8 px-10'>
+            <div className='flex flex-col gap-4 items-center font-medium' >
+              <Counter
+              vertical
+              value={filters.guests.adults} 
+              setValue={value => {setFilters({...filters, guests: {...filters.guests, adults: value }})}} 
+              />
+              <p className='text-lg text-gray-700'>Adults</p>
+            </div>
+            <div className='flex flex-col gap-4 items-center font-medium' >
+              <Counter
+              vertical
+              value={filters.guests.children} 
+              setValue={value => {setFilters({...filters, guests: {...filters.guests, children: value }})}} 
+              />
+              <p className='text-lg text-gray-700'>Children</p>
+            </div>
+            <div className='flex flex-col gap-4 items-center font-medium' >
+              <Counter
+              vertical
+              value={filters.guests.babies} 
+              setValue={value => {setFilters({...filters, guests: {...filters.guests, babies: value }})}} 
+              />
+              <p className='text-lg text-gray-700'>Babies</p>
+            </div>
           </div>
         </DeskSearchbarModal>
         <div 
@@ -90,31 +111,16 @@ const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
               <MagnifyingGlassIcon className="w-6 h-6 text-violet-700" />
         </div>
         <div className='flex items-center absolute -left-4 z-10 -translate-x-full'>
-          <DeskFiltersPanel>
-            <h2 className='text-center text-2xl'>Filters</h2>
-            <div className='flex items-center justify-start
-              pt-4 overflow-auto  snap-x snap-mandatory  scrollbar-none'>
-                <div className="flex space-x-6 snap-x snap-mandatory">
-                  {categories.map((category, i) => (
-                    <PropertyTypeSelect
-                        key={i}
-                        name={category.title}
-                        illustration={category.categoryIllustration.url}
-                        onClick={() => applyCategory(category.id)}
-                        selected={filters?.category === category.id} 
-                    />
-                    ))}
-                </div>
-            </div>
-          </DeskFiltersPanel>
-          <ArrowPathIcon onClick={reset} className='text-violet-700 w-6 h-6 ml-4' />
+          <DeskFiltersButton setOpen={setFiltersModal} open={filtersModal} />
+          <div className='py-2 px-4 rounded-full ml-4 bg-violet-700'>
+          <ArrowPathIcon onClick={() => {reset(); setFiltersModal(false)}} className='text-yellow-500 w-6 h-6' />
+          </div>
         </div>
-        {/* <QuestionMarkCircleIcon 
-        className='absolute -right-4 translate-x-full
-        w-6 h-6 text-violet-700' 
-        /> */}
       </div>
     </motion.section>
     }</AnimatePresence>  
+
+    <DeskFiltersPanel open={(filtersModal && !hide)} setOpen={setFiltersModal} />
+    </>
   )
 }

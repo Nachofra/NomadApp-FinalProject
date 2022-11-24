@@ -17,7 +17,7 @@ export const MobileSearch = ({hide}) => {
       exit={{ y: -50, opacity: 0 }}
       className='w-screen fixed bottom-4 flex items-center justify-center'>
         <div
-          className={`transition-all w-[94vw] max-w-[900px]  
+          className={`transition-all w-[94vw] max-w-[600px]  
           shadow-xl cursor-pointer h-auto relative
           flex flex-col justify-start items-start
           rounded-tl-xl rounded-bl-xl rounded-tr-xl rounded-br-[10rem]

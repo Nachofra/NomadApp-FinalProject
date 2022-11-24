@@ -2,9 +2,9 @@ import { ChevronDownIcon } from '@heroicons/react/24/solid'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { useState } from 'react'
 
-export const CollapsableMenu = ({question, className,questionClassName, wrapperClassName, ...props}) => {
+export const CollapsableMenu = ({question, className, initial = false, questionClassName, wrapperClassName, ...props}) => {
 
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(initial)
   return (
     <article
       className="flex flex-col text-left w-full rounded-lg h-auto cursor-pointer"
