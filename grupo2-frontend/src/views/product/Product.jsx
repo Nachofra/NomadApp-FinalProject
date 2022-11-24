@@ -74,7 +74,9 @@ export const Product = () => {
     
     const validateDates = () => date?.to && date?.from
 
-    const handleReserve = () => validateDates() ? navigate(PrivateRoutes.RESERVEID(data.id), {state: {product: data, dates: date}}) : setError(true)
+    const handleReserve = () => validateDates() ? navigate(
+        PrivateRoutes.RESERVEID(data.id), 
+        {state: {product: data, dates: date, avoidDates: avoidDates}}) : setError(true)
     
     
   if (data) {return (
@@ -207,10 +209,9 @@ export const Product = () => {
                 const dateFromMl = dateFrom?.getTime();
                 const dateToMl = dateTo?.getTime();
 
-                console.log(dateFromMl, dateToMl);
                 if (!dateToMl) {handleDates(dateFrom, dateTo)}
 
-                if (!avoidDates.some(elm => {
+                if (!avoidDates?.some(elm => {
                     return(dateFrom  < elm.start ) && (dateTo > elm.end )
                 })) {
                     handleDates(dateFrom, dateTo)

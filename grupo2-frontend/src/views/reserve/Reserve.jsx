@@ -41,6 +41,10 @@ export const Reserve = () => {
     } = useLoadingViewContext()
 
   const [ data, setData ] = useState(state?.product)
+  const [avoidDates, setAvoidDates ] = useState(state?.avoidDates)
+
+  const excludeDatesHandler = excArr => excArr.map(range => ({ start: range.checkInDate, end :  range.checkOutDate}))
+
   const {id} = useParams();
 
   const fetchData = async () =>{
@@ -48,6 +52,8 @@ export const Reserve = () => {
       try {
         const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
         setData(data);
+        const { data :  dates} = await axios.get(`${FetchRoutes.BASEURL}/reservation/product/${id}`);
+        setAvoidDates(excludeDatesHandler(dates));
       } catch (error) {
         console.error(error.message);
         triggerError()
@@ -56,8 +62,8 @@ export const Reserve = () => {
     }
 
   useEffect(() => {
-        if ( !data ) { fetchData() };
-        if ( data ) { loadDone() };
+    if ( !data || !avoidDates ) { fetchData() };
+    if ( data && avoidDates ) { loadDone() };
 
   }, [])
 
@@ -189,8 +195,21 @@ export const Reserve = () => {
             <Calendar
               startDate={formFields.dateFrom}
               endDate={formFields.dateTo}
-              afterChange={(dateFrom, dateTo) => { handleDates(dateFrom, dateTo)}}
+              afterChange={(dateFrom, dateTo) => {
+                const dateFromMl = dateFrom?.getTime();
+                const dateToMl = dateTo?.getTime();
+
+                if (!dateToMl) {handleDates(dateFrom, dateTo)}
+
+                if (!avoidDates?.some(elm => {
+                    return(dateFrom  < elm.start ) && (dateTo > elm.end )
+                })) {
+                    handleDates(dateFrom, dateTo)
+                
+            }}}
               monthsDisplayed={width > 660 ? 2 : 1 }
+              excludeDateIntervals={avoidDates}
+
             />
           </div>
           <h3 className='text-2xl md:text-3xl
