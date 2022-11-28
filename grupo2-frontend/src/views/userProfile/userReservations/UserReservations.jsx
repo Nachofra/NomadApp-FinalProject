@@ -47,7 +47,7 @@ export const UserReservations = () => {
      <>
         <HeaderNav />
         <BaseLayout
-          wrapperClassName="bg-logo-hero-search mb-6 md:mb-10"
+          wrapperClassName="bg-logo-hero-search"
           padding='px-3 pt-24 lg:pt-32'
         >
             <div className='flex items-end justify-between w-full py-6 md:px-10'>
@@ -61,7 +61,8 @@ export const UserReservations = () => {
           padding='px-3 pt-4 md:pt-6'
           className=" mb-10"
         >
-            <div className='w-full place-items-center grid 
+            <p className='text-end mb-4 md:mb-6 mr-2 text-gray-400 md:px-10'>{`Viewing results ${data ? data.length : 0} from ${data ? data.length : 0} `}</p>
+            <div className='w-full place-items-center grid md:px-2
             grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'>
                 {data?.map((reserve, i) => (
                     <UserReserveCard data={reserve} key={i} />
