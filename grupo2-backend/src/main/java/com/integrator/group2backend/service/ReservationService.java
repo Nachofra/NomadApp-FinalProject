@@ -1,11 +1,9 @@
 package com.integrator.group2backend.service;
 
-import com.integrator.group2backend.controller.ReservationController;
 import com.integrator.group2backend.dto.ReservationDTO;
 import com.integrator.group2backend.dto.ReservationSimpleDTO;
 import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.entities.Reservation;
-import com.integrator.group2backend.repository.ProductRepository;
 import com.integrator.group2backend.repository.ReservationRepository;
 import com.integrator.group2backend.utils.MapperService;
 import org.apache.log4j.Logger;
@@ -24,7 +22,6 @@ public class ReservationService {
     private final MapperService mapperService;
     public static final Logger logger = Logger.getLogger(ReservationService.class);
 
-
     public ReservationService(ReservationRepository reservationRepository, MapperService mapperService, ProductService productService) {
         this.reservationRepository = reservationRepository;
         this.mapperService = mapperService;
@@ -32,13 +29,22 @@ public class ReservationService {
     }
     public List<ReservationDTO> listAllReservations() {
         List<Reservation> searchedReservations = reservationRepository.findAll();
+        if (searchedReservations.isEmpty()){
+            logger.error("Error al listar todas las reservas.");
+        }else {
+            logger.info("Se listaron todas las reservas.");
+        }
         return this.mapperService.mapList(searchedReservations, ReservationDTO.class);
     }
-    public Optional<Reservation> searchReservationById(Long id) {
-        return reservationRepository.findById(id);
+    public Optional<ReservationDTO> searchReservationById(Long id) {
+        Optional reservationFound = reservationRepository.findById(id);
+        if (reservationFound.isEmpty()){
+            logger.error("Error al listar la reserva con id " + id);
+        }else {
+            logger.info("Se listo la reserva con id " + id);
+        }
+        return reservationFound;
     }
-
-
     public List<ReservationDTO> findReservationByUserId(Long user_id) {
         List<Reservation> reservationsByUser = this.reservationRepository.findReservationByUserId(user_id);
         List<ReservationDTO> dtoReservationsByUser = this.mapperService.mapList(reservationsByUser, ReservationDTO.class);
@@ -49,24 +55,33 @@ public class ReservationService {
         }
         return dtoReservationsByUser;
     }
-
-
     public ReservationDTO addReservation(Reservation reservation) {
         Product p = this.productService.searchProductById(reservation.getProduct().getId()).get();
         Double priceForDay = p.getDailyPrice().doubleValue();
         Integer days = (int) (reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime()) / 86400000;
         reservation.setFinalPrice(days * priceForDay);
+        logger.info("Se ha registrado una nueva reserva.");
         return this.mapperService.convert(this.reservationRepository.save(reservation), ReservationDTO.class);
     }
-
+    public List<ReservationSimpleDTO> findByProductId(Long productId) {
+        List<Reservation> reservationsById = this.reservationRepository.findReservationByProductId(productId);
+        if (reservationsById.isEmpty()) {
+            logger.error("Error al listar todas las reservas del producto con id " + productId);
+        }else {
+            logger.info("Se listaron todas las reservas del producto con id " + productId);
+        }
+        return this.mapperService.mapList(reservationsById, ReservationSimpleDTO.class);
+    }
     public List<ReservationDTO> findReservationsByCheckInDateAndCheckOutDate(String checkInDate, String checkOutDate) throws ParseException {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         Date formattedCheckInDate = dateFormatter.parse(checkInDate);
         Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
-        return this.mapperService.mapList(this.reservationRepository.findReservationsByCheckInDateAndCheckOutDate(formattedCheckInDate, formattedCheckOutDate), ReservationDTO.class);
-    }
-
-    public List<ReservationSimpleDTO> findByProductId(Long productId) {
-        return this.mapperService.mapList(this.reservationRepository.findReservationByProductId(productId), ReservationSimpleDTO.class);
+        List<Reservation> reservationsByDate = this.reservationRepository.findReservationsByCheckInDateAndCheckOutDate(formattedCheckInDate, formattedCheckOutDate);
+        if (reservationsByDate.isEmpty()){
+            logger.error("Error al buscar reservas en el rango de fechas correspondiente.");
+        }else {
+            logger.info("Se encontraron reservas en el rango de fechas correspondiente.");
+        }
+        return this.mapperService.mapList(reservationsByDate, ReservationDTO.class);
     }
 }
