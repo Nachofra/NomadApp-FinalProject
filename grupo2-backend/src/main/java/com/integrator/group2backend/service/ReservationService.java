@@ -1,5 +1,6 @@
 package com.integrator.group2backend.service;
 
+import com.integrator.group2backend.controller.ReservationController;
 import com.integrator.group2backend.dto.ReservationDTO;
 import com.integrator.group2backend.dto.ReservationSimpleDTO;
 import com.integrator.group2backend.entities.Product;
@@ -7,6 +8,7 @@ import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.repository.ProductRepository;
 import com.integrator.group2backend.repository.ReservationRepository;
 import com.integrator.group2backend.utils.MapperService;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -20,6 +22,8 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ProductService productService;
     private final MapperService mapperService;
+    public static final Logger logger = Logger.getLogger(ReservationService.class);
+
 
     public ReservationService(ReservationRepository reservationRepository, MapperService mapperService, ProductService productService) {
         this.reservationRepository = reservationRepository;
@@ -36,7 +40,14 @@ public class ReservationService {
 
 
     public List<ReservationDTO> findReservationByUserId(Long user_id) {
-        return this.mapperService.mapList(this.reservationRepository.findReservationByUserId(user_id), ReservationDTO.class);
+        List<Reservation> reservationsByUser = this.reservationRepository.findReservationByUserId(user_id);
+        List<ReservationDTO> dtoReservationsByUser = this.mapperService.mapList(reservationsByUser, ReservationDTO.class);
+        if (reservationsByUser.isEmpty()){
+            logger.error("Error al listar todas las reservas ddel usuario con id " + user_id);
+        }else {
+            logger.info("Se listaron todas las reservas del usuario con id " + user_id);
+        }
+        return dtoReservationsByUser;
     }
 
 

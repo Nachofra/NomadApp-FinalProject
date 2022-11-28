@@ -3,13 +3,13 @@ package com.integrator.group2backend.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 public class ReservationPublicDTO {
     private Long id;
-    public Date checkInDate;
-    public Date checkOutDate;
+    public LocalDate checkInDate;
+    public LocalDate checkOutDate;
     private ProductSimpleDTO product;
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Setter
@@ -12,8 +13,8 @@ public class ReservationDTO {
     private Long id;
     private Double finalPrice;
     private Time checkInTime;
-    private Date checkInDate;
-    private Date checkOutDate;
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
     private ProductSimpleDTO product;
     private CurrentUserDTO user;
 }

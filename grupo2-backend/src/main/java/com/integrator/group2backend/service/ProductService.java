@@ -89,6 +89,15 @@ public class ProductService {
         logger.info("Se encontraron los productos correspondientes a la Categoria con ID " + category_id);
         return this.mapperService.mapList(productFoundByCategoryId, ProductViewDTO.class);
     }
+    public List<ProductViewDTO> searchProductsByCityCheckInDateCheckOutDate(Long city, Date checkInDate, Date checkOutDate){
+        List<Product> productFoundByCityCheckInDateCheckOutDate = productRepository.searchProductByCityCheckInDateCheckOutDate(city, checkInDate, checkOutDate);
+        if (productFoundByCityCheckInDateCheckOutDate.isEmpty()){
+            logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city + "  en las fechas especificadas.");
+            return this.mapperService.mapList(productFoundByCityCheckInDateCheckOutDate, ProductViewDTO.class);
+        }
+        logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " en las fechas especificadas.");
+        return this.mapperService.mapList(productFoundByCityCheckInDateCheckOutDate, ProductViewDTO.class);
+    }
 
     public List<ProductViewDTO> listProductByCityIdAndCategoryId(Long city_id, Long category_id) {
         List<Product> productFoundByCityIdAndCategoryId = productRepository.findByCityIdAndCategoryId(city_id, category_id);
@@ -108,23 +117,7 @@ public class ProductService {
         return this.mapperService.mapList(productFoundByCityIdAndCategoryIdAndGuests, ProductViewDTO.class);
     }
 
-    public List<ProductViewDTO> searchProductsByCityCheckInDateCheckOutDate(Long city, Date checkInDate, Date checkOutDate){
-        /*SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date formattedCheckInDate = dateFormatter.parse(checkInDate);
-        Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);*/
-        List<Product> productFoundByCityCheckInDateCheckOutDate = productRepository.searchProductByCityCheckInDateCheckOutDate(city, checkInDate, checkOutDate);
-        if (productFoundByCityCheckInDateCheckOutDate.isEmpty()){
-            logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city + "  en las fechas especificadas.");
-            return this.mapperService.mapList(productFoundByCityCheckInDateCheckOutDate, ProductViewDTO.class);
-        }
-        logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " en las fechas especificadas.");
-        return this.mapperService.mapList(productFoundByCityCheckInDateCheckOutDate, ProductViewDTO.class);
-    }
-
     public List<ProductViewDTO> searchProductsByCityExcludingDates(Long city, Date checkInDate, Date checkOutDate){
-        /*SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date formattedCheckInDate = dateFormatter.parse(checkInDate);
-        Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);*/
         List<Product> productFoundByCityId = productRepository.findByCityId(city);
         List<Product> productFoundByCityCheckInDateCheckOutDate = productRepository.searchProductByCityCheckInDateCheckOutDate(city, checkInDate, checkOutDate);
         List<Product> auxList = new ArrayList<>();
@@ -145,9 +138,6 @@ public class ProductService {
     }
 
     public List<ProductViewDTO> searchProductByCityCategoryCheckInDateCheckOutDate(Long city, Long category, Date checkInDate, Date checkOutDate){
-        /*SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date formattedCheckInDate = dateFormatter.parse(checkInDate);
-        Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);*/
         List<Product> productFoundByCityIdAndCategoryId = productRepository.findByCityIdAndCategoryId(city, category);
         List<Product> productFoundByCityCheckInDateCheckOutDate = productRepository.searchProductByCityCategoryCheckInDateCheckOutDate(city, category, checkInDate, checkOutDate);
         List<Product> auxList = new ArrayList<>();
@@ -166,18 +156,19 @@ public class ProductService {
         logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " y Categoria con ID " + category + " en las fechas especificadas.");
         return mapperService.mapList(auxList, ProductViewDTO.class);
     }
-    public List<ProductViewDTO> customProductFilter(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id, Float minPrice, Float maxPrice, String checkInDate, String checkOutDate, Boolean random) throws Exception{
+    public List<ProductViewDTO> customProductFilter(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id,
+                                                    Float minPrice, Float maxPrice, String checkInDate, String checkOutDate, Boolean random) throws Exception{
+
         List<Product> foundByCustomFilter = productRepository.customDynamicQuery(rooms, beds, bathrooms, guests, city_id, category_id, minPrice, maxPrice);
-        //List<Product> foundByCustomFilter = productRepository.customDynamicQuery(rooms, beds, bathrooms, guests, city_id, category_id, minPrice, maxPrice, formattedCheckInDate, formattedCheckOutDate);
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date formattedCheckInDate = null;
-        Date formattedCheckOutDate = null;
 
         if (checkInDate != null && checkOutDate != null){
-            System.out.println("Filtramos por fechas");
-            formattedCheckInDate = dateFormatter.parse(checkInDate);
-            formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+            //System.out.println("Filtramos por fechas");
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date formattedCheckInDate = dateFormatter.parse(checkInDate);
+            Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+
             List<Product> foundByDates = productRepository.searchProductByCheckInDateCheckOutDate(formattedCheckInDate,formattedCheckOutDate);
+
             List<Product> auxList = new ArrayList<>();
             auxList.addAll(foundByCustomFilter);
             /*System.out.println("Found by dates");
@@ -185,11 +176,12 @@ public class ProductService {
             System.out.println("Aux list before filter");
             System.out.println(auxList);*/
             for (Product productFilter : foundByCustomFilter) {
-                System.out.println("Buscamos en el custom filter");
+                /*System.out.println("Buscamos en el custom filter");
+                System.out.println(productFilter.getReservations().toString());*/
                 for (Product productDate : foundByDates) {
-                    System.out.println("Buscamos coincidencias con las fechas");
+                    //System.out.println("Buscamos coincidencias con las fechas");
                     if (productFilter.equals(productDate)) {
-                        System.out.println("Encontramos coincidencias");
+                        //System.out.println("Encontramos coincidencias");
                         auxList.remove(productFilter);
                     }
                 }

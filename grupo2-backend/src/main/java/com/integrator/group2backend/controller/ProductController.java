@@ -4,7 +4,6 @@ import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.service.ProductService;
 import com.integrator.group2backend.utils.MapperService;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +22,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
-    public static final Logger logger = Logger.getLogger(ProductService.class);
-
     private final ProductService productService;
 
     private final MapperService mapperService;
@@ -38,12 +35,19 @@ public class ProductController {
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         return ResponseEntity.ok(productService.addProduct(product));
     }
-    /*@GetMapping
-    public ResponseEntity<List<ProductViewDTO>> listAllProducts() {
-        return productService.listAllProducts();
-    }*/
+    @GetMapping
+    public ResponseEntity<List<ProductViewDTO>> listProducts(
+            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds,
+            @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests,
+            @RequestParam(required = false) Long city, @RequestParam(required = false) Long category,
+            @RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice,
+            @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate)
+            throws Exception {
+        Boolean random = false;
+        return ResponseEntity.ok(productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate, random));
+    }
     @GetMapping("/random")
-    public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts(
+    public ResponseEntity<List<ProductViewDTO>> listRandomProducts(
             @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds,
             @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests,
             @RequestParam(required = false) Long city, @RequestParam(required = false) Long category,
@@ -80,17 +84,6 @@ public class ProductController {
             return ResponseEntity.ok("El producto con id " + productId + " ha sido borrado");
         }
         return ResponseEntity.notFound().build();
-    }
-    @RequestMapping
-    public ResponseEntity<List<ProductViewDTO>> findProductsByCustomFilter(
-            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds,
-            @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests,
-            @RequestParam(required = false) Long city, @RequestParam(required = false) Long category,
-            @RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice,
-            @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate)
-            throws Exception{
-        Boolean random = false;
-        return ResponseEntity.ok(productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate, random));
     }
     /*@GetMapping("/city/{id}")
     public ResponseEntity<List<ProductViewDTO>> getProductByCityId(@PathVariable Long id) {

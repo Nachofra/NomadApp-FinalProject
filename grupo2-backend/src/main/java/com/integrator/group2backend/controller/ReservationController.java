@@ -55,14 +55,7 @@ public class ReservationController {
     }
     @GetMapping("/user/{id}")
     public ResponseEntity<List<ReservationDTO>> seachReservationByUserId(@PathVariable("id") Long userId){
-        List<ReservationDTO> reservationFound = reservationService.findReservationByUserId(userId);
-        if(!reservationFound.isEmpty()){
-            logger.info("Se listaron todas las reservas del usuario con id " + userId);
-            return ResponseEntity.ok(reservationFound);
-        }else{
-            logger.error("Error al listar todas las reservas ddel usuario con id " + userId);
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(reservationService.findReservationByUserId(userId));
     }
     @GetMapping("/product/{id}")
     public ResponseEntity<List<ReservationSimpleDTO>> getReservationByProductId(@PathVariable("id") Long productId){
