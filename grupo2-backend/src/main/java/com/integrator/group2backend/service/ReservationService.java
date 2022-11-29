@@ -57,8 +57,12 @@ public class ReservationService {
     public ReservationDTO addReservation(Reservation reservation) {
         Product p = this.productService.searchProductById(reservation.getProduct().getId()).get();
         Double priceForDay = p.getDailyPrice().doubleValue();
-        Integer days = (int) (reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime()) / 86400000;
-        reservation.setFinalPrice(days * priceForDay);
+        System.out.println("Check In");
+        System.out.println("Local Date " + reservation.getCheckInDate());
+        System.out.println("Check Out");
+        System.out.println("Local Date " + reservation.getCheckInDate());
+        //Integer days = (int) (reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime()) / 86400000;
+        //reservation.setFinalPrice(days * priceForDay);
         logger.info("Se ha registrado una nueva reserva.");
         return this.mapperService.convert(this.reservationRepository.save(reservation), ReservationDTO.class);
     }
@@ -75,6 +79,12 @@ public class ReservationService {
         DateTimeFormatter dateTimeFormatter  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate formattedCheckInDate = LocalDate.parse(checkInDate, dateTimeFormatter);
         LocalDate formattedCheckOutDate = LocalDate.parse(checkOutDate, dateTimeFormatter);
+
+        System.out.println("Check In");
+        System.out.println("String " + checkInDate + " Local Date " + formattedCheckInDate);
+        System.out.println("Check Out");
+        System.out.println("String " + checkOutDate + " Local Date " + formattedCheckOutDate);
+
         List<Reservation> reservationsByDate = this.reservationRepository.findReservationsByCheckInDateAndCheckOutDate(formattedCheckInDate, formattedCheckOutDate);
         if (reservationsByDate.isEmpty()){
             logger.error("Error al buscar reservas en el rango de fechas correspondiente.");

@@ -5,7 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -17,8 +18,8 @@ public class Reservation {
     private Long id;
     private Double finalPrice;
     private Time checkInTime;
-    private Date checkInDate;
-    private Date checkOutDate;
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "product_id", referencedColumnName = "id")

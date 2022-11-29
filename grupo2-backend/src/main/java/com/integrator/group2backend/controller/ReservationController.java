@@ -6,11 +6,10 @@ import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.service.ReservationService;
 import com.integrator.group2backend.utils.MapperService;
 import org.apache.log4j.Logger;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
+
 import java.util.*;
 
 @RestController
