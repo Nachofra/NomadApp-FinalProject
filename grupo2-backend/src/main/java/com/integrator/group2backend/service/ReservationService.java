@@ -9,9 +9,8 @@ import com.integrator.group2backend.utils.MapperService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,10 +71,10 @@ public class ReservationService {
         }
         return this.mapperService.mapList(reservationsById, ReservationSimpleDTO.class);
     }
-    public List<ReservationDTO> findReservationsByCheckInDateAndCheckOutDate(String checkInDate, String checkOutDate) throws ParseException {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date formattedCheckInDate = dateFormatter.parse(checkInDate);
-        Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+    public List<ReservationDTO> findReservationsByCheckInDateAndCheckOutDate(String checkInDate, String checkOutDate) throws Exception {
+        DateTimeFormatter dateTimeFormatter  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate formattedCheckInDate = LocalDate.parse(checkInDate, dateTimeFormatter);
+        LocalDate formattedCheckOutDate = LocalDate.parse(checkOutDate, dateTimeFormatter);
         List<Reservation> reservationsByDate = this.reservationRepository.findReservationsByCheckInDateAndCheckOutDate(formattedCheckInDate, formattedCheckOutDate);
         if (reservationsByDate.isEmpty()){
             logger.error("Error al buscar reservas en el rango de fechas correspondiente.");
