@@ -31,7 +31,10 @@ init:terraform:
 validate:terraform:
   stage: validate
   script:
+    - cd .aws/
+    - ls
     - cd grupo2-infraestructura/Terraform
+    - ls
     - terraform validate
 
 # build:maven:
