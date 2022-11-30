@@ -6,15 +6,17 @@ stages:
 #   - release
 #   - deploy
 
-workflow:
-  rules:
-    - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+# workflow:
+#   rules:
+#     - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
 
 init:terraform:
   stage: init
   image: 
     name: hashicorp/terraform:1.3.4
-    entrypoint: [""]
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   before_script:
     - mkdir .aws/
     - mkdir .google/
