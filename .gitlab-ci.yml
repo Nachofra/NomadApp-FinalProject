@@ -26,14 +26,16 @@ init:terraform:
     - cd grupo2-infraestructura/Terraform
     - terraform init
 
-# validate:terraform:
-#   stage: validate
-#   image: 
-#     name: hashicorp/terraform:1.3.4
-#     entrypoint: [""]
-#   script:
-#     - cd grupo2-infraestructura/Terraform
-#     - terraform validate
+validate:terraform:
+  stage: validate
+  image: 
+    name: hashicorp/terraform:1.3.4
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  script:
+    - cd grupo2-infraestructura/Terraform
+    - terraform validate
 
 # build:maven:
 #   stage: build
