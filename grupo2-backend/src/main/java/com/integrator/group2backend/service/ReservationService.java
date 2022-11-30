@@ -9,8 +9,8 @@ import com.integrator.group2backend.utils.MapperService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,12 +57,12 @@ public class ReservationService {
     public ReservationDTO addReservation(Reservation reservation) {
         Product p = this.productService.searchProductById(reservation.getProduct().getId()).get();
         Double priceForDay = p.getDailyPrice().doubleValue();
-        System.out.println("Check In");
-        System.out.println("Local Date " + reservation.getCheckInDate());
-        System.out.println("Check Out");
-        System.out.println("Local Date " + reservation.getCheckInDate());
-        //Integer days = (int) (reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime()) / 86400000;
-        //reservation.setFinalPrice(days * priceForDay);
+        Integer days = (int) (reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime()) / 86400000;
+        System.out.println("Reservation check in date "+ reservation.getCheckInDate().getTime());
+        System.out.println("Reservation check in date "+ reservation.getCheckInDate());
+        System.out.println("Reservation check out date " +reservation.getCheckOutDate().getTime());
+        System.out.println("Reservation check out date " +reservation.getCheckOutDate());
+        reservation.setFinalPrice(days * priceForDay);
         logger.info("Se ha registrado una nueva reserva.");
         return this.mapperService.convert(this.reservationRepository.save(reservation), ReservationDTO.class);
     }
@@ -76,14 +76,13 @@ public class ReservationService {
         return this.mapperService.mapList(reservationsById, ReservationSimpleDTO.class);
     }
     public List<ReservationDTO> findReservationsByCheckInDateAndCheckOutDate(String checkInDate, String checkOutDate) throws Exception {
-        DateTimeFormatter dateTimeFormatter  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        /*DateTimeFormatter dateTimeFormatter  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate formattedCheckInDate = LocalDate.parse(checkInDate, dateTimeFormatter);
-        LocalDate formattedCheckOutDate = LocalDate.parse(checkOutDate, dateTimeFormatter);
+        LocalDate formattedCheckOutDate = LocalDate.parse(checkOutDate, dateTimeFormatter);*/
 
-        System.out.println("Check In");
-        System.out.println("String " + checkInDate + " Local Date " + formattedCheckInDate);
-        System.out.println("Check Out");
-        System.out.println("String " + checkOutDate + " Local Date " + formattedCheckOutDate);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date formattedCheckInDate = dateFormatter.parse(checkInDate);
+        Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
 
         List<Reservation> reservationsByDate = this.reservationRepository.findReservationsByCheckInDateAndCheckOutDate(formattedCheckInDate, formattedCheckOutDate);
         if (reservationsByDate.isEmpty()){
