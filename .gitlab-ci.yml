@@ -33,7 +33,7 @@ validate:terraform:
   script:
     - ls -a
     - cd grupo2-infraestructura/Terraform
-    - ls
+    - ls -a
     - terraform validate
 
 # build:maven:
