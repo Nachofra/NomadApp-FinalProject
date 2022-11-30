@@ -28,7 +28,9 @@ validate:terraform:
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script:
     - cd /
-    - ls -aR
+    - ls -a
+    - cd usr
+    - ls -a
     - terraform -chdir=grupo2-infraestructura/Terraform validate
 
 # build:maven:
