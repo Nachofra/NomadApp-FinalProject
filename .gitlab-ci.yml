@@ -29,7 +29,7 @@ validate:terraform:
   script:
     - cd /
     - ls -a
-    - cd usr
+    - cd home
     - ls -a
     - terraform -chdir=grupo2-infraestructura/Terraform validate
 
