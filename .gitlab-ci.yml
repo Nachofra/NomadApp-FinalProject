@@ -11,19 +11,21 @@ stages:
 
 init:terraform:
   stage: init
-  image: hashicorp/terraform:1.3.4 docker pull
+  image: hashicorp/terraform:1.3.4
   before_script:
     - mkdir .aws/
     - mkdir .google/
     - echo -e "$AWS_TERRAFORM_CREDENTIALS" > .aws/credentials
     - echo -e "$GOOGLE_TERRAFORM_CREDENTIALS" > .google/credentials.json
   script:
+    - cd grupo2-infraestructura/Terraform
     - terraform init
 
 validate:terraform:
   stage: validate
   image: hashicorp/terraform:1.3.4 docker pull
   script:
+    - cd grupo2-infraestructura/Terraform
     - terraform validate
 
 
