@@ -1,0 +1,10 @@
+version: '2'
+services:
+  production-tomcat-container:
+    container_name: 'production-tomcat-container'
+    image: nachofra/proyectointegradorbackend:latest
+    ports:
+      - "80:8080"
+      - "443:8443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt

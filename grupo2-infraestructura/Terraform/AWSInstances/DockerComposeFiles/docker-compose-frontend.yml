@@ -1,0 +1,12 @@
+version: '3.1'
+services:
+
+  production-nginx-container:
+    container_name: 'production-nginx-container'
+    image: nachofra/proyectointegradorfrontend:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - ./dh-param/dhparam-2048.pem:/etc/ssl/certs/dhparam-2048.pem
