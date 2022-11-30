@@ -16,18 +16,9 @@ before_script:
   - mkdir .google/
   - echo -e "$AWS_TERRAFORM_CREDENTIALS" > .aws/credentials
   - echo -e "$GOOGLE_TERRAFORM_CREDENTIALS" > .google/credentials.json
-
-init:terraform:
-  stage: init
-  image: 
-    name: hashicorp/terraform:1.3.4
-    entrypoint:
-      - '/usr/bin/env'
-      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-  script:
-    - cd grupo2-infraestructura/Terraform
-    - terraform init
-
+  - terraform --version
+  - terraform -chdir=grupo2-infraestructura/Terraform init
+    
 validate:terraform:
   stage: validate
   image: 
@@ -36,10 +27,7 @@ validate:terraform:
       - '/usr/bin/env'
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script:
-    - ls -a
-    - cd grupo2-infraestructura/Terraform
-    - ls -a
-    - terraform validate
+    - terraform -chdir=grupo2-infraestructura/Terraform validate
 
 # build:maven:
 #   stage: build
