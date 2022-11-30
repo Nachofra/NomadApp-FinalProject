@@ -10,26 +10,31 @@ stages:
 #   rules:
 #     - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
 
-# Default image and entrypoint for terraform jobs
-image: 
-  name: hashicorp/terraform:1.3.4
-  entrypoint:
-    - '/usr/bin/env'
-    - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+# Setting folders and credentials to use between terraform jobs
+before_script:
+  - mkdir .aws/
+  - mkdir .google/
+  - echo -e "$AWS_TERRAFORM_CREDENTIALS" > .aws/credentials
+  - echo -e "$GOOGLE_TERRAFORM_CREDENTIALS" > .google/credentials.json
 
 init:terraform:
   stage: init
-  before_script:
-    - mkdir .aws/
-    - mkdir .google/
-    - echo -e "$AWS_TERRAFORM_CREDENTIALS" > .aws/credentials
-    - echo -e "$GOOGLE_TERRAFORM_CREDENTIALS" > .google/credentials.json
+  image: 
+    name: hashicorp/terraform:1.3.4
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script:
     - cd grupo2-infraestructura/Terraform
     - terraform init
 
 validate:terraform:
   stage: validate
+  image: 
+    name: hashicorp/terraform:1.3.4
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script:
     - ls -a
     - cd grupo2-infraestructura/Terraform
