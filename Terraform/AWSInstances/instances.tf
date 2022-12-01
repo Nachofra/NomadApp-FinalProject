@@ -62,6 +62,13 @@ resource "aws_instance" "frontend_instance" {
   sudo apt install certbot -y
   sudo certbot certonly --non-interactive --agree-tos --standalone --preferred-challenges http -d ${var.site_url} -d ${var.site_url_www} -m ${var.cert_email}
   echo "*** Completed SSL Installation"
+
+  sudo su
+  sudo crontab -l 2>/dev/null; > sslrenewcron
+  echo "43 6 * * * sudo certbot renew && cd /docker/letsencrypt-docker-nginx/src/production/ && sudo docker-compose restart" >> sslrenewcron
+  sudo crontab sslrenewcron
+  rm sslrenewcron
+  echo "*** Completed SSL Automated Renew"
   EOF
   tags                   = {
     Name = "0222FTC1_grupo2_frontend_instance"
@@ -117,6 +124,13 @@ resource "aws_instance" "backend_instance" {
   sudo apt install certbot -y
   sudo certbot certonly --non-interactive --agree-tos --standalone --preferred-challenges http -d ${var.backend_site_url} -m ${var.cert_email}
   echo "*** Completed SSL Installation"
+
+  sudo su
+  sudo crontab -l 2>/dev/null; > sslrenewcron
+  echo "43 6 * * * sudo certbot renew && cd /docker/letsencrypt-docker-tomcat/src/production/ && sudo docker-compose restart" >> sslrenewcron
+  sudo crontab sslrenewcron
+  rm sslrenewcron
+  echo "*** Completed SSL Automated Renew"
   EOF
   tags                   = {
     Name = "0222FTC1_grupo2_backend_instance"
