@@ -58,22 +58,23 @@ plan:terraform:
     reports:
       terraform: ${TF_ROOT}/plan.json
 
-# apply:terraform:
-#   stage: apply
-#   image: registry.gitlab.com/gitlab-org/terraform-images/releases/1.3:v0.46.0
-#   cache:
-#     key: group2-infra
-#     paths:
-#       - ${TF_ROOT}/.terraform
-#   environment:
-#     name: Terraform
-#   script:
-#     - gitlab-terraform apply
-#   dependencies:
-#     - plan:terraform
-#   when: manual
-#   only:
-#     - develop
+apply:terraform:
+  stage: apply
+  image: registry.gitlab.com/gitlab-org/terraform-images/releases/1.3:v0.46.0
+  cache:
+    key: group2-infra
+    paths:
+      - ${TF_ROOT}/.terraform
+  environment:
+    name: Terraform
+  script:
+    - cd ${TF_ROOT}
+    - gitlab-terraform apply
+  dependencies:
+    - plan:terraform
+  when: manual
+  only:
+    - develop
 
 # workflow:
 #   rules:
