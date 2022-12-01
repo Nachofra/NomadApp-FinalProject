@@ -8,6 +8,7 @@ module "aws_instances" {
   // Waits buckets creation
   depends_on = [module.aws_buckets]
 
+  main_vpc_cidr = var.main_vpc_cidr
   public_subnet_cidr = var.public_subnet_cidr
   frontend_instance_ip = var.frontend_instance_ip
   backend_instance_ip = var.backend_instance_ip
