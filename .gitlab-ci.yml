@@ -59,14 +59,14 @@ apply:terraform:
   only:
     - terraform-pipeline
 
-destroy:terraform:
-  stage: destroy
-  environment:
-    name: Terraform
-  script:
-    - gitlab-terraform destroy
-  dependencies:
-    - plan:terraform
-  when: manual
-  only:
-    - terraform-pipeline
+# destroy:terraform:
+#   stage: destroy
+#   environment:
+#     name: Terraform
+#   script:
+#     - gitlab-terraform destroy
+#   dependencies:
+#     - plan:terraform
+#   when: manual
+#   only:
+#     - terraform-pipeline
