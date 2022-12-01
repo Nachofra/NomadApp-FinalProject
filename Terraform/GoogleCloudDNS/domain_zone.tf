@@ -30,6 +30,20 @@ resource "google_dns_record_set" "backend_a" {
   rrdatas = [var.backend_instance_ip]
 }
 
+resource "google_dns_record_set" "google_endpoint_ns" {
+  name         = google_dns_managed_zone.prod_zone.dns_name
+  managed_zone = google_dns_managed_zone.prod_zone.name
+  type         = "NS"
+  ttl          = 21600
+
+  rrdatas = [
+    "ns-cloud-d1.googledomains.com",
+    "ns-cloud-d2.googledomains.com",
+    "ns-cloud-d3.googledomains.com",
+    "ns-cloud-d4.googledomains.com",
+  ]
+}
+
 resource "google_dns_record_set" "google_email_mx" {
   name         = google_dns_managed_zone.prod_zone.dns_name
   managed_zone = google_dns_managed_zone.prod_zone.name
