@@ -18,3 +18,29 @@ variable "google_project_id" {
   type        = string
   default     = "" // Ingresar por gitlab
 }
+
+#AWSInstances
+
+variable "public_subnet_cidr" {
+  description = "Public subnet CIDR for backend instance"
+  type        = string
+  default = "" // Ingresar en gitlab
+}
+
+variable "frontend_instance_ip" {
+  description = "Frontend bucket private ip"
+  type = string
+  default = "" // Ingresar en gitlab
+}
+
+variable "backend_instance_ip" {
+  description = "Frontend bucket private ip"
+  type = string
+  default = "" // Ingresar en gitlab
+}
+
+variable "gitlab_runner_token" {
+  description = "Gitlab registration token for runner"
+  type = string
+  default = "" // Ingresar en gitlab
+}

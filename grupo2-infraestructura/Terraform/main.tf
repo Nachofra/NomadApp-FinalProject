@@ -7,6 +7,11 @@ module "aws_instances" {
 
   // Waits buckets creation
   depends_on = [module.aws_buckets]
+
+  public_subnet_cidr = var.public_subnet_cidr
+  frontend_instance_ip = var.frontend_instance_ip
+  backend_instance_ip = var.backend_instance_ip
+  gitlab_runner_token = var.gitlab_runner_token
 }
 
 module "google_dns" {
