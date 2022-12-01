@@ -8,7 +8,7 @@
 image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
 
 variables:
-  TF_ROOT: ${CI_PROJECT_DIR}/environments/example/production
+  TF_ROOT: ${CI_PROJECT_DIR}/grupo2-infraestructura/Terraform
   TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/example-production
 
 cache:
@@ -18,6 +18,7 @@ cache:
 
 before_script:
   - cd ${TF_ROOT}
+  - echo ${TF_ADDRESS}
 
 stages:
   - prepare
