@@ -2,6 +2,7 @@ package com.integrator.group2backend.service;
 
 import com.integrator.group2backend.dto.CurrentUserDTO;
 import com.integrator.group2backend.entities.User;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
 import com.integrator.group2backend.repository.UserRepository;
 import com.integrator.group2backend.utils.MapperService;
 import net.bytebuddy.utility.RandomString;
@@ -37,7 +38,12 @@ public class UserService {
         this.mapperService = mapperService;
     }
 
-    public User addUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException {
+    public User addUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException, DataIntegrityViolationException {
+
+        if (user.getPassword().length() < 7){
+            throw new DataIntegrityViolationException("The password length is less than 7");
+        }
+
         if(userRepository.findByEmail(user.getEmail()) == null){
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -45,11 +51,12 @@ public class UserService {
             user.setVerificationCode(randomCode);
             user.setEnabled(false);
 
-            sendVerificationEmail(user, siteURL);
+//            sendVerificationEmail(user, siteURL);
 
             return userRepository.save(user);
+        }else{
+            throw new DataIntegrityViolationException("The user is already created");
         }
-        throw new MessagingException("The user is already created");
     }
 
     public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {

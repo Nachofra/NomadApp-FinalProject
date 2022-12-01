@@ -3,6 +3,7 @@ package com.integrator.group2backend.controller;
 import com.integrator.group2backend.dto.CurrentUserDTO;
 import com.integrator.group2backend.dto.UserVerifyCodeDTO;
 import com.integrator.group2backend.entities.User;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
 import com.integrator.group2backend.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody User user) throws UnsupportedEncodingException, MessagingException {
+    public ResponseEntity<User> createUser(@RequestBody User user) throws UnsupportedEncodingException, MessagingException, DataIntegrityViolationException {
         return new ResponseEntity<>(userService.addUser(user, frontendUrl), HttpStatus.CREATED);
     }
 

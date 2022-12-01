@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.integrator.group2backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -42,6 +43,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
                     "description",
                     "The email or password entered is invalid. Please try again.");
         }
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getOutputStream()
                 .println(objectMapper.writeValueAsString(data));
     }
