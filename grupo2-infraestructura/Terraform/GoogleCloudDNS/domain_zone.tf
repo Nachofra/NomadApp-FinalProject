@@ -13,7 +13,7 @@ resource "google_dns_record_set" "www_cname" {
 }
 
 resource "google_dns_record_set" "frontend_a" {
-  name         = "test." + google_dns_managed_zone.prod_zone.dns_name
+  name         = "test.${google_dns_managed_zone.prod_zone.dns_name}"
   managed_zone = google_dns_managed_zone.prod_zone.name
   type         = "A"
   ttl          = 300
