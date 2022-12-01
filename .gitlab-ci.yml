@@ -15,7 +15,7 @@ before_script:
   - mkdir ~/.aws/
   - mkdir ~/.google/
   - echo -e "$AWS_TERRAFORM_CREDENTIALS" > ~/.aws/credentials
-  - cp $GOOGLE_TERRAFORM_CREDENTIALS > ~/.google/credentials.json
+  - cp $GOOGLE_TERRAFORM_CREDENTIALS ~/.google/credentials.json
   - terraform --version
   - terraform -chdir=grupo2-infraestructura/Terraform init
     
