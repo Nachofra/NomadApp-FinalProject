@@ -12,10 +12,10 @@ stages:
 
 # Setting folders and credentials to use between terraform jobs
 before_script:
-  - mkdir .aws/
-  - mkdir .google/
-  - echo -e "$AWS_TERRAFORM_CREDENTIALS" > .aws/credentials
-  - echo -e "$GOOGLE_TERRAFORM_CREDENTIALS" > .google/credentials.json
+  - mkdir ~/.aws/
+  - mkdir ~/.google/
+  - echo -e "$AWS_TERRAFORM_CREDENTIALS" > ~/.aws/credentials
+  - echo -e "$GOOGLE_TERRAFORM_CREDENTIALS" > ~/.google/credentials.json
   - terraform --version
   - terraform -chdir=grupo2-infraestructura/Terraform init
     
@@ -27,9 +27,6 @@ validate:terraform:
       - '/usr/bin/env'
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script:
-    - pwd
-    - cd ~
-    - pwd
     - terraform -chdir=grupo2-infraestructura/Terraform validate
 
 # build:maven:
