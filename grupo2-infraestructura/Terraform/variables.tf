@@ -11,6 +11,26 @@ variable "credentials_profile" {
   default = "default"
 }
 
+#Terraform Variables
+
+variable "remote_state" {
+  description = "Remote gitlab state for Terraform"
+  type = string
+  default = "" // Ingresar por gitlab
+}
+
+variable "gitlab_username" {
+  description = "Gitlab Username"
+  type = string
+  default = "" // Ingresar por gitlab
+}
+
+variable "gitlab_access_token" {
+  description = "Gitlab Access Token"
+  type = string
+  default = "" // Ingresar por gitlab
+}
+
 #Google Cloud Variables
 variable "google_project_id" {
   description = "Project ID of current infra"
