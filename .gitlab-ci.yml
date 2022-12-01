@@ -30,7 +30,6 @@ stages:
 variables:
   TF_ROOT: ${CI_PROJECT_DIR}/grupo2-infraestructura/Terraform
   TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/group2-infra
-  TF_VAR_remote_state: ${TF_ADDRESS}
 
 
 # Setting folders and credentials to use between terraform jobs
