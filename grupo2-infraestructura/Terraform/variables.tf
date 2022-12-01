@@ -16,5 +16,5 @@ variable "credentials_profile" {
 variable "google_project_id" {
   description = "Project ID of current infra"
   type        = string
-  default     = "" // Ingresar por gitlab
+   // Ingresar por gitlab
 }
