@@ -1,11 +1,11 @@
 variable "hosted_zone_name" {
   type = string
-  default = "nomadapp-com-ar-test"
+  default = "nomadapp-com-ar"
 }
 
 variable "dns_name" {
   type = string
-  default = "test.nomadapp.com.ar."
+  default = "nomadapp.com.ar."
 }
 
 variable "frontend_instance_ip" {

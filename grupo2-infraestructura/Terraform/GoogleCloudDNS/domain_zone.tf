@@ -5,7 +5,7 @@ resource "google_dns_managed_zone" "prod_zone" {
 }
 
 resource "google_dns_record_set" "www_cname" {
-  name         = "test.www.${google_dns_managed_zone.prod_zone.dns_name}"
+  name         = "www.${google_dns_managed_zone.prod_zone.dns_name}"
   managed_zone = google_dns_managed_zone.prod_zone.name
   type         = "CNAME"
   ttl          = 300
@@ -13,7 +13,7 @@ resource "google_dns_record_set" "www_cname" {
 }
 
 resource "google_dns_record_set" "frontend_a" {
-  name         = "test.${google_dns_managed_zone.prod_zone.dns_name}"
+  name         = google_dns_managed_zone.prod_zone.dns_name
   managed_zone = google_dns_managed_zone.prod_zone.name
   type         = "A"
   ttl          = 300
@@ -22,7 +22,7 @@ resource "google_dns_record_set" "frontend_a" {
 }
 
 resource "google_dns_record_set" "backend_a" {
-  name         = "test.backend.${google_dns_managed_zone.prod_zone.dns_name}"
+  name         = "backend.${google_dns_managed_zone.prod_zone.dns_name}"
   managed_zone = google_dns_managed_zone.prod_zone.name
   type         = "A"
   ttl          = 300

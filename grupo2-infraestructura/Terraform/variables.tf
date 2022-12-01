@@ -8,7 +8,7 @@ variable "aws_region_id" {
 variable "credentials_profile" {
   description = "Profile used for config and credentials"
   type = string
-  default = "default"
+  default = "grupo2-digital"
 }
 
 #Google Cloud Variables
