@@ -1,12 +1,6 @@
 terraform {
   required_version = ">= 1.3.0, <= 1.3.4"
-  backend "http" {
-    config = {
-      address = var.remote_state
-      username = var.gitlab_username
-      password = var.gitlab_access_token
-    }
-  }
+  backend "http" {}
   required_providers {
     aws = {
       source  = "hashicorp/aws"
