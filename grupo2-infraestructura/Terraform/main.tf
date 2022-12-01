@@ -1,12 +1,12 @@
-module "aws_buckets" {
-  source = "./S3Buckets"
-}
+#module "aws_buckets" {
+#  source = "./S3Buckets"
+#}
 
 module "aws_instances" {
   source = "./AWSInstances"
 
-  // Waits buckets creation
-  depends_on = [module.aws_buckets]
+  # Waits buckets creation
+#  depends_on = [module.aws_buckets]
 
   main_vpc_cidr = var.main_vpc_cidr
   public_subnet_cidr = var.public_subnet_cidr
@@ -18,7 +18,7 @@ module "aws_instances" {
 module "google_dns" {
   source = "./GoogleCloudDNS"
 
-  // Waits the outputs of AWS instances to create records in the DNS zone
+  # Waits the outputs of AWS instances to create records in the DNS zone
   backend_instance_ip = module.aws_instances.backend_instance_public_ip
   frontend_instance_ip = module.aws_instances.frontend_instance_public_ip
 }
