@@ -48,9 +48,9 @@ plan:
       terraform: ${TF_ROOT}/plan.json
 
 
-workflow:
-  rules:
-    - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+# workflow:
+#   rules:
+#     - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
 
 # Setting folders and credentials to use between terraform jobs
 # before_script:
