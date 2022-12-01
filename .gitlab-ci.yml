@@ -37,6 +37,7 @@ plan:terraform:
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script:
     - echo ${TF_VAR_public_subnet_cidr}
+    - echo $TF_VAR_public_subnet_cidr
     - terraform -chdir="grupo2-infraestructura/Terraform" plan
 
 # build:maven:
