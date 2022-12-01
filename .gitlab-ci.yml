@@ -9,7 +9,7 @@ image: registry.gitlab.com/gitlab-org/terraform-images/stable:1.3.4
 
 variables:
   TF_ROOT: ${CI_PROJECT_DIR}/grupo2-infraestructura/Terraform
-  TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/example-production
+  TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/group2-infra
 
 cache:
   key: example-production
