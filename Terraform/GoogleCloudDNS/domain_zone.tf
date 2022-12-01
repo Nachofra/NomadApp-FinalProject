@@ -37,10 +37,10 @@ resource "google_dns_record_set" "google_endpoint_ns" {
   ttl          = 21600
 
   rrdatas = [
-    "ns-cloud-d1.googledomains.com",
-    "ns-cloud-d2.googledomains.com",
-    "ns-cloud-d3.googledomains.com",
-    "ns-cloud-d4.googledomains.com",
+    "ns-cloud-d1.googledomains.com.",
+    "ns-cloud-d2.googledomains.com.",
+    "ns-cloud-d3.googledomains.com.",
+    "ns-cloud-d4.googledomains.com.",
   ]
 }
 
