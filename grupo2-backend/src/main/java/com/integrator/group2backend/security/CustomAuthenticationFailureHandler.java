@@ -27,9 +27,21 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
                                         AuthenticationException exception) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         Map<String, Object> data = new HashMap<>();
-        data.put(
-                "message",
-                exception.getMessage());
+        if(exception.getMessage().equals("User is disabled")){
+            data.put(
+                    "title",
+                    "Please check your email");
+            data.put(
+                    "description",
+                    "Your email address must be verified before you can sign in. Please check your mailbox to verify your account.");
+        } else if (exception.getMessage().equals("Bad credentials")) {
+            data.put(
+                    "title",
+                    "We couldn't log you in");
+            data.put(
+                    "description",
+                    "The email or password entered is invalid. Please try again.");
+        }
         response.getOutputStream()
                 .println(objectMapper.writeValueAsString(data));
     }
