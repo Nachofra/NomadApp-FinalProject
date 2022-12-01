@@ -1,44 +1,87 @@
-stages:
-  - validate
-  - plan
+# stages:
+#   - validate
+#   - plan
 #   - build
 #   - release
 #   - deploy
 
-# workflow:
-#   rules:
-#     - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+
+variables:
+  TF_ROOT: ${CI_PROJECT_DIR}/environments/example/production
+  TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/example-production
+
+cache:
+  key: example-production
+  paths:
+    - ${TF_ROOT}/.terraform
+
+before_script:
+  - cd ${TF_ROOT}
+
+stages:
+  - prepare
+  - validate
+  - build
+  - deploy
+
+init:
+  stage: prepare
+  script:
+    - gitlab-terraform init
+
+validate:
+  stage: validate
+  script:
+    - gitlab-terraform validate
+
+plan:
+  stage: build
+  script:
+    - gitlab-terraform plan
+    - gitlab-terraform plan-json
+  artifacts:
+    name: plan
+    paths:
+      - ${TF_ROOT}/plan.cache
+    reports:
+      terraform: ${TF_ROOT}/plan.json
+
+
+workflow:
+  rules:
+    - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
 
 # Setting folders and credentials to use between terraform jobs
-before_script:
-  - mkdir ~/.aws/
-  - mkdir ~/.google/
-  - echo -e "$AWS_TERRAFORM_CREDENTIALS" > ~/.aws/credentials
-  - cp $GOOGLE_TERRAFORM_CREDENTIALS ~/.google/credentials.json
-  - terraform --version
-  - terraform -chdir="grupo2-infraestructura/Terraform" init
+# before_script:
+#   - mkdir ~/.aws/
+#   - mkdir ~/.google/
+#   - echo -e "$AWS_TERRAFORM_CREDENTIALS" > ~/.aws/credentials
+#   - cp $GOOGLE_TERRAFORM_CREDENTIALS ~/.google/credentials.json
+#   - terraform --version
+#   - terraform -chdir="grupo2-infraestructura/Terraform" init
     
-validate:terraform:
-  stage: validate
-  image: 
-    name: hashicorp/terraform:1.3.4
-    entrypoint:
-      - '/usr/bin/env'
-      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-  script:
-    - terraform -chdir="grupo2-infraestructura/Terraform" validate
+# validate:terraform:
+#   stage: validate
+#   image: 
+#     name: hashicorp/terraform:1.3.4
+#     entrypoint:
+#       - '/usr/bin/env'
+#       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+#   script:
+#     - terraform -chdir="grupo2-infraestructura/Terraform" validate
 
-plan:terraform:
-  stage: plan
-  image: 
-    name: hashicorp/terraform:1.3.4
-    entrypoint:
-      - '/usr/bin/env'
-      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-  script:
-    - echo ${TF_VAR_public_subnet_cidr}
-    - echo $TF_VAR_public_subnet_cidr
-    - terraform -chdir="grupo2-infraestructura/Terraform" plan
+# plan:terraform:
+#   stage: plan
+#   image: 
+#     name: hashicorp/terraform:1.3.4
+#     entrypoint:
+#       - '/usr/bin/env'
+#       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+#   script:
+#     - echo ${TF_VAR_public_subnet_cidr}
+#     - echo $TF_VAR_public_subnet_cidr
+#     - terraform -chdir="grupo2-infraestructura/Terraform" plan
 
 # build:maven:
 #   stage: build
