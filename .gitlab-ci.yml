@@ -3,7 +3,7 @@ stages:
   - validate
   - plan
   - apply
-  - build
+  # - build
   # - deploy
 
 # Creating terraform remote state paths and endpoints
@@ -76,23 +76,23 @@ apply:terraform:
   only:
     - develop
 
-# workflow:
-#   rules:
-#     - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+workflow:
+  rules:
+    - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
 
-build:maven:
-  stage: build
-  image: maven:3.8.6-openjdk-18
-  cache:
-    paths:
-      - grupo2-backend/target/
-  script:
-    - cd "grupo2-backend/"
-    - echo -e "$DOTENV_CONFIG_BACKEND" > src/main/resources/.env
-    - mvn clean install
-  artifacts:
-    paths:
-      - grupo2-backend/target/*.war
+# build:maven:
+#   stage: build
+#   image: maven:3.8.6-openjdk-18
+#   cache:
+#     paths:
+#       - grupo2-backend/target/
+#   script:
+#     - cd "grupo2-backend/"
+#     - echo -e "$DOTENV_CONFIG_BACKEND" > src/main/resources/.env
+#     - mvn clean install
+#   artifacts:
+#     paths:
+#       - grupo2-backend/target/*.war
 
 # build:vite:
 #   stage: build
