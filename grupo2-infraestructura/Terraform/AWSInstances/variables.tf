@@ -2,7 +2,7 @@
 variable "main_vpc_cidr" {
   description = "Main VPC CIDR (Group A IP)"
   type        = string
-  default     = "10.0.0.0/16"
+  // Ingresar en gitlab
 }
 
 variable "public_subnet_cidr" {

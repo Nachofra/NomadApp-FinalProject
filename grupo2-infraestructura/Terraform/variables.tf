@@ -12,7 +12,6 @@ variable "credentials_profile" {
 }
 
 #Google Cloud Variables
-
 variable "google_project_id" {
   description = "Project ID of current infra"
   type        = string
@@ -20,6 +19,11 @@ variable "google_project_id" {
 }
 
 #AWSInstances
+variable "main_vpc_cidr" {
+  description = "Main VPC CIDR (Group A IP)"
+  type        = string
+  default = "" // Ingresar en gitlab
+}
 
 variable "public_subnet_cidr" {
   description = "Public subnet CIDR for backend instance"
