@@ -51,7 +51,7 @@ public class UserService {
             user.setVerificationCode(randomCode);
             user.setEnabled(false);
 
-//            sendVerificationEmail(user, siteURL);
+            sendVerificationEmail(user, siteURL);
 
             return userRepository.save(user);
         }else{
