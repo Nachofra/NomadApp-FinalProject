@@ -3,10 +3,11 @@ stages:
   - validate
   - plan
   - apply
+  - destroy
 
 image: registry.gitlab.com/gitlab-org/terraform-images/releases/1.3:v0.46.0
 
-# Creating terraform remote state paths and endpoints
+# Creating terraform remote state paths and endpoints 
 variables:
   TF_ROOT: ${CI_PROJECT_DIR}/Terraform
   TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/group2-infra
@@ -52,6 +53,18 @@ apply:terraform:
     name: Terraform
   script:
     - gitlab-terraform apply
+  dependencies:
+    - plan:terraform
+  when: manual
+  only:
+    - terraform-pipeline
+
+destroy:terraform:
+  stage: destroy
+  environment:
+    name: Terraform
+  script:
+    - gitlab-terraform destroy
   dependencies:
     - plan:terraform
   when: manual
