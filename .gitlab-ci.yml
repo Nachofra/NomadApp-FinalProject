@@ -1,25 +1,3 @@
-# validate:terraform:
-#   stage: validate
-#   image: 
-#     name: hashicorp/terraform:1.3.4
-#     entrypoint:
-#       - '/usr/bin/env'
-#       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-#   script:
-#     - terraform -chdir="grupo2-infraestructura/Terraform" validate
-
-# plan:terraform:
-#   stage: plan
-#   image: 
-#     name: hashicorp/terraform:1.3.4
-#     entrypoint:
-#       - '/usr/bin/env'
-#       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-#   script:
-#     - echo ${TF_VAR_public_subnet_cidr}
-#     - echo $TF_VAR_public_subnet_cidr
-#     - terraform -chdir="grupo2-infraestructura/Terraform" plan
-
 stages:
   - init
   - validate
@@ -80,9 +58,9 @@ plan:terraform:
       terraform: ${TF_ROOT}/plan.json
 
 
-# workflow:
-#   rules:
-#     - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+workflow:
+  rules:
+    - if:  $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
 
 # build:maven:
 #   stage: build
