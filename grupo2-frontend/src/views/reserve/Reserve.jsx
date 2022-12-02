@@ -24,15 +24,13 @@ export const Reserve = () => {
   const {user} = useUserContext()
   const {state} = useLocation()
 
-  console.log(user)
-
   Date.prototype.formatMMDDYYYYhypens = function(){
     return this.getFullYear() + 
     "-" +  ("0" + (this.getMonth() + 1)).slice(-2) +
     "-" +  ("0" + this.getDate()).slice(-2);
   }
     
-  const handleDateFormat = date => date? date.formatMMDDYYYYhypens() : null;
+  const handleDateFormat = date => date.formatMMDDYYYYhypens();
 
   const {
       status,
@@ -71,8 +69,6 @@ export const Reserve = () => {
   const [errorModal, setErrorModal ] = useState(false);
   const [error, setError ] = useState(false);
 
-  console.log(user)
-
   const initialStateForm = {
     name: user.firstName,
     lastName: user.lastName,
@@ -94,7 +90,15 @@ export const Reserve = () => {
   const days = (formFields.dateFrom && formFields.dateTo) ? (formFields.dateTo.getTime() - formFields.dateFrom.getTime()) / 86400000 : null;
 
   const postRequest = async () => {
+
       try {
+        console.log({
+          checkInTime: formFields.checkin?.time,
+          checkInDate: handleDateFormat(formFields.dateFrom),
+          checkOutDate: handleDateFormat(formFields.dateTo),
+          product: { id: id },
+          user: { id: user.id }
+        })
         startLoading();
         await axios.post(`${FetchRoutes.BASEURL}/reservation`,
         {
@@ -123,9 +127,9 @@ export const Reserve = () => {
     <>
     <HeaderNav />
     <BaseLayout
-        padding='mt-16 lg:mt-24 md:px-6 lg:px-8'
-        wrapperClassName="bg-violet-800 sticky top-16 lg:top-24 z-20"
-        className="flex items-center justify-between"
+    padding='mt-16 lg:mt-24 md:px-6 lg:px-8'
+    wrapperClassName="bg-violet-800 sticky top-16 lg:top-24 z-20"
+    className="flex items-center justify-between"
     >
         <div className='flex flex-col items-start justify-center py-4'>
             <p className='uppercase text-gray-200 font-thin text-lg'>{data.category.title}</p>
@@ -251,7 +255,11 @@ export const Reserve = () => {
           </div>
         </div>
 
-        <ReserveCard fieldError={error} data={data} dates={{from: formFields.dateFrom, to: formFields.dateTo}} handleSubmit={handleSubmit} days={days} />
+        <ReserveCard 
+        fieldError={error} 
+        data={data} 
+        dates={{from: formFields.dateFrom, to: formFields.dateTo}} 
+        handleSubmit={handleSubmit} days={days} />
       </div>
       
     </BaseLayout>
