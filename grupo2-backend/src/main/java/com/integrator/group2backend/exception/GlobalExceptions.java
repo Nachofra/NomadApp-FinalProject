@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @ControllerAdvice
 public class GlobalExceptions {
@@ -19,6 +20,23 @@ public class GlobalExceptions {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> procesamientoResourceNotFoundException(ResourceNotFoundException exception){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(MailSendException.class)
+    public ResponseEntity<String> procesamientoMailSendException(MailSendException exception){
+        Map<String, Object> data = new HashMap<>();
+
+        if(Objects.equals(exception.getMessage(), "The email is not a valid address")) {
+            data.put("title", "We couldn't create your account");
+            data.put("description", "The entered email is not a valid address. Please try again with another email");
+        }
+
+        try {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(objectMapper.writeValueAsString(data));
+        }
+        catch (IOException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @ExceptionHandler(BadRequestException.class)
