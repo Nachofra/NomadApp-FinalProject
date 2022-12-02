@@ -23,7 +23,20 @@ public class GlobalExceptions {
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<String> procesamientoBadRequestException(BadRequestException exception){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        Map<String, Object> data = new HashMap<>();
+
+        if(exception.getMessage().equals("Error verificating user")) {
+            data.put("title", "We couldn't verificate this user");
+            data.put("description", "User is already verificated or does not exist.");
+        }
+
+        try {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(objectMapper.writeValueAsString(data));
+        }
+        // Handle IOException of objectMapper.writeValueAsString
+        catch (IOException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @ExceptionHandler(com.integrator.group2backend.exception.DataIntegrityViolationException.class)

@@ -3,6 +3,7 @@ package com.integrator.group2backend.controller;
 import com.integrator.group2backend.dto.CurrentUserDTO;
 import com.integrator.group2backend.dto.UserVerifyCodeDTO;
 import com.integrator.group2backend.entities.User;
+import com.integrator.group2backend.exception.BadRequestException;
 import com.integrator.group2backend.exception.DataIntegrityViolationException;
 import com.integrator.group2backend.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,11 +33,11 @@ public class UserController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<String> verifyUser(@RequestBody UserVerifyCodeDTO userVerifyCodeDTO) {
+    public ResponseEntity<String> verifyUser(@RequestBody UserVerifyCodeDTO userVerifyCodeDTO) throws BadRequestException{
         if (userService.verify(userVerifyCodeDTO.getCode())) {
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.status(401).build();
+            throw new BadRequestException("Error verificating user");
         }
     }
 
