@@ -2,11 +2,13 @@ package com.integrator.group2backend.service;
 
 import com.integrator.group2backend.dto.CurrentUserDTO;
 import com.integrator.group2backend.entities.User;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
 import com.integrator.group2backend.repository.UserRepository;
 import com.integrator.group2backend.utils.MapperService;
 import net.bytebuddy.utility.RandomString;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,7 +39,12 @@ public class UserService {
         this.mapperService = mapperService;
     }
 
-    public User addUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException {
+    public User addUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException, DataIntegrityViolationException {
+
+        if (user.getPassword().length() < 7){
+            throw new DataIntegrityViolationException("The password length is less than 7");
+        }
+
         if(userRepository.findByEmail(user.getEmail()) == null){
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -48,36 +55,42 @@ public class UserService {
             sendVerificationEmail(user, siteURL);
 
             return userRepository.save(user);
+        }else{
+            throw new DataIntegrityViolationException("The user is already created");
         }
-        throw new MessagingException("The user is already created");
     }
 
     public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
-        String toAddress = user.getEmail();
-        String senderName = "Nomad App";
-        String subject = "Please verify your registration";
-        String content = "Dear [[name]],<br>"
-                + "Please click the link below to verify your registration:<br>"
-                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                + "Thank you,<br>"
-                + "Nomad Support.";
+        try {
+            String toAddress = user.getEmail();
+            String senderName = "Nomad App";
+            String subject = "Please verify your registration";
+            String content = "Dear [[name]],<br>"
+                    + "Please click the link below to verify your registration:<br>"
+                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                    + "Thank you,<br>"
+                    + "Nomad Support.";
 
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom(this.fromAddress, senderName);
-        helper.setTo(toAddress);
-        helper.setSubject(subject);
+            helper.setFrom(this.fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
 
-        content = content.replace("[[name]]", user.getUsername());
+            content = content.replace("[[name]]", user.getUsername());
 
-        String verifyURL = siteURL + "/verify-confirmation?code=" + user.getVerificationCode();
+            String verifyURL = siteURL + "/verify-confirmation?code=" + user.getVerificationCode();
 
-        content = content.replace("[[URL]]", verifyURL);
+            content = content.replace("[[URL]]", verifyURL);
 
-        helper.setText(content, true);
+            helper.setText(content, true);
 
-        mailSender.send(message);
+            mailSender.send(message);
+        }
+        catch (MailSendException e){
+            throw new com.integrator.group2backend.exception.MailSendException("The email is not a valid address");
+        }
     }
 
     public boolean verify(String verificationCode) {
