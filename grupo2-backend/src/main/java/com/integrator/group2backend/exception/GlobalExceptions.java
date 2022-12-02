@@ -1,11 +1,13 @@
 package com.integrator.group2backend.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -71,8 +73,43 @@ public class GlobalExceptions {
             data.put("description", "The password entered is less than 7 characters long. Please try again with a longer password.");
         }
 
+        if(exception.getMessage().equals("The dates cannot be equal")) {
+            data.put("title", "We couldn't create your reservation");
+            data.put("description", "The dates entered cannot be the same. Please try again with other dates.");
+        }
+
+        if(exception.getMessage().equals("The range of dates is already taken")) {
+            data.put("title", "We couldn't create your reservation");
+            data.put("description", "The dates entered are already taken by another user. Please try again with other dates.");
+        }
+
+        if(exception.getMessage().equals("The dates are chronologically invalid")) {
+            data.put("title", "We couldn't create your reservation");
+            data.put("description", "The dates entered occurs before the actual date or are chronologically invalid. Please try again with other dates.");
+        }
+
         try {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(objectMapper.writeValueAsString(data));
+        }
+        // Handle IOException of objectMapper.writeValueAsString
+        catch (IOException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @ExceptionHandler({DateParseException.class, HttpMessageNotReadableException.class})
+    public ResponseEntity<String> procesamientoDateParseException(Exception exception){
+        Map<String, Object> data = new HashMap<>();
+
+        if(exception.getMessage().equals("An error ocurred parsing dates") || exception.getMessage().contains("JSON parse error: Cannot deserialize value of type `java.util.Date`")) {
+            data.put("title", "We couldn't create your reservation");
+            data.put("description", "The dates entered are invalid. Please try again with other dates.");
+        }
+
+        try {
+            if(!data.isEmpty()){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(objectMapper.writeValueAsString(data));
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }
         // Handle IOException of objectMapper.writeValueAsString
         catch (IOException e){

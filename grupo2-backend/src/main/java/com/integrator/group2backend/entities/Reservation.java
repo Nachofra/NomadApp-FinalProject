@@ -18,7 +18,9 @@ public class Reservation {
     private Long id;
     private Double finalPrice;
     private Time checkInTime;
+    @Temporal(TemporalType.DATE)
     private Date checkInDate;
+    @Temporal(TemporalType.DATE)
     private Date checkOutDate;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)

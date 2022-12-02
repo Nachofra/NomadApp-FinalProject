@@ -9,7 +9,7 @@ export const BaseLayout = ({
   ...props
 }) => {
   return (
-    <section className={`w-screen relative ${wrapperClassName}`} { ...props }>
+    <section className={`max-w-screen relative ${wrapperClassName}`} { ...props }>
       {anchor && 
         <a id={anchor} style={{
           // display : 'block',

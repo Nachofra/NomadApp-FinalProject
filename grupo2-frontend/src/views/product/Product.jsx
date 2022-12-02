@@ -54,6 +54,7 @@ export const Product = () => {
         const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
         setData(data);
         const { data :  dates} = await axios.get(`${FetchRoutes.BASEURL}/reservation/product/${id}`);
+        console.log(dates)
         setAvoidDates(excludeDatesHandler(dates));
         } catch (error) {
         console.error(error.message);
@@ -245,7 +246,7 @@ export const Product = () => {
         text-gray-700 font-medium'>Rent policies</h5>
 
         <div className='grid grid-cols-1 md:gird-cols-2 lg:grid-cols-3 gap-8 mt-4'>
-        { data.policies.map((item, i) => (
+        { data.policies?.map((item, i) => (
             <PolicyList key={i} title={item.name} list={item.policyItems} />
         ))} 
         </div>

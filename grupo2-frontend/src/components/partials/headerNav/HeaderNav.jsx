@@ -26,7 +26,7 @@ export const HeaderNav = ({transparent}) => {
     <section 
     className='top-0 fixed z-50
     w-screen flex items-center justify-between' >
-        <div className={`w-screen cursor-pointer min-h-[70px] lg:min-h-[96px] relative
+        <div className={`w-full cursor-pointer min-h-[70px] lg:min-h-[96px] relative
         flex justify-end items-end p-4 lg:p-6 transition-all
         ring-1 ring-violet-700 ring-opacity-5 
         ${transparent && !open ? '' : 'bg-white  shadow-md'}`} >

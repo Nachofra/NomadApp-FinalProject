@@ -6,7 +6,7 @@ export const CountSelect = ({value, setValue}) => {
     className='flex items-center justify-start scrollbar-none
     pt-4 pb-6 px-2 overflow-auto snap-x snap-mandatory'
     >
-        <div className="flex space-x-4 snap-x snap-mandatory scrollbar-none">
+        <div className="flex gap-2 snap-x snap-mandatory scrollbar-none">
             <button 
             className={`w-10 py-2 rounded-xl snap-start transition-all
             ${value === null ? 'bg-violet-700 text-white' : 'border border-gray-600 text-gray-600'}`}

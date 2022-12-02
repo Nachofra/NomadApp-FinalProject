@@ -4,15 +4,23 @@ import com.integrator.group2backend.dto.ReservationDTO;
 import com.integrator.group2backend.dto.ReservationSimpleDTO;
 import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.entities.Reservation;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
+import com.integrator.group2backend.exception.DateParseException;
 import com.integrator.group2backend.repository.ReservationRepository;
 import com.integrator.group2backend.utils.MapperService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 @Service
 public class ReservationService {
@@ -54,7 +62,29 @@ public class ReservationService {
         }
         return dtoReservationsByUser;
     }
-    public ReservationDTO addReservation(Reservation reservation) {
+    public ReservationDTO addReservation(Reservation reservation) throws DataIntegrityViolationException, DateParseException {
+
+        //Fixing date issues
+//        reservation.getCheckInDate().setDate(reservation.getCheckInDate().getDate() + 1);
+//        reservation.getCheckInDate().setHours(0);
+//        reservation.getCheckOutDate().setDate(reservation.getCheckOutDate().getDate() + 1);
+//        reservation.getCheckOutDate().setHours(0);
+
+        String datePattern = "yyyy-MM-dd";
+        DateFormat df = new SimpleDateFormat(datePattern);
+        String checkInDate = df.format(reservation.getCheckInDate());
+        String checkOutDate = df.format(reservation.getCheckOutDate());
+        Date todayDate = new Date();
+
+        if(checkInDate.equals(checkOutDate)){
+            throw new DataIntegrityViolationException("The dates cannot be equal");
+        }
+        // If checkIn or checkOut date occurs before todayDate or checkout occurs before checkIn, throw an error
+        if(reservation.getCheckInDate().compareTo(todayDate) < 0 || reservation.getCheckOutDate().compareTo(todayDate) < 0 || reservation.getCheckOutDate().compareTo(reservation.getCheckInDate()) < 0){
+            throw new DataIntegrityViolationException("The dates are chronologically invalid");
+        }
+
+//        if(findReservationsByCheckInDateAndCheckOutDate(checkInDate, checkOutDate).isEmpty()){
         Product p = this.productService.searchProductById(reservation.getProduct().getId()).get();
         Double priceForDay = p.getDailyPrice().doubleValue();
         Integer days = (int) (reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime()) / 86400000;
@@ -65,6 +95,10 @@ public class ReservationService {
         reservation.setFinalPrice(days * priceForDay);
         logger.info("Se ha registrado una nueva reserva.");
         return this.mapperService.convert(this.reservationRepository.save(reservation), ReservationDTO.class);
+//        }else {
+//            throw new DataIntegrityViolationException("The range of dates is already taken");
+//        }
+
     }
     public List<ReservationSimpleDTO> findByProductId(Long productId) {
         List<Reservation> reservationsById = this.reservationRepository.findReservationByProductId(productId);
@@ -75,14 +109,22 @@ public class ReservationService {
         }
         return this.mapperService.mapList(reservationsById, ReservationSimpleDTO.class);
     }
-    public List<ReservationDTO> findReservationsByCheckInDateAndCheckOutDate(String checkInDate, String checkOutDate) throws Exception {
+    public List<ReservationDTO> findReservationsByCheckInDateAndCheckOutDate(String checkInDate, String checkOutDate) throws DateParseException {
         /*DateTimeFormatter dateTimeFormatter  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate formattedCheckInDate = LocalDate.parse(checkInDate, dateTimeFormatter);
         LocalDate formattedCheckOutDate = LocalDate.parse(checkOutDate, dateTimeFormatter);*/
+        Date formattedCheckInDate = null;
+        Date formattedCheckOutDate = null;
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date formattedCheckInDate = dateFormatter.parse(checkInDate);
-        Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+        try{
+            formattedCheckInDate = dateFormatter.parse(checkInDate);
+            formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+        }
+        catch (ParseException e){
+            throw new DateParseException("An error ocurred parsing dates");
+        }
+
 
         List<Reservation> reservationsByDate = this.reservationRepository.findReservationsByCheckInDateAndCheckOutDate(formattedCheckInDate, formattedCheckOutDate);
         if (reservationsByDate.isEmpty()){

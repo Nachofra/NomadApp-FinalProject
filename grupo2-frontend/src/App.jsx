@@ -10,6 +10,7 @@ import { VerifyConfirmation } from './views/verify-confirmation/VerifyConfirmati
 import './App.css'
 import { DefaultError } from './views/defaultError/DefaultError'
 import { UserReservations } from './views/userProfile/userReservations/UserReservations'
+import { ProductCreate } from './views/productCreate/ProductCreate'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Route path={PublicRoutes.DEFAULTERROR} element={<DefaultError />} />
 
       <Route element={<AuthGuard />}>
+        <Route path={PrivateRoutes.PRODUCTCREATE} element={<ProductCreate />} />
         <Route path={PrivateRoutes.RESERVE} element={<Reserve />} />
         <Route path={PrivateRoutes.USERRESERVATIONS} element={<UserReservations />} />
 
