@@ -17,7 +17,7 @@ export const Input = ({
 }) => {
 
   return (
-    <div className='flex flex-col-reverse items-start font-primary group w-full relative'>
+    <div className={`flex flex-col-reverse items-start font-primary group w-full relative ${className}`}>
         {children}
         <input 
         className={`peer block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 
@@ -37,7 +37,7 @@ export const Input = ({
         {label && 
         <label
             htmlFor={id}
-            className="ml-2 peer-focus:text-violet-700 text-gray-800 text-lg"
+            className="ml-1 peer-focus:text-violet-700 text-gray-800 text-lg"
         >
             {label}
         </label>}
