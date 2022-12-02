@@ -43,11 +43,11 @@ public class Product {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
-            name = "PolicyByProduct",
+            name = "PolicyItemByProduct",
             joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "policy_id")
+            inverseJoinColumns = @JoinColumn(name = "policyItem_id")
     )
-    private Set<Policy> policies;
+    private Set<PolicyItem> policyItems;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(

@@ -24,8 +24,4 @@ public class Policy {
     @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "policy" })
     private List<PolicyItem> policyItems;
-
-    @ManyToMany(mappedBy = "policies", cascade = CascadeType.MERGE)
-    @JsonIgnore
-    private Set<Product> products;
 }

@@ -29,7 +29,7 @@ public class UpdateProductCompare {
     public Product updateProductCompare (Optional<Product> oldProduct, Product newProduct){
 
         Set<Image> images = new HashSet<>();
-        Set<Policy> policies = new HashSet<>();
+        Set<PolicyItem> policyItems = new HashSet<>();
         Set<Feature> features = new HashSet<>();
 
         if (newProduct.getTitle() == null){
@@ -77,11 +77,11 @@ public class UpdateProductCompare {
         }
         newProduct.setImages(images);
 
-        policies.addAll(newProduct.getPolicies());
+        policyItems.addAll(newProduct.getPolicyItems());
         if (newProduct.getImages() == null){
-            policies.addAll(oldProduct.get().getPolicies().stream().distinct().collect(Collectors.toList()));
+            policyItems.addAll(oldProduct.get().getPolicyItems().stream().distinct().collect(Collectors.toList()));
         }
-        newProduct.setPolicies(policies);
+        newProduct.setPolicyItems(policyItems);
 
         features.addAll(newProduct.getFeatures());
         if (newProduct.getFeatures() == null){
@@ -102,7 +102,7 @@ public class UpdateProductCompare {
         System.out.println(oldProduct.get().getCity());
         System.out.println(oldProduct.get().getCategory());
         System.out.println(oldProduct.get().getImages());
-        System.out.println(oldProduct.get().getPolicies());
+        System.out.println(oldProduct.get().getPolicyItems());
         System.out.println(oldProduct.get().getFeatures());
         System.out.println("---------- NEW PRODUCT ----------");
         System.out.println(newProduct.getTitle());
@@ -117,7 +117,7 @@ public class UpdateProductCompare {
         System.out.println(newProduct.getCity());
         System.out.println(newProduct.getCategory());
         System.out.println(newProduct.getImages());
-        System.out.println(newProduct.getPolicies());
+        System.out.println(newProduct.getPolicyItems());
         System.out.println(newProduct.getFeatures());
 
         return newProduct;

@@ -25,7 +25,8 @@ public class ProductCreateDTO {
     private Category category;
     private City city;
     private Set<Feature> features;
-    private Set<Policy> policies;
+    private Set<PolicyItem> policyItems;
+
     /*@JsonIgnoreProperties(value = { "product" })
     private Set<Image> images;*/
 }
