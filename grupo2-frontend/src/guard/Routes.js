@@ -12,7 +12,8 @@ export const PrivateRoutes = {
     RESERVE : '/product/:id/reserve',
     RESERVEID: (id) => `/product/${id}/reserve`,
     USERRESERVATIONS: '/reservation/user/:id',
-    USERRESERVATIONSID: (id) => `/reservation/user/${id}`
+    USERRESERVATIONSID: (id) => `/reservation/user/${id}`,
+    PRODUCTCREATE: '/product/create'
 }
 
 export const FetchRoutes = {
