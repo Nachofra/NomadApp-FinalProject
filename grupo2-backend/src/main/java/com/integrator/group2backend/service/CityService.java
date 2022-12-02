@@ -1,7 +1,6 @@
 package com.integrator.group2backend.service;
 
 import com.integrator.group2backend.entities.City;
-import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.exception.BadRequestException;
 import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.repository.CityRepository;
@@ -15,12 +14,10 @@ import java.util.Optional;
 public class CityService {
 
     private final CityRepository cityRepository;
-    private final ProductService productService;
 
     @Autowired
-    public CityService(CityRepository cityRepository, ProductService productService) {
+    public CityService(CityRepository cityRepository) {
         this.cityRepository = cityRepository;
-        this.productService = productService;
     }
 
     public City addCity(City city) throws BadRequestException {

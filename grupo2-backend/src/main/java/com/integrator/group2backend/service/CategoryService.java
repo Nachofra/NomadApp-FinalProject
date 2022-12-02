@@ -36,7 +36,6 @@ public class CategoryService {
         if (category.getCategoryImage() == null) {
             category.setCategoryImage(oldCategory.getCategoryImage());
         }
-
         return this.categoryRepository.save(category);
     }
 

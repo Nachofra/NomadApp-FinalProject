@@ -1,32 +1,86 @@
 package com.integrator.group2backend.service;
 
+import com.integrator.group2backend.dto.ProductCreateDTO;
 import com.integrator.group2backend.dto.ProductViewDTO;
-import com.integrator.group2backend.entities.Product;
+import com.integrator.group2backend.entities.*;
 import com.integrator.group2backend.repository.ProductRepository;
 import com.integrator.group2backend.utils.MapperService;
+import com.integrator.group2backend.utils.UpdateProductCompare;
 import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProductService {
     public static final Logger logger = Logger.getLogger(ProductService.class);
     private final ProductRepository productRepository;
     private final MapperService mapperService;
+    private final UpdateProductCompare updateProductCompare;
+    private final CategoryService categoryService;
+    private final FeatureService featureService;
+    private final PolicyItemService policyItemService;
+    private final ImageService imageService;
+    private final CityService cityService;
 
-    public ProductService(ProductRepository productRepository, MapperService mapperService) {
+    public ProductService(ProductRepository productRepository, MapperService mapperService, UpdateProductCompare updateProductCompare, CategoryService categoryService, FeatureService featureService, PolicyItemService policyItemService, ImageService imageService, CityService cityService) {
         this.productRepository = productRepository;
         this.mapperService = mapperService;
+        this.updateProductCompare = updateProductCompare;
+        this.categoryService = categoryService;
+        this.featureService = featureService;
+        this.policyItemService = policyItemService;
+        this.imageService = imageService;
+        this.cityService = cityService;
     }
 
-    public Product addProduct(Product product) {
+    /*public Product addProduct(Product product) {
+        logger.info("Se agrego un producto correctamente");
+        return productRepository.save(product);
+    }*/
+    public Product addProduct(ProductCreateDTO newProduct) {
+        Product product = new Product();
+
+        product.setTitle(newProduct.getTitle());
+        product.setDescription(newProduct.getDescription());
+        product.setRooms(newProduct.getRooms());
+        product.setBeds(newProduct.getBeds());
+        product.setBathrooms(newProduct.getBathrooms());
+        product.setGuests(newProduct.getGuests());
+        product.setDailyPrice(product.getDailyPrice());
+        product.setLatitude(product.getLatitude());
+        product.setLongitude(product.getLongitude());
+
+        Optional<Category> category = categoryService.searchCategoryById(newProduct.getCategory_id());
+        product.setCategory(category.get());
+
+        Optional<City> city = cityService.getCityById(newProduct.getCity_id());
+        product.setCity(city.get());
+
+        Set<Feature> featureList = new HashSet<>();
+        for (Long featureId: newProduct.getFeatures_id()) {
+            Optional<Feature> feature = featureService.searchFeatureById(featureId);
+            featureList.add(feature.get());
+        }
+        product.setFeatures(featureList);
+
+        Set<PolicyItem> policyItemsList = new HashSet<>();
+        for (Long policyItemId: newProduct.getPolicyItems_id()) {
+            Optional<PolicyItem> policyItem = policyItemService.getPolicyItemById(policyItemId);
+            policyItemsList.add(policyItem.get());
+        }
+        product.setPolicyItems(policyItemsList);
+
+        Set<Image> imageList = new HashSet<>();
+        for (MultipartFile images: newProduct.getImages()) {
+            Image image = imageService.addImage(images);
+            imageList.add(image);
+        }
+        product.setImages(imageList);
+
         logger.info("Se agrego un producto correctamente");
         return productRepository.save(product);
     }
@@ -59,9 +113,11 @@ public class ProductService {
         logger.error("El producto especificado no existe con id " + productId);
         return product;
     }
-    public Product updateProduct(Product product) {
-        logger.info("Se actualizo correctamente el producto con id " + product.getId());
-        return productRepository.save(product);
+    public Product updateProduct(Product newProduct) {
+        Optional<Product> oldProduct = searchProductById(newProduct.getId());
+        Product updatedProduct = updateProductCompare.updateProductCompare(oldProduct, newProduct);
+        logger.info("Se actualizo correctamente el producto con id " + newProduct.getId());
+        return productRepository.save(updatedProduct);
     }
     public void deleteProduct(Long id) {
         if (productRepository.findById(id).isPresent()){
@@ -207,7 +263,7 @@ public class ProductService {
             logger.info("Se mezclo la lista de productos.");
             Collections.shuffle(foundByCustomFilter);
         }
-        logger.info("Se filtraron los productos sin fechas.");
+        logger.info("Se filtraron los productos sin filtrar por fechas.");
         return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
     }
 }

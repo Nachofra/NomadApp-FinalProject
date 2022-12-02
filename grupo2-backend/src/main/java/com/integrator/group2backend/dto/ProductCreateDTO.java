@@ -1,18 +1,17 @@
 package com.integrator.group2backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.integrator.group2backend.entities.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Id;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Getter
 @Setter
-public class ProductSimpleDTO {
-
-    private Long id;
+public class ProductCreateDTO {
     private String title;
     private String description;
     private Integer rooms;
@@ -22,9 +21,9 @@ public class ProductSimpleDTO {
     private Float dailyPrice;
     private Float latitude;
     private Float longitude;
-    private Category category;
-    private City city;
-    private Set<Feature> features;
-    private Set<PolicyItem> policyItems;
-    private Set<Image> images;
+    private Long category_id;
+    private Long city_id;
+    private ArrayList<Long> features_id;
+    private ArrayList<Long> policyItems_id;
+    private ArrayList<MultipartFile> images;
 }

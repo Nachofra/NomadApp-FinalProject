@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,4 +20,8 @@ public class PolicyItem {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "policy_id", referencedColumnName = "id")
     private Policy policy;
+
+    @ManyToMany(mappedBy = "policyItems", cascade = CascadeType.MERGE)
+    @JsonIgnore
+    private Set<Product> products;
 }

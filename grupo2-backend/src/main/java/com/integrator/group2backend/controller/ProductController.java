@@ -1,5 +1,6 @@
 package com.integrator.group2backend.controller;
 
+import com.integrator.group2backend.dto.ProductCreateDTO;
 import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.service.ProductService;
@@ -32,7 +33,7 @@ public class ProductController {
         this.mapperService = mapperService;
     }
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> createProduct(@RequestBody ProductCreateDTO product) {
         return ResponseEntity.ok(productService.addProduct(product));
     }
     @GetMapping
