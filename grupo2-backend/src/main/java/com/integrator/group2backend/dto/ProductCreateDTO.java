@@ -1,11 +1,11 @@
 package com.integrator.group2backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.integrator.group2backend.entities.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Id;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Getter
@@ -22,11 +22,9 @@ public class ProductCreateDTO {
     private Float dailyPrice;
     private Float latitude;
     private Float longitude;
-    private Category category;
-    private City city;
-    private Set<Feature> features;
-    private Set<PolicyItem> policyItems;
-
-    /*@JsonIgnoreProperties(value = { "product" })
-    private Set<Image> images;*/
+    private Long category_id;
+    private Long city_id;
+    private ArrayList<Long> features_id;
+    private ArrayList<Long> policyItems_id;
+    private Set<Image> images;
 }

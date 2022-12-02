@@ -7,6 +7,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.integrator.group2backend.controller.CategoryController;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,8 @@ import java.util.Date;
 
 @Service
 public class AmazonClient {
+    public static final Logger logger = Logger.getLogger(AmazonClient.class);
+
     private AmazonS3 s3client;
 
     @Value("${amazon.s3.bucket-url}")
@@ -50,7 +54,6 @@ public class AmazonClient {
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
     public String uploadFile(MultipartFile multipartFile) {
-
         String fileUrl = "";
         try {
             File file = convertMultiPartToFile(multipartFile);
@@ -61,13 +64,15 @@ public class AmazonClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return (fileUrl);
+        logger.info("Se cargo una imagen en el bucket S3 con endpoint " + endpointUrl);
+        return fileUrl;
     }
     public String deleteFileFromS3Bucket(String fileUrl) {
         String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
         System.out.println(s3client.doesBucketExist(fileName));
         System.out.println(bucketName+"/"+fileName);
         s3client.deleteObject(new DeleteObjectRequest(bucketName + "/", fileName));
+        logger.info("Se elimino una imagen del bucket S3 con endpoint " + endpointUrl);
         return "Successfully deleted";
     }
 }
