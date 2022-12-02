@@ -7,6 +7,7 @@ import com.integrator.group2backend.service.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,11 +22,14 @@ public class ImageController {
         this.imageService = imageService;
     }
 
+    /*@PostMapping
+    private ResponseEntity<Image> addImage(@RequestBody Image image, @RequestPart(value = "file") MultipartFile file){
+        return ResponseEntity.ok(this.imageService.addImage(image, file));
+    }*/
     @PostMapping
-    private ResponseEntity<Image> addImage(@RequestBody Image image){
-        return ResponseEntity.ok(this.imageService.addImage(image));
+    private ResponseEntity<Image> addImage(@RequestPart(value = "file") MultipartFile file){
+        return ResponseEntity.ok(this.imageService.addImage(file));
     }
-
     @PostMapping("/list")
     private ResponseEntity<List<Image>> addImageList(@RequestBody List<Image> imageList){
         return ResponseEntity.ok(this.imageService.addImageList(imageList));
@@ -43,9 +47,6 @@ public class ImageController {
     @GetMapping
     private ResponseEntity<List<Image>> getAllImage(){
         List<Image> list = this.imageService.getAllImage();
-        if(!list.isEmpty()){
-            return ResponseEntity.ok(list);
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(list);
     }
 }

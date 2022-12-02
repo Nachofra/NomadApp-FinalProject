@@ -4,6 +4,7 @@ import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.repository.ProductRepository;
 import com.integrator.group2backend.utils.MapperService;
+import com.integrator.group2backend.utils.UpdateProductCompare;
 import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,12 @@ public class ProductService {
     public static final Logger logger = Logger.getLogger(ProductService.class);
     private final ProductRepository productRepository;
     private final MapperService mapperService;
+    private final UpdateProductCompare updateProductCompare;
 
-    public ProductService(ProductRepository productRepository, MapperService mapperService) {
+    public ProductService(ProductRepository productRepository, MapperService mapperService, UpdateProductCompare updateProductCompare) {
         this.productRepository = productRepository;
         this.mapperService = mapperService;
+        this.updateProductCompare = updateProductCompare;
     }
 
     public Product addProduct(Product product) {
@@ -59,9 +62,11 @@ public class ProductService {
         logger.error("El producto especificado no existe con id " + productId);
         return product;
     }
-    public Product updateProduct(Product product) {
-        logger.info("Se actualizo correctamente el producto con id " + product.getId());
-        return productRepository.save(product);
+    public Product updateProduct(Product newProduct) {
+        Optional<Product> oldProduct = searchProductById(newProduct.getId());
+        Product updatedProduct = updateProductCompare.updateProductCompare(oldProduct, newProduct);
+        logger.info("Se actualizo correctamente el producto con id " + newProduct.getId());
+        return productRepository.save(updatedProduct);
     }
     public void deleteProduct(Long id) {
         if (productRepository.findById(id).isPresent()){
@@ -207,7 +212,7 @@ public class ProductService {
             logger.info("Se mezclo la lista de productos.");
             Collections.shuffle(foundByCustomFilter);
         }
-        logger.info("Se filtraron los productos sin fechas.");
+        logger.info("Se filtraron los productos sin filtrar por fechas.");
         return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
     }
 }

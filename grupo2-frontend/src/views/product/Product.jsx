@@ -44,6 +44,7 @@ export const Product = () => {
     const [avoidDates, setAvoidDates ] = useState()
     
     const excludeDatesHandler = excArr => excArr.map(range => ({ start: range.checkInDate, end :  range.checkOutDate}))
+    console.log(avoidDates)
     
     const {id} = useParams();
 

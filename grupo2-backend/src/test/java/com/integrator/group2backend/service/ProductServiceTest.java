@@ -7,6 +7,7 @@ import com.integrator.group2backend.entities.Policy;
 import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.repository.ProductRepository;
 import com.integrator.group2backend.utils.MapperService;
+import com.integrator.group2backend.utils.UpdateProductCompare;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,10 +37,12 @@ public class ProductServiceTest {
     private MapperService mapperService;
 
     private ProductService productService;
+    private UpdateProductCompare updateProductCompare;
+
 
     @Before
     public void setUp() {
-        this.productService = new ProductService(this.productRepository, this.mapperService);
+        this.productService = new ProductService(this.productRepository, this.mapperService, this.updateProductCompare);
     }
 
 
