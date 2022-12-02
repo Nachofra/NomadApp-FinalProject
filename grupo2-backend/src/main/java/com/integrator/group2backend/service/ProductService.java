@@ -9,6 +9,7 @@ import com.integrator.group2backend.utils.UpdateProductCompare;
 import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,15 +23,17 @@ public class ProductService {
     private final CategoryService categoryService;
     private final FeatureService featureService;
     private final PolicyItemService policyItemService;
+    private final ImageService imageService;
     private final CityService cityService;
 
-    public ProductService(ProductRepository productRepository, MapperService mapperService, UpdateProductCompare updateProductCompare, CategoryService categoryService, FeatureService featureService, PolicyItemService policyItemService, CityService cityService) {
+    public ProductService(ProductRepository productRepository, MapperService mapperService, UpdateProductCompare updateProductCompare, CategoryService categoryService, FeatureService featureService, PolicyItemService policyItemService, ImageService imageService, CityService cityService) {
         this.productRepository = productRepository;
         this.mapperService = mapperService;
         this.updateProductCompare = updateProductCompare;
         this.categoryService = categoryService;
         this.featureService = featureService;
         this.policyItemService = policyItemService;
+        this.imageService = imageService;
         this.cityService = cityService;
     }
 
@@ -71,7 +74,12 @@ public class ProductService {
         }
         product.setPolicyItems(policyItemsList);
 
-
+        Set<Image> imageList = new HashSet<>();
+        for (MultipartFile images: newProduct.getImages()) {
+            Image image = imageService.addImage(images);
+            imageList.add(image);
+        }
+        product.setImages(imageList);
 
         logger.info("Se agrego un producto correctamente");
         return productRepository.save(product);

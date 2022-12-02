@@ -36,12 +36,13 @@ public class ProductServiceTest {
     private CityService cityService;
     private FeatureService featureService;
     private PolicyItemService policyItemService;
+    private ImageService imageService;
     private UpdateProductCompare updateProductCompare;
 
 
     @Before
     public void setUp() {
-        this.productService = new ProductService(this.productRepository, this.mapperService, this.updateProductCompare, categoryService, featureService, policyItemService, cityService);
+        this.productService = new ProductService(this.productRepository, this.mapperService, this.updateProductCompare, categoryService, featureService, policyItemService, imageService, cityService);
     }
 
 

@@ -3,6 +3,7 @@ package com.integrator.group2backend.dto;
 import com.integrator.group2backend.entities.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Id;
 import java.util.ArrayList;
@@ -11,8 +12,6 @@ import java.util.Set;
 @Getter
 @Setter
 public class ProductCreateDTO {
-    @Id
-    private Long id;
     private String title;
     private String description;
     private Integer rooms;
@@ -26,5 +25,5 @@ public class ProductCreateDTO {
     private Long city_id;
     private ArrayList<Long> features_id;
     private ArrayList<Long> policyItems_id;
-    private Set<Image> images;
+    private ArrayList<MultipartFile> images;
 }
