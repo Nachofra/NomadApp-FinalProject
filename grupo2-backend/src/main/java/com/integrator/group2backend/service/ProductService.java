@@ -50,9 +50,13 @@ public class ProductService {
         product.setBeds(newProduct.getBeds());
         product.setBathrooms(newProduct.getBathrooms());
         product.setGuests(newProduct.getGuests());
-        product.setDailyPrice(product.getDailyPrice());
-        product.setLatitude(product.getLatitude());
-        product.setLongitude(product.getLongitude());
+        product.setDailyPrice(newProduct.getDailyPrice());
+        product.setAddress(newProduct.getAddress());
+        product.setNumber(newProduct.getNumber());
+        product.setFloor(newProduct.getFloor());
+        product.setApartment(newProduct.getApartment());
+        product.setLatitude(newProduct.getLatitude());
+        product.setLongitude(newProduct.getLongitude());
 
         Optional<Category> category = categoryService.searchCategoryById(newProduct.getCategory_id());
         product.setCategory(category.get());
@@ -74,12 +78,12 @@ public class ProductService {
         }
         product.setPolicyItems(policyItemsList);
 
-        Set<Image> imageList = new HashSet<>();
+        /*Set<Image> imageList = new HashSet<>();
         for (MultipartFile images: newProduct.getImages()) {
             Image image = imageService.addImage(images);
             imageList.add(image);
         }
-        product.setImages(imageList);
+        product.setImages(imageList);*/
 
         logger.info("Se agrego un producto correctamente");
         return productRepository.save(product);
