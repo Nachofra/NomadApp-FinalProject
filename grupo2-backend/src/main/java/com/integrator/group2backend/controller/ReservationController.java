@@ -3,6 +3,8 @@ package com.integrator.group2backend.controller;
 import com.integrator.group2backend.dto.ReservationDTO;
 import com.integrator.group2backend.dto.ReservationSimpleDTO;
 import com.integrator.group2backend.entities.Reservation;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
+import com.integrator.group2backend.exception.DateParseException;
 import com.integrator.group2backend.service.ReservationService;
 import com.integrator.group2backend.utils.MapperService;
 import org.apache.log4j.Logger;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.text.ParseException;
 import java.util.*;
 
 @RestController
@@ -25,7 +28,7 @@ public class ReservationController {
         this.mapperService = mapperService;
     }
     @PostMapping
-    public ResponseEntity<ReservationDTO> createReservation(@RequestBody Reservation reservation){
+    public ResponseEntity<ReservationDTO> createReservation(@RequestBody Reservation reservation) throws DataIntegrityViolationException, DateParseException {
         return ResponseEntity.ok(reservationService.addReservation(reservation));
     }
     @GetMapping
