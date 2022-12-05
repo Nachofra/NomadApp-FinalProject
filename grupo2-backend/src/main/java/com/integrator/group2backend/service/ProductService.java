@@ -117,11 +117,10 @@ public class ProductService {
         logger.error("El producto especificado no existe con id " + productId);
         return product;
     }
-    public Product updateProduct(Product newProduct) {
-        Optional<Product> oldProduct = searchProductById(newProduct.getId());
-        Product updatedProduct = updateProductCompare.updateProductCompare(oldProduct, newProduct);
-        logger.info("Se actualizo correctamente el producto con id " + newProduct.getId());
-        return productRepository.save(updatedProduct);
+    public Product updateProduct(Long productId, ProductCreateDTO productUpdate) {
+        Optional<Product> product = searchProductById(productId);
+        logger.info("Se actualizo correctamente el producto con id " + product.get().getId());
+        return productRepository.save(updateProductCompare.updateProductCompare(product.get(), productUpdate));
     }
     public void deleteProduct(Long id) {
         if (productRepository.findById(id).isPresent()){

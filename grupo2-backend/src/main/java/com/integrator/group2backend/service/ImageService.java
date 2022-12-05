@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,20 @@ public class ImageService {
         logger.info("Se agrego una nueva imagen.");
         return imageRepository.save(newImage);
     }
+    /*public List<Image> addMultipleImages(List<MultipartFile> files){
+        List<Image> newImages = new ArrayList<Image>();
+        for (MultipartFile file:files) {
+            Image newImage = new Image();
+            String fileUrl = amazonClient.uploadFile(file);
+            newImage.setName(fileUrl.substring(fileUrl.lastIndexOf("/") + 1));
+            newImage.setExtension(fileUrl.substring(fileUrl.lastIndexOf(".") + 1));
+            newImage.setURL(fileUrl);
+            logger.info("Se agrego una nueva imagen.");
+            newImages.add(newImage);
+        }
+        logger.info("Se creo una nueva lista de imagenes.");
+        return imageRepository.saveAll(newImages);
+    }*/
     public List<Image> addImageList(List<Image> imagelist){
         return this.imageRepository.saveAll(imagelist);
     }

@@ -1,125 +1,143 @@
 package com.integrator.group2backend.utils;
 
+import com.integrator.group2backend.dto.ProductCreateDTO;
 import com.integrator.group2backend.entities.*;
-import com.integrator.group2backend.service.CategoryService;
-import com.integrator.group2backend.service.CityService;
-import com.integrator.group2backend.service.ImageService;
-import com.integrator.group2backend.service.PolicyService;
+import com.integrator.group2backend.service.*;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Component
 public class UpdateProductCompare {
-    /*private final CityService cityService;
+    private final CityService cityService;
     private final CategoryService categoryService;
-    private final PolicyService policyService;
+    private final PolicyItemService policyItemService;
+    private final FeatureService featureService;
     private final ImageService imageService;
 
-    public UpdateProductCompare(CityService cityService, CategoryService categoryService, PolicyService policyService, ImageService imageService) {
+    public UpdateProductCompare(CityService cityService, CategoryService categoryService, PolicyItemService policyItemService, FeatureService featureService, ImageService imageService) {
         this.cityService = cityService;
         this.categoryService = categoryService;
-        this.policyService = policyService;
+        this.policyItemService = policyItemService;
+        this.featureService = featureService;
         this.imageService = imageService;
-    }*/
+    }
 
-    public Product updateProductCompare (Optional<Product> oldProduct, Product newProduct){
+    public Product updateProductCompare (Product oldProduct, ProductCreateDTO newProduct){
 
-        Set<Image> images = new HashSet<>();
+        Product auxProduct = new Product();
         Set<PolicyItem> policyItems = new HashSet<>();
         Set<Feature> features = new HashSet<>();
+        Set<Image> images = new HashSet<>();
+
+        auxProduct.setId(oldProduct.getId());
 
         if (newProduct.getTitle() == null){
-            newProduct.setTitle(oldProduct.get().getTitle());
+            auxProduct.setTitle(oldProduct.getTitle());
         }
         if (newProduct.getDescription() == null){
-            newProduct.setDescription(oldProduct.get().getDescription());
+            auxProduct.setDescription(oldProduct.getDescription());
         }
         if (newProduct.getRooms() == null){
-            newProduct.setRooms(oldProduct.get().getRooms());
+            auxProduct.setRooms(oldProduct.getRooms());
         }
         if (newProduct.getBeds() == null){
-            newProduct.setBeds(oldProduct.get().getBeds());
+            auxProduct.setBeds(oldProduct.getBeds());
         }
         if (newProduct.getGuests() == null){
-            newProduct.setGuests(oldProduct.get().getGuests());
+            auxProduct.setGuests(oldProduct.getGuests());
         }
         if (newProduct.getDailyPrice() == null){
-            newProduct.setDailyPrice(oldProduct.get().getDailyPrice());
+            auxProduct.setDailyPrice(oldProduct.getDailyPrice());
         }
         if (newProduct.getAddress() == null){
-            newProduct.setAddress(oldProduct.get().getAddress());
+            auxProduct.setAddress(oldProduct.getAddress());
         }
         if (newProduct.getNumber() == null){
-            newProduct.setNumber(oldProduct.get().getNumber());
+            auxProduct.setNumber(oldProduct.getNumber());
         }
         if (newProduct.getFloor() == null){
-            newProduct.setFloor(oldProduct.get().getFloor());
+            auxProduct.setFloor(oldProduct.getFloor());
         }
-        if (newProduct.getCity() == null){
+
+        if (newProduct.getCity_id() == null){
             System.out.println("No actualizo City");
-            newProduct.setCity(oldProduct.get().getCity());
+            auxProduct.setCity(oldProduct.getCity());
         }else {
             System.out.println("Actualizo City");
-            //Optional<City> newCity = cityService.getCityById(newProduct.getCity().getId());
-            //newProduct.setCity(newCity.get());
-        }
-        if (newProduct.getCategory() == null){
-            newProduct.setCategory(oldProduct.get().getCategory());
+            Optional<City> searchedCity = cityService.getCityById(newProduct.getCity_id());
+            auxProduct.setCity(searchedCity.get());
         }
 
-        images.addAll(newProduct.getImages());
-        if (newProduct.getImages() == null){
+        if (newProduct.getCategory_id() == null){
+            System.out.println("No actualizo Category");
+            auxProduct.setCategory(oldProduct.getCategory());
+        }else {
+            System.out.println("Actualizo category");
+            Optional<Category> searchedCategory = categoryService.searchCategoryById(newProduct.getCategory_id());
+            auxProduct.setCategory(searchedCategory.get());
+        }
+
+        if (newProduct.getPolicyItems_id() == null){
+            System.out.println("No actualizo PolicyItems");
+            policyItems.addAll(oldProduct.getPolicyItems());
+            auxProduct.setPolicyItems(policyItems);
+        }else{
+            for (Long policyItemId: newProduct.getPolicyItems_id()){
+                policyItems.add(policyItemService.getPolicyItemById(policyItemId).get());
+            }
+            System.out.println("Actualizo PolicyItems");
+            auxProduct.setPolicyItems(policyItems);
+        }
+
+        if (newProduct.getFeatures_id() == null){
+            System.out.println("No actualizo features");
+            features.addAll(oldProduct.getFeatures());
+            auxProduct.setFeatures(features);
+        }else {
+            for (Long featureId: newProduct.getFeatures_id()){
+                features.add(featureService.searchFeatureById(featureId).get());
+            }
+            System.out.println("Actualizo features");
+            auxProduct.setFeatures(features);
+        }
+
+        /*if (newProduct.getImages() == null){
             images.addAll(oldProduct.get().getImages().stream().distinct().collect(Collectors.toList()));
         }
-        newProduct.setImages(images);
-
-        policyItems.addAll(newProduct.getPolicyItems());
-        if (newProduct.getImages() == null){
-            policyItems.addAll(oldProduct.get().getPolicyItems().stream().distinct().collect(Collectors.toList()));
-        }
-        newProduct.setPolicyItems(policyItems);
-
-        features.addAll(newProduct.getFeatures());
-        if (newProduct.getFeatures() == null){
-            features.addAll(oldProduct.get().getFeatures().stream().distinct().collect(Collectors.toList()));
-        }
-        newProduct.setFeatures(features);
+        auxProduct.setImages(images);*/
 
         System.out.println("---------- OLD PRODUCT ----------");
-        System.out.println(oldProduct.get().getTitle());
-        System.out.println(oldProduct.get().getDescription());
-        System.out.println(oldProduct.get().getRooms());
-        System.out.println(oldProduct.get().getBeds());
-        System.out.println(oldProduct.get().getGuests());
-        System.out.println(oldProduct.get().getDailyPrice());
-        System.out.println(oldProduct.get().getAddress());
-        System.out.println(oldProduct.get().getNumber());
-        System.out.println(oldProduct.get().getFloor());
-        System.out.println(oldProduct.get().getCity());
-        System.out.println(oldProduct.get().getCategory());
-        System.out.println(oldProduct.get().getImages());
-        System.out.println(oldProduct.get().getPolicyItems());
-        System.out.println(oldProduct.get().getFeatures());
-        System.out.println("---------- NEW PRODUCT ----------");
-        System.out.println(newProduct.getTitle());
-        System.out.println(newProduct.getDescription());
-        System.out.println(newProduct.getRooms());
-        System.out.println(newProduct.getBeds());
-        System.out.println(newProduct.getGuests());
-        System.out.println(newProduct.getDailyPrice());
-        System.out.println(newProduct.getAddress());
-        System.out.println(newProduct.getNumber());
-        System.out.println(newProduct.getFloor());
-        System.out.println(newProduct.getCity());
-        System.out.println(newProduct.getCategory());
-        System.out.println(newProduct.getImages());
-        System.out.println(newProduct.getPolicyItems());
-        System.out.println(newProduct.getFeatures());
+        System.out.println(oldProduct.getTitle());
+        System.out.println(oldProduct.getDescription());
+        System.out.println(oldProduct.getRooms());
+        System.out.println(oldProduct.getBeds());
+        System.out.println(oldProduct.getGuests());
+        System.out.println(oldProduct.getDailyPrice());
+        System.out.println(oldProduct.getAddress());
+        System.out.println(oldProduct.getNumber());
+        System.out.println(oldProduct.getFloor());
+        System.out.println(oldProduct.getCity());
+        System.out.println(oldProduct.getCategory());
+        System.out.println(oldProduct.getImages());
+        System.out.println(oldProduct.getPolicyItems());
+        System.out.println(oldProduct.getFeatures());
+        System.out.println("---------- AUX PRODUCT ----------");
+        System.out.println(auxProduct.getTitle());
+        System.out.println(auxProduct.getDescription());
+        System.out.println(auxProduct.getRooms());
+        System.out.println(auxProduct.getBeds());
+        System.out.println(auxProduct.getGuests());
+        System.out.println(auxProduct.getDailyPrice());
+        System.out.println(auxProduct.getAddress());
+        System.out.println(auxProduct.getNumber());
+        System.out.println(auxProduct.getFloor());
+        System.out.println(auxProduct.getCity());
+        System.out.println(auxProduct.getCategory());
+        System.out.println(auxProduct.getImages());
+        System.out.println(auxProduct.getPolicyItems());
+        System.out.println(auxProduct.getFeatures());
 
-        return newProduct;
+        return auxProduct;
     }
 }

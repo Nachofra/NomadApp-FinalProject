@@ -67,12 +67,10 @@ public class ProductController {
         }
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long productId, @RequestBody ProductCreateDTO productUpdate) {
         boolean productExists = productService.searchProductById(productId).isPresent();
         if (productExists) {
-            product.setId(productId);
-            Product updatedProduct = productService.updateProduct(product);
-            return ResponseEntity.ok(updatedProduct);
+            return ResponseEntity.ok(productService.updateProduct(productId, productUpdate));
         } else {
             return ResponseEntity.notFound().build();
         }

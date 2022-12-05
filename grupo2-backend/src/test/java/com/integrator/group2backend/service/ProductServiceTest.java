@@ -131,7 +131,7 @@ public class ProductServiceTest {
         Mockito.verify(this.mapperService, times(0)).mapList(any(), any());
     }
 
-    @Test
+    /*@Test
     public void updateProduct() {
         Product p = new Product();
         Mockito.when(this.productRepository.save(eq(p))).thenReturn(null);
@@ -139,7 +139,7 @@ public class ProductServiceTest {
         this.productService.updateProduct(p);
 
         Mockito.verify(this.productRepository, times(1)).save(eq(p));
-    }
+    }*/
 
     @Test
     public void testDeleteProduct() {
