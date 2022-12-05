@@ -1,12 +1,10 @@
 package com.integrator.group2backend.service;
 
-import com.integrator.group2backend.controller.CategoryController;
 import com.integrator.group2backend.entities.Image;
 import com.integrator.group2backend.repository.ImageRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -38,7 +36,7 @@ public class ImageService {
         logger.info("Se agrego una nueva imagen.");
         return imageRepository.save(newImage);
     }
-    /*public List<Image> addMultipleImages(List<MultipartFile> files){
+    public List<Image> addMultipleImages(List<MultipartFile> files){
         List<Image> newImages = new ArrayList<Image>();
         for (MultipartFile file:files) {
             Image newImage = new Image();
@@ -51,7 +49,7 @@ public class ImageService {
         }
         logger.info("Se creo una nueva lista de imagenes.");
         return imageRepository.saveAll(newImages);
-    }*/
+    }
     public List<Image> addImageList(List<Image> imagelist){
         return this.imageRepository.saveAll(imagelist);
     }

@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,6 +26,6 @@ public class ProductCreateDTO {
     private Long category_id;
     private Long city_id;
     private ArrayList<Long> features_id;
-    private ArrayList<Long> policyItems_id;
-    //private ArrayList<MultipartFile> images;
+    //private ArrayList<Long> policyItems_id;
+    private Set<MultipartFile> image;
 }

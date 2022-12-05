@@ -58,6 +58,13 @@ public class ProductService {
         product.setLatitude(newProduct.getLatitude());
         product.setLongitude(newProduct.getLongitude());
 
+        Set<Image> imageList = new HashSet<>();
+        for (MultipartFile images: newProduct.getImage()) {
+            Image image = imageService.addImage(images);
+            imageList.add(image);
+        }
+        product.setImages(imageList);
+
         Optional<Category> category = categoryService.searchCategoryById(newProduct.getCategory_id());
         product.setCategory(category.get());
 
@@ -71,19 +78,12 @@ public class ProductService {
         }
         product.setFeatures(featureList);
 
-        Set<PolicyItem> policyItemsList = new HashSet<>();
+        /*Set<PolicyItem> policyItemsList = new HashSet<>();
         for (Long policyItemId: newProduct.getPolicyItems_id()) {
             Optional<PolicyItem> policyItem = policyItemService.getPolicyItemById(policyItemId);
             policyItemsList.add(policyItem.get());
         }
-        product.setPolicyItems(policyItemsList);
-
-        /*Set<Image> imageList = new HashSet<>();
-        for (MultipartFile images: newProduct.getImages()) {
-            Image image = imageService.addImage(images);
-            imageList.add(image);
-        }
-        product.setImages(imageList);*/
+        product.setPolicyItems(policyItemsList);*/
 
         logger.info("Se agrego un producto correctamente");
         return productRepository.save(product);

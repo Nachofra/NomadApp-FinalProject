@@ -11,8 +11,8 @@ import java.util.*;
 public class UpdateProductCompare {
     private final CityService cityService;
     private final CategoryService categoryService;
-    private final PolicyItemService policyItemService;
     private final FeatureService featureService;
+    private final PolicyItemService policyItemService;
     private final ImageService imageService;
 
     public UpdateProductCompare(CityService cityService, CategoryService categoryService, PolicyItemService policyItemService, FeatureService featureService, ImageService imageService) {
@@ -26,8 +26,8 @@ public class UpdateProductCompare {
     public Product updateProductCompare (Product oldProduct, ProductCreateDTO newProduct){
 
         Product auxProduct = new Product();
-        Set<PolicyItem> policyItems = new HashSet<>();
         Set<Feature> features = new HashSet<>();
+        Set<PolicyItem> policyItems = new HashSet<>();
         Set<Image> images = new HashSet<>();
 
         auxProduct.setId(oldProduct.getId());
@@ -128,18 +128,6 @@ public class UpdateProductCompare {
             auxProduct.setCategory(searchedCategory.get());
         }
 
-        if (newProduct.getPolicyItems_id() == null){
-            System.out.println("No actualizo PolicyItems");
-            policyItems.addAll(oldProduct.getPolicyItems());
-            auxProduct.setPolicyItems(policyItems);
-        }else{
-            for (Long policyItemId: newProduct.getPolicyItems_id()){
-                policyItems.add(policyItemService.getPolicyItemById(policyItemId).get());
-            }
-            System.out.println("Actualizo PolicyItems");
-            auxProduct.setPolicyItems(policyItems);
-        }
-
         if (newProduct.getFeatures_id() == null){
             System.out.println("No actualizo features");
             features.addAll(oldProduct.getFeatures());
@@ -151,6 +139,18 @@ public class UpdateProductCompare {
             System.out.println("Actualizo features");
             auxProduct.setFeatures(features);
         }
+
+        /*if (newProduct.getPolicyItems_id() == null){
+            System.out.println("No actualizo PolicyItems");
+            policyItems.addAll(oldProduct.getPolicyItems());
+            auxProduct.setPolicyItems(policyItems);
+        }else{
+            for (Long policyItemId: newProduct.getPolicyItems_id()){
+                policyItems.add(policyItemService.getPolicyItemById(policyItemId).get());
+            }
+            System.out.println("Actualizo PolicyItems");
+            auxProduct.setPolicyItems(policyItems);
+        }*/
 
         /*if (newProduct.getImages() == null){
             images.addAll(oldProduct.get().getImages().stream().distinct().collect(Collectors.toList()));
