@@ -1,8 +1,10 @@
 package com.integrator.group2backend.service;
 
+import com.integrator.group2backend.dto.PolicyDTO;
 import com.integrator.group2backend.dto.ProductCreateDTO;
 import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.*;
+import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.repository.ProductRepository;
 import com.integrator.group2backend.utils.MapperService;
 import com.integrator.group2backend.utils.UpdateProductCompare;
@@ -26,7 +28,9 @@ public class ProductService {
     private final ImageService imageService;
     private final CityService cityService;
 
-    public ProductService(ProductRepository productRepository, MapperService mapperService, UpdateProductCompare updateProductCompare, CategoryService categoryService, FeatureService featureService, PolicyItemService policyItemService, ImageService imageService, CityService cityService) {
+    private final PolicyService policyService;
+
+    public ProductService(ProductRepository productRepository, MapperService mapperService, UpdateProductCompare updateProductCompare, CategoryService categoryService, FeatureService featureService, PolicyItemService policyItemService, ImageService imageService, CityService cityService,PolicyService policyService) {
         this.productRepository = productRepository;
         this.mapperService = mapperService;
         this.updateProductCompare = updateProductCompare;
@@ -35,6 +39,7 @@ public class ProductService {
         this.policyItemService = policyItemService;
         this.imageService = imageService;
         this.cityService = cityService;
+        this.policyService = policyService;
     }
 
     /*public Product addProduct(Product product) {
@@ -108,20 +113,36 @@ public class ProductService {
         Collections.shuffle(searchedProducts);
         return ResponseEntity.ok(this.mapperService.mapList(searchedProducts, ProductViewDTO.class));
     }
-    public Optional<Product> searchProductById(Long productId) {
+    public ProductViewDTO searchProductById(Long productId) throws ResourceNotFoundException {
         Optional<Product> product = productRepository.findById(productId);
-        if (product.isPresent()){
-            logger.info("Se encontro correctamente el producto con id " + productId);
-            return product;
+        if (product.isEmpty()){
+            logger.error("El producto especificado no existe con id " + productId);
+            throw new ResourceNotFoundException("No value present: ");
         }
-        logger.error("El producto especificado no existe con id " + productId);
-        return product;
+
+        ProductViewDTO productViewDTO = this.mapperService.convert(product.get(), ProductViewDTO.class);
+        productViewDTO.setPolicies(this.getPolicies(product.get().getPolicyItems()));
+        logger.info("Se encontro correctamente el producto con id " + productId);
+        return productViewDTO;
     }
-    public Product updateProduct(Product newProduct) {
-        Optional<Product> oldProduct = searchProductById(newProduct.getId());
+
+    public Optional<Product> getProductById(Long id){
+        return this.productRepository.findById(id);
+    }
+
+    public ProductViewDTO updateProduct(Product newProduct) throws ResourceNotFoundException {
+        Optional<Product> oldProduct = this.productRepository.findById(newProduct.getId());
+        if (oldProduct.isEmpty()){
+            logger.error("El producto especificado no existe con id " + newProduct.getId());
+            throw new ResourceNotFoundException("No value present: ");
+        }
         Product updatedProduct = updateProductCompare.updateProductCompare(oldProduct, newProduct);
+
+        ProductViewDTO productViewDTO = this.mapperService.convert(updatedProduct, ProductViewDTO.class);
+        productViewDTO.setPolicies(this.getPolicies(updatedProduct.getPolicyItems()));
         logger.info("Se actualizo correctamente el producto con id " + newProduct.getId());
-        return productRepository.save(updatedProduct);
+        productRepository.save(updatedProduct);
+        return productViewDTO;
     }
     public void deleteProduct(Long id) {
         if (productRepository.findById(id).isPresent()){
@@ -269,5 +290,10 @@ public class ProductService {
         }
         logger.info("Se filtraron los productos sin filtrar por fechas.");
         return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
+    }
+
+
+    public Set<PolicyDTO> getPolicies(Set<PolicyItem> policyItems){
+        return this.policyService.converPolicyItems(policyItems);
     }
 }

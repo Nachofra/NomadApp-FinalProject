@@ -25,7 +25,7 @@ public class ProductViewDTO {
     private Category category;
     private City city;
     private Set<Feature> features;
-    private Set<PolicyItem> policyItems;
+    private Set<PolicyDTO> policies;
     @JsonIgnoreProperties(value = { "product" })
     private Set<Image> images;
     @JsonIgnoreProperties(value = { "product" })
