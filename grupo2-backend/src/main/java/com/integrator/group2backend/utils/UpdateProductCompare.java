@@ -13,14 +13,12 @@ public class UpdateProductCompare {
     private final CategoryService categoryService;
     private final FeatureService featureService;
     private final PolicyItemService policyItemService;
-    private final ImageService imageService;
 
-    public UpdateProductCompare(CityService cityService, CategoryService categoryService, PolicyItemService policyItemService, FeatureService featureService, ImageService imageService) {
+    public UpdateProductCompare(CityService cityService, CategoryService categoryService, PolicyItemService policyItemService, FeatureService featureService) {
         this.cityService = cityService;
         this.categoryService = categoryService;
         this.policyItemService = policyItemService;
         this.featureService = featureService;
-        this.imageService = imageService;
     }
 
     public Product updateProductCompare (Product oldProduct, ProductCreateDTO newProduct){
@@ -28,7 +26,6 @@ public class UpdateProductCompare {
         Product auxProduct = new Product();
         Set<Feature> features = new HashSet<>();
         Set<PolicyItem> policyItems = new HashSet<>();
-        Set<Image> images = new HashSet<>();
 
         auxProduct.setId(oldProduct.getId());
 
@@ -151,52 +148,6 @@ public class UpdateProductCompare {
             System.out.println("Actualizo PolicyItems");
             auxProduct.setPolicyItems(policyItems);
         }
-        /*
-        if (newProduct.getImages() == null){
-            images.addAll(oldProduct.get().getImages().stream().distinct().collect(Collectors.toList()));
-        }
-        auxProduct.setImages(images);
-        */
-
-        System.out.println("---------- OLD PRODUCT ----------");
-        System.out.println(oldProduct.getTitle());
-        System.out.println(oldProduct.getDescription());
-        System.out.println(oldProduct.getRooms());
-        System.out.println(oldProduct.getBeds());
-        System.out.println(oldProduct.getBathrooms());
-        System.out.println(oldProduct.getGuests());
-        System.out.println(oldProduct.getDailyPrice());
-        System.out.println(oldProduct.getAddress());
-        System.out.println(oldProduct.getNumber());
-        System.out.println(oldProduct.getFloor());
-        System.out.println(oldProduct.getApartment());
-        System.out.println(oldProduct.getLatitude());
-        System.out.println(oldProduct.getLongitude());
-        System.out.println(oldProduct.getCity());
-        System.out.println(oldProduct.getCategory());
-        System.out.println(oldProduct.getImages());
-        System.out.println(oldProduct.getPolicyItems());
-        System.out.println(oldProduct.getFeatures());
-        System.out.println("---------- AUX PRODUCT ----------");
-        System.out.println(auxProduct.getTitle());
-        System.out.println(auxProduct.getDescription());
-        System.out.println(auxProduct.getRooms());
-        System.out.println(auxProduct.getBeds());
-        System.out.println(auxProduct.getBathrooms());
-        System.out.println(auxProduct.getGuests());
-        System.out.println(auxProduct.getDailyPrice());
-        System.out.println(auxProduct.getAddress());
-        System.out.println(auxProduct.getNumber());
-        System.out.println(auxProduct.getFloor());
-        System.out.println(auxProduct.getApartment());
-        System.out.println(auxProduct.getLatitude());
-        System.out.println(auxProduct.getLongitude());
-        System.out.println(auxProduct.getCity());
-        System.out.println(auxProduct.getCategory());
-        System.out.println(auxProduct.getImages());
-        System.out.println(auxProduct.getPolicyItems());
-        System.out.println(auxProduct.getFeatures());
-
         return auxProduct;
     }
 }
