@@ -41,14 +41,11 @@ public class ProductService {
         logger.info("Se agrego un producto correctamente");
         return productRepository.save(product);
     }*/
-    public Product addProduct(ProductCreateDTO newProduct) {
+    public ProductViewDTO addProduct(ProductCreateDTO newProduct) {
         Product product = new Product();
         Set<Image> imageList = new HashSet<>();
-        for (MultipartFile images: newProduct.getImage()) {
-            Image image = imageService.addImage(images);
-            imageList.add(image);
-        }
-        product.setImages(imageList);
+        Set<Feature> featureList = new HashSet<>();
+        Set<PolicyItem> policyItemsList = new HashSet<>();
 
         product.setTitle(newProduct.getTitle());
         product.setDescription(newProduct.getDescription());
@@ -64,27 +61,42 @@ public class ProductService {
         product.setLatitude(newProduct.getLatitude());
         product.setLongitude(newProduct.getLongitude());
 
+        // We create the product
+        Product createdProduct = productRepository.save(product);
+
+        for (MultipartFile images: newProduct.getImage()) {
+            Image image = imageService.addImage(images);
+            if(image != null){
+                image.setProduct(createdProduct);
+                imageList.add(image);
+            }
+        }
+        product.setImages(imageList);
+
         Optional<Category> category = categoryService.searchCategoryById(newProduct.getCategory_id());
         product.setCategory(category.get());
 
         Optional<City> city = cityService.getCityById(newProduct.getCity_id());
         product.setCity(city.get());
 
-        Set<Feature> featureList = new HashSet<>();
         for (Long featureId: newProduct.getFeatures_id()) {
             Optional<Feature> feature = featureService.searchFeatureById(featureId);
             featureList.add(feature.get());
         }
         product.setFeatures(featureList);
 
-        /*Set<PolicyItem> policyItemsList = new HashSet<>();
+        /*
         for (Long policyItemId: newProduct.getPolicyItems_id()) {
             Optional<PolicyItem> policyItem = policyItemService.getPolicyItemById(policyItemId);
             policyItemsList.add(policyItem.get());
         }
         product.setPolicyItems(policyItemsList);*/
+
+        // We update the created product with its relationships
+        createdProduct = productRepository.save(createdProduct);
         logger.info("Se agrego un producto correctamente");
-        return productRepository.save(product);
+
+        return this.mapperService.convert(createdProduct, ProductViewDTO.class);
     }
     public ResponseEntity<List<ProductViewDTO>> listAllProducts() {
         List<Product> searchedProducts = productRepository.findAll();
