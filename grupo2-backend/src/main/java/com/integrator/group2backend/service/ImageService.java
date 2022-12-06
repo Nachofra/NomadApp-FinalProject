@@ -30,6 +30,9 @@ public class ImageService {
     public Image addImage(MultipartFile file){
         Image newImage = new Image();
         String fileUrl = amazonClient.uploadFile(file);
+        if (fileUrl == ""){
+            return null;
+        }
         newImage.setName(fileUrl.substring(fileUrl.lastIndexOf("/") + 1));
         newImage.setExtension(fileUrl.substring(fileUrl.lastIndexOf(".") + 1));
         newImage.setURL(fileUrl);

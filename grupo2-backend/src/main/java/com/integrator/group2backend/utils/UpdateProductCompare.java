@@ -140,7 +140,8 @@ public class UpdateProductCompare {
             auxProduct.setFeatures(features);
         }
 
-        /*if (newProduct.getPolicyItems_id() == null){
+        /*
+        if (newProduct.getPolicyItems_id() == null){
             System.out.println("No actualizo PolicyItems");
             policyItems.addAll(oldProduct.getPolicyItems());
             auxProduct.setPolicyItems(policyItems);
@@ -150,12 +151,12 @@ public class UpdateProductCompare {
             }
             System.out.println("Actualizo PolicyItems");
             auxProduct.setPolicyItems(policyItems);
-        }*/
-
-        /*if (newProduct.getImages() == null){
+        }
+        if (newProduct.getImages() == null){
             images.addAll(oldProduct.get().getImages().stream().distinct().collect(Collectors.toList()));
         }
-        auxProduct.setImages(images);*/
+        auxProduct.setImages(images);
+        */
 
         System.out.println("---------- OLD PRODUCT ----------");
         System.out.println(oldProduct.getTitle());
