@@ -54,18 +54,22 @@ public class AmazonClient {
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
     public String uploadFile(MultipartFile multipartFile) {
-        String fileUrl = "";
-        try {
-            File file = convertMultiPartToFile(multipartFile);
-            String fileName = generateFileName(multipartFile);
-            fileUrl = endpointUrl + "/" + fileName;
-            uploadFileTos3bucket(fileName, file);
-            file.delete();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (multipartFile.getSize() <= 3145728 ){
+            String fileUrl = "";
+            try {
+                File file = convertMultiPartToFile(multipartFile);
+                String fileName = generateFileName(multipartFile);
+                fileUrl = endpointUrl + "/" + fileName;
+                uploadFileTos3bucket(fileName, file);
+                file.delete();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            logger.info("Se cargo una imagen en el bucket S3 con endpoint " + endpointUrl);
+            return fileUrl;
         }
-        logger.info("Se cargo una imagen en el bucket S3 con endpoint " + endpointUrl);
-        return fileUrl;
+        logger.error("El archivo de imagen es demasiado pesado.");
+        return null;
     }
     public String deleteFileFromS3Bucket(String fileUrl) {
         String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);

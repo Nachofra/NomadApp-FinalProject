@@ -1,9 +1,7 @@
 package com.integrator.group2backend.controller;
 
 import com.integrator.group2backend.entities.Image;
-import com.integrator.group2backend.entities.Policy;
 import com.integrator.group2backend.service.ImageService;
-import com.integrator.group2backend.service.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +21,17 @@ public class ImageController {
     }
 
     /*@PostMapping
-    private ResponseEntity<Image> addImage(@RequestBody Image image, @RequestPart(value = "file") MultipartFile file){
+    private ResponseEntity<Image> addImage(@RequestBody Image image){
         return ResponseEntity.ok(this.imageService.addImage(image, file));
     }*/
     @PostMapping
     private ResponseEntity<Image> addImage(@RequestPart(value = "file") MultipartFile file){
         return ResponseEntity.ok(this.imageService.addImage(file));
+    }
+    @PostMapping("/uploadList")
+    private ResponseEntity<List<Image>> addMultipleImages(@RequestBody List<MultipartFile> files){
+        System.out.println(files);
+        return ResponseEntity.ok(this.imageService.addMultipleImages(files));
     }
     @PostMapping("/list")
     private ResponseEntity<List<Image>> addImageList(@RequestBody List<Image> imageList){

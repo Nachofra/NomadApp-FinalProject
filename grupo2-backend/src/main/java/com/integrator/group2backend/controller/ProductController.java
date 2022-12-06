@@ -8,15 +8,7 @@ import com.integrator.group2backend.service.ProductService;
 import com.integrator.group2backend.utils.MapperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,7 +26,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductCreateDTO product) {
+    public ResponseEntity<ProductViewDTO> createProduct(@ModelAttribute ProductCreateDTO product) {
         return ResponseEntity.ok(productService.addProduct(product));
     }
 
@@ -67,18 +59,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductViewDTO> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product) throws ResourceNotFoundException {
-        // boolean productExists = productService.searchProductById(productId).isPresent();
-//        ProductViewDTO productViewDTO = this.productService.searchProductById(productId);
-//        if (productViewDTO.getId() != null) {
-//            product.setId(productId);
-//            Product updatedProduct = productService.updateProduct(product);
-//            return ResponseEntity.ok(updatedProduct);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-
-        return ResponseEntity.ok(this.productService.updateProduct(product));
+    public ResponseEntity<ProductViewDTO> updateProduct(@PathVariable("id") Long productId, @RequestBody ProductCreateDTO productUpdate) throws ResourceNotFoundException {
+        return ResponseEntity.ok(this.productService.updateProduct(productId, productUpdate));
     }
 
     @DeleteMapping("/{id}")
