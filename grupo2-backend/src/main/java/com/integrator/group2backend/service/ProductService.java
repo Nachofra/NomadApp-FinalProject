@@ -43,6 +43,12 @@ public class ProductService {
     }*/
     public Product addProduct(ProductCreateDTO newProduct) {
         Product product = new Product();
+        Set<Image> imageList = new HashSet<>();
+        for (MultipartFile images: newProduct.getImage()) {
+            Image image = imageService.addImage(images);
+            imageList.add(image);
+        }
+        product.setImages(imageList);
 
         product.setTitle(newProduct.getTitle());
         product.setDescription(newProduct.getDescription());
@@ -57,13 +63,6 @@ public class ProductService {
         product.setApartment(newProduct.getApartment());
         product.setLatitude(newProduct.getLatitude());
         product.setLongitude(newProduct.getLongitude());
-
-        Set<Image> imageList = new HashSet<>();
-        for (MultipartFile images: newProduct.getImage()) {
-            Image image = imageService.addImage(images);
-            imageList.add(image);
-        }
-        product.setImages(imageList);
 
         Optional<Category> category = categoryService.searchCategoryById(newProduct.getCategory_id());
         product.setCategory(category.get());
@@ -84,7 +83,6 @@ public class ProductService {
             policyItemsList.add(policyItem.get());
         }
         product.setPolicyItems(policyItemsList);*/
-
         logger.info("Se agrego un producto correctamente");
         return productRepository.save(product);
     }
