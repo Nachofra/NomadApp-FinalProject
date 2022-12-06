@@ -41,7 +41,7 @@ public class ProductService {
         logger.info("Se agrego un producto correctamente");
         return productRepository.save(product);
     }*/
-    public Product addProduct(ProductCreateDTO newProduct) {
+    public ProductViewDTO addProduct(ProductCreateDTO newProduct) {
         Product product = new Product();
 
         product.setTitle(newProduct.getTitle());
@@ -58,10 +58,16 @@ public class ProductService {
         product.setLatitude(newProduct.getLatitude());
         product.setLongitude(newProduct.getLongitude());
 
+        // We create the product
+        Product createdProduct = productRepository.save(product);
+
         Set<Image> imageList = new HashSet<>();
         for (MultipartFile images: newProduct.getImage()) {
             Image image = imageService.addImage(images);
-            imageList.add(image);
+            if(image != null){
+                image.setProduct(createdProduct);
+                imageList.add(image);
+            }
         }
         product.setImages(imageList);
 
@@ -85,8 +91,11 @@ public class ProductService {
         }
         product.setPolicyItems(policyItemsList);*/
 
+        // We update the created product with its relationships
+        createdProduct = productRepository.save(createdProduct);
         logger.info("Se agrego un producto correctamente");
-        return productRepository.save(product);
+
+        return this.mapperService.convert(createdProduct, ProductViewDTO.class);
     }
     public ResponseEntity<List<ProductViewDTO>> listAllProducts() {
         List<Product> searchedProducts = productRepository.findAll();

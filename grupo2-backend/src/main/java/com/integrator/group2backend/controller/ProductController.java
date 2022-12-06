@@ -25,7 +25,7 @@ public class ProductController {
         this.mapperService = mapperService;
     }
     @PostMapping
-    public ResponseEntity<Product> createProduct(@ModelAttribute ProductCreateDTO product) {
+    public ResponseEntity<ProductViewDTO> createProduct(@ModelAttribute ProductCreateDTO product) {
         return ResponseEntity.ok(productService.addProduct(product));
     }
     @GetMapping
