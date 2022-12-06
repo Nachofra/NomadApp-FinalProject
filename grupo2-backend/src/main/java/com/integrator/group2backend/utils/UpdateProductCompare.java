@@ -127,8 +127,7 @@ public class UpdateProductCompare {
 
         if (newProduct.getFeatures_id() == null){
             System.out.println("No actualizo features");
-            features.addAll(oldProduct.getFeatures());
-            auxProduct.setFeatures(features);
+            auxProduct.setFeatures(oldProduct.getFeatures());
         }else {
             for (Long featureId: newProduct.getFeatures_id()){
                 features.add(featureService.searchFeatureById(featureId).get());
@@ -139,8 +138,7 @@ public class UpdateProductCompare {
 
         if (newProduct.getPolicyItems_id() == null){
             System.out.println("No actualizo PolicyItems");
-            policyItems.addAll(oldProduct.getPolicyItems());
-            auxProduct.setPolicyItems(policyItems);
+            auxProduct.setPolicyItems(oldProduct.getPolicyItems());
         }else{
             for (Long policyItemId: newProduct.getPolicyItems_id()){
                 policyItems.add(policyItemService.getPolicyItemById(policyItemId).get());
