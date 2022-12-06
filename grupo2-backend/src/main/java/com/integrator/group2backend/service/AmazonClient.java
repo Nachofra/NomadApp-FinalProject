@@ -69,7 +69,7 @@ public class AmazonClient {
             return fileUrl;
         }
         logger.error("El archivo de imagen es demasiado pesado.");
-        return "";
+        return null;
     }
     public String deleteFileFromS3Bucket(String fileUrl) {
         String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
