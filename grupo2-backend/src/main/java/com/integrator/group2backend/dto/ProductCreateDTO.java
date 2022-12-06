@@ -26,6 +26,6 @@ public class ProductCreateDTO {
     private Long category_id;
     private Long city_id;
     private ArrayList<Long> features_id;
-    //private ArrayList<Long> policyItems_id;
+    private ArrayList<Long> policyItems_id;
     private Set<MultipartFile> image;
 }

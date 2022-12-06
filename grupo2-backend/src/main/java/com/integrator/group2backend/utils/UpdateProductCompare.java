@@ -140,7 +140,6 @@ public class UpdateProductCompare {
             auxProduct.setFeatures(features);
         }
 
-        /*
         if (newProduct.getPolicyItems_id() == null){
             System.out.println("No actualizo PolicyItems");
             policyItems.addAll(oldProduct.getPolicyItems());
@@ -152,6 +151,7 @@ public class UpdateProductCompare {
             System.out.println("Actualizo PolicyItems");
             auxProduct.setPolicyItems(policyItems);
         }
+        /*
         if (newProduct.getImages() == null){
             images.addAll(oldProduct.get().getImages().stream().distinct().collect(Collectors.toList()));
         }
