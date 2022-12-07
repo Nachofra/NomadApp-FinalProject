@@ -103,6 +103,11 @@ public class GlobalExceptions {
             data.put("description", "The name of the old file doesn't exist in the S3 Bucket, try with uploading a new image.");
         }
 
+        if (exception.getMessage().equals("Cannot create the product")){
+            data.put("title", "We couldn't update your product");
+            data.put("description", "A product must have all of it's relationships");
+        }
+
         try {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(objectMapper.writeValueAsString(data));
         }

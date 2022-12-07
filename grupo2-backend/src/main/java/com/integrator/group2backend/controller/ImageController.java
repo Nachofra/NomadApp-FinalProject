@@ -60,4 +60,14 @@ public class ImageController {
         List<Image> list = this.imageService.getAllImage();
         return ResponseEntity.ok(list);
     }
+
+    @DeleteMapping("/{id}")
+    private ResponseEntity<String> deleteImageByid(@PathVariable Long id) throws ResourceNotFoundException{
+        Optional<Image> image = this.imageService.getImageById(id);
+        if(image.isPresent()){
+            this.imageService.deleteImage(id);
+            return ResponseEntity.ok("Image with id " + id + " deleted");
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

@@ -1,8 +1,10 @@
 package com.integrator.group2backend.controller;
 
 import com.integrator.group2backend.dto.ProductCreateDTO;
+import com.integrator.group2backend.dto.ProductUpdateDTO;
 import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Product;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
 import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.service.ProductService;
 import com.integrator.group2backend.utils.MapperService;
@@ -26,7 +28,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductViewDTO> createProduct(@ModelAttribute ProductCreateDTO product) {
+    public ResponseEntity<ProductViewDTO> createProduct(@ModelAttribute ProductCreateDTO product) throws DataIntegrityViolationException {
         return ResponseEntity.ok(productService.addProduct(product));
     }
 
@@ -59,7 +61,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductViewDTO> updateProduct(@PathVariable("id") Long productId, @RequestBody ProductCreateDTO productUpdate) throws ResourceNotFoundException {
+    public ResponseEntity<ProductViewDTO> updateProduct(@PathVariable("id") Long productId, @ModelAttribute ProductUpdateDTO productUpdate) throws ResourceNotFoundException {
         return ResponseEntity.ok(this.productService.updateProduct(productId, productUpdate));
     }
 

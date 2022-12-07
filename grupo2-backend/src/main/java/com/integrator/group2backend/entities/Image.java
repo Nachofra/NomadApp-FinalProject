@@ -23,7 +23,7 @@ public class Image {
     @JsonIgnore
     private Feature feature;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 }

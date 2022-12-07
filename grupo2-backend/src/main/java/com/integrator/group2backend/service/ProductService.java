@@ -2,6 +2,7 @@ package com.integrator.group2backend.service;
 
 import com.integrator.group2backend.dto.PolicyDTO;
 import com.integrator.group2backend.dto.ProductCreateDTO;
+import com.integrator.group2backend.dto.ProductUpdateDTO;
 import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Category;
 import com.integrator.group2backend.entities.City;
@@ -9,6 +10,7 @@ import com.integrator.group2backend.entities.Feature;
 import com.integrator.group2backend.entities.Image;
 import com.integrator.group2backend.entities.PolicyItem;
 import com.integrator.group2backend.entities.Product;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
 import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.repository.ProductRepository;
 import com.integrator.group2backend.utils.MapperService;
@@ -56,62 +58,66 @@ public class ProductService {
         logger.info("Se agrego un producto correctamente");
         return productRepository.save(product);
     }*/
-    public ProductViewDTO addProduct(ProductCreateDTO newProduct) {
-        Product product = new Product();
-        Set<Image> imageList = new HashSet<>();
-        Set<Feature> featureList = new HashSet<>();
-        Set<PolicyItem> policyItemsList = new HashSet<>();
+    public ProductViewDTO addProduct(ProductCreateDTO newProduct) throws DataIntegrityViolationException{
+        if(!(newProduct.getImage() == null || newProduct.getPolicyItems_id() == null || newProduct.getCategory_id() == null || newProduct.getFeatures_id() == null || newProduct.getCity_id() == null)){
+            Product product = new Product();
+            Set<Image> imageList = new HashSet<>();
+            Set<Feature> featureList = new HashSet<>();
+            Set<PolicyItem> policyItemsList = new HashSet<>();
 
-        product.setTitle(newProduct.getTitle());
-        product.setDescription(newProduct.getDescription());
-        product.setRooms(newProduct.getRooms());
-        product.setBeds(newProduct.getBeds());
-        product.setBathrooms(newProduct.getBathrooms());
-        product.setGuests(newProduct.getGuests());
-        product.setDailyPrice(newProduct.getDailyPrice());
-        product.setAddress(newProduct.getAddress());
-        product.setNumber(newProduct.getNumber());
-        product.setFloor(newProduct.getFloor());
-        product.setApartment(newProduct.getApartment());
-        product.setLatitude(newProduct.getLatitude());
-        product.setLongitude(newProduct.getLongitude());
+            product.setTitle(newProduct.getTitle());
+            product.setDescription(newProduct.getDescription());
+            product.setRooms(newProduct.getRooms());
+            product.setBeds(newProduct.getBeds());
+            product.setBathrooms(newProduct.getBathrooms());
+            product.setGuests(newProduct.getGuests());
+            product.setDailyPrice(newProduct.getDailyPrice());
+            product.setAddress(newProduct.getAddress());
+            product.setNumber(newProduct.getNumber());
+            product.setFloor(newProduct.getFloor());
+            product.setApartment(newProduct.getApartment());
+            product.setLatitude(newProduct.getLatitude());
+            product.setLongitude(newProduct.getLongitude());
 
-        // We create the product
-        Product createdProduct = productRepository.save(product);
+            // We create the product
+            Product createdProduct = productRepository.save(product);
 
-        for (MultipartFile images : newProduct.getImage()) {
-            Image image = imageService.addImage(images);
-            if (image != null) {
-                image.setProduct(createdProduct);
-                imageList.add(image);
+            for (MultipartFile images : newProduct.getImage()) {
+                Image image = imageService.addImage(images);
+                if (image != null) {
+                    image.setProduct(createdProduct);
+                    imageList.add(image);
+                }
             }
+            product.setImages(imageList);
+
+            Optional<Category> category = categoryService.searchCategoryById(newProduct.getCategory_id());
+            product.setCategory(category.get());
+
+            Optional<City> city = cityService.getCityById(newProduct.getCity_id());
+            product.setCity(city.get());
+
+            for (Long featureId : newProduct.getFeatures_id()) {
+                Optional<Feature> feature = featureService.searchFeatureById(featureId);
+                featureList.add(feature.get());
+            }
+            product.setFeatures(featureList);
+
+
+            for (Long policyItemId: newProduct.getPolicyItems_id()) {
+                Optional<PolicyItem> policyItem = policyItemService.getPolicyItemById(policyItemId);
+                policyItemsList.add(policyItem.get());
+            }
+            product.setPolicyItems(policyItemsList);
+
+            // We update the created product with its relationships
+            createdProduct = productRepository.save(createdProduct);
+            logger.info("Se agrego un producto correctamente");
+
+            return this.setProductViewDTOsingle(createdProduct);
+        }else{
+            throw new DataIntegrityViolationException("Cannot create the product");
         }
-        product.setImages(imageList);
-
-        Optional<Category> category = categoryService.searchCategoryById(newProduct.getCategory_id());
-        product.setCategory(category.get());
-
-        Optional<City> city = cityService.getCityById(newProduct.getCity_id());
-        product.setCity(city.get());
-
-        for (Long featureId : newProduct.getFeatures_id()) {
-            Optional<Feature> feature = featureService.searchFeatureById(featureId);
-            featureList.add(feature.get());
-        }
-        product.setFeatures(featureList);
-
-        /*
-        for (Long policyItemId: newProduct.getPolicyItems_id()) {
-            Optional<PolicyItem> policyItem = policyItemService.getPolicyItemById(policyItemId);
-            policyItemsList.add(policyItem.get());
-        }
-        product.setPolicyItems(policyItemsList);*/
-
-        // We update the created product with its relationships
-        createdProduct = productRepository.save(createdProduct);
-        logger.info("Se agrego un producto correctamente");
-
-        return this.setProductViewDTOsingle(createdProduct);
     }
 
     public ResponseEntity<List<ProductViewDTO>> listAllProducts() throws ResourceNotFoundException {
@@ -149,14 +155,14 @@ public class ProductService {
         return this.productRepository.findById(id);
     }
 
-    public ProductViewDTO updateProduct(Long productId, ProductCreateDTO productUpdate) throws ResourceNotFoundException {
+    public ProductViewDTO updateProduct(Long productId, ProductUpdateDTO productUpdate) throws ResourceNotFoundException {
         Optional<Product> oldProduct = this.productRepository.findById(productId);
         if (oldProduct.isEmpty()) {
             logger.error("El producto especificado no existe con id " + productId);
             throw new ResourceNotFoundException("No value present: ");
         }
         Product updatedProduct = updateProductCompare.updateProductCompare(oldProduct.get(), productUpdate);
-
+        productRepository.save(updatedProduct);
         return this.setProductViewDTOsingle(updatedProduct);
     }
 

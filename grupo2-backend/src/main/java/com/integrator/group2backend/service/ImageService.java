@@ -73,6 +73,16 @@ public class ImageService {
             throw new ResourceNotFoundException("No value present: ");
         }
     }
+    public void deleteImage(Long imageId) throws ResourceNotFoundException {
+        Optional<Image> imageToDelete = getImageById(imageId);
+        if(imageToDelete.isPresent()){
+            amazonClient.deleteFileFromS3Bucket(imageToDelete.get().getName());
+            imageRepository.delete(imageToDelete.get());
+            logger.info("Se elimino la imagen con id " + imageToDelete.get().getId());
+        }else{
+            throw new ResourceNotFoundException("No value present: ");
+        }
+    }
     public List<Image> addImageList(List<Image> imagelist){
         return this.imageRepository.saveAll(imagelist);
     }

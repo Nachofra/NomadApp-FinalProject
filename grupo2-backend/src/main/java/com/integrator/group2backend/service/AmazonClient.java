@@ -107,11 +107,10 @@ public class AmazonClient {
         logger.error("El archivo de imagen es demasiado pesado.");
         throw new ImageSizeTooLongException("The image size cannot be larger than 3 MB");
     }
-    public String deleteFileFromS3Bucket(String fileUrl) {
-        String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+    public String deleteFileFromS3Bucket(String fileName) {
         System.out.println(s3client.doesBucketExist(fileName));
         System.out.println(bucketName+"/"+fileName);
-        s3client.deleteObject(new DeleteObjectRequest(bucketName + "/", fileName));
+        s3client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
         logger.info("Se elimino una imagen del bucket S3 con endpoint " + endpointUrl);
         return "Successfully deleted";
     }

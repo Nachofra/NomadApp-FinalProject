@@ -1,9 +1,12 @@
 package com.integrator.group2backend.utils;
 
 import com.integrator.group2backend.dto.ProductCreateDTO;
+import com.integrator.group2backend.dto.ProductUpdateDTO;
 import com.integrator.group2backend.entities.*;
+import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.service.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -13,19 +16,24 @@ public class UpdateProductCompare {
     private final CategoryService categoryService;
     private final FeatureService featureService;
     private final PolicyItemService policyItemService;
+    private final ImageService imageService;
 
-    public UpdateProductCompare(CityService cityService, CategoryService categoryService, PolicyItemService policyItemService, FeatureService featureService) {
+    public UpdateProductCompare(CityService cityService, CategoryService categoryService, PolicyItemService policyItemService, FeatureService featureService, ImageService imageService) {
         this.cityService = cityService;
         this.categoryService = categoryService;
         this.policyItemService = policyItemService;
         this.featureService = featureService;
+        this.imageService = imageService;
     }
 
-    public Product updateProductCompare (Product oldProduct, ProductCreateDTO newProduct){
+    public Product updateProductCompare (Product oldProduct, ProductUpdateDTO newProduct){
 
         Product auxProduct = new Product();
         Set<Feature> features = new HashSet<>();
         Set<PolicyItem> policyItems = new HashSet<>();
+        List<MultipartFile> newMultipartFiles = new ArrayList<>();
+        List<Image> modifiedImagesList = new ArrayList<>();
+        Set<Image> modifiedImagesSet = new HashSet<>();
 
         auxProduct.setId(oldProduct.getId());
 
@@ -146,6 +154,42 @@ public class UpdateProductCompare {
             System.out.println("Actualizo PolicyItems");
             auxProduct.setPolicyItems(policyItems);
         }
+
+        // Adding new images
+        if (newProduct.getAddImages() == null){
+            System.out.println("No agrego imagenes");
+        }else{
+            //Add new images to list
+            modifiedImagesList = imageService.addMultipleImages(newProduct.getAddImages());
+            for (Image newImage: modifiedImagesList) {
+                newImage.setProduct(oldProduct);
+            }
+            modifiedImagesSet.addAll(modifiedImagesList);
+        }
+
+        // Adding and/or removing old images
+        if (newProduct.getRemoveImages() == null){
+            System.out.println("No elimino imagenes");
+            modifiedImagesSet.addAll(oldProduct.getImages());
+        }else{
+            //Search old selected images and delete them
+            for (Long imagesToRemoveId: newProduct.getRemoveImages()){
+                Optional<Image> searchedImage = imageService.getImageById(imagesToRemoveId);
+                if(searchedImage.isPresent() && searchedImage.get().getProduct().getId().equals(oldProduct.getId())){
+                    try {
+                        imageService.deleteImage(imagesToRemoveId);
+                        oldProduct.getImages().remove(searchedImage.get());
+                    }catch (ResourceNotFoundException e){
+                        System.out.println(e.getMessage());
+                    }
+                }else {
+                    System.out.println("The image to remove with ID " + imagesToRemoveId + " doesn't belong to this product");
+                }
+            }
+            modifiedImagesSet.addAll(oldProduct.getImages());
+        }
+        // Setting aux product with all the new modified images
+        auxProduct.setImages(modifiedImagesSet);
         return auxProduct;
     }
 }
