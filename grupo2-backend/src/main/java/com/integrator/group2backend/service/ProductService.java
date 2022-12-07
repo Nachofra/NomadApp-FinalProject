@@ -103,21 +103,21 @@ public class ProductService {
         //return this.mapperService.convert(createdProduct, ProductViewDTO.class);
         return this.setProductViewDTOsingle(createdProduct);
     }
-    public ResponseEntity<List<ProductViewDTO>> listAllProducts() {
+    public ResponseEntity<List<ProductViewDTO>> listAllProducts() throws ResourceNotFoundException {
         List<Product> searchedProducts = productRepository.findAll();
         if (searchedProducts.isEmpty()) {
             logger.error("Error al listar todos los productos");
-            return ResponseEntity.badRequest().build();
+            throw new ResourceNotFoundException("No value present: ");
         }
         //List<ProductViewDTO> dtoSearchedProducts = this.mapperService.mapList(searchedProducts, ProductViewDTO.class);
         logger.info("Se listaron todos los productos");
         return ResponseEntity.ok(this.setProductViewDTO(searchedProducts));
     }
-    public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts() {
+    public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts() throws ResourceNotFoundException {
         List<Product> searchedProducts = productRepository.findAll();
         if ((searchedProducts.isEmpty())) {
             logger.error("Error al listar todos los productos aleatoriamente");
-            return ResponseEntity.badRequest().build();
+            throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se listaron todos los productos aleatoriamente");
         Collections.shuffle(searchedProducts);
@@ -156,53 +156,56 @@ public class ProductService {
         logger.error("El producto con id " + id + " no existe en la base de datos");
     }
 
-    public List<ProductViewDTO> listProductByCityId(Long city_id) {
+    public List<ProductViewDTO> listProductByCityId(Long city_id) throws ResourceNotFoundException {
         List<Product> productFoundByCityId = productRepository.findByCityId(city_id);
         if (productFoundByCityId.isEmpty()){
             logger.error("No se encontraron los productos correspondientes a la Ciudad con ID " + city_id);
+            throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes a la Ciudad con ID " + city_id);
         //return this.mapperService.mapList(productFoundByCityId, ProductViewDTO.class);
         return this.setProductViewDTO(productFoundByCityId);
     }
 
-    public List<ProductViewDTO> listProductByCategoryId(Long category_id) {
+    public List<ProductViewDTO> listProductByCategoryId(Long category_id) throws ResourceNotFoundException {
         List<Product> productFoundByCategoryId = productRepository.findByCategoryId(category_id);
         if (productFoundByCategoryId.isEmpty()) {
             logger.error("NO se encontraron los productos correspondientes a la Categoria con ID " + category_id);
+            throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes a la Categoria con ID " + category_id);
         //return this.mapperService.mapList(productFoundByCategoryId, ProductViewDTO.class);
         return this.setProductViewDTO(productFoundByCategoryId);
     }
-    public List<ProductViewDTO> searchProductsByCityCheckInDateCheckOutDate(Long city, Date checkInDate, Date checkOutDate){
+    public List<ProductViewDTO> searchProductsByCityCheckInDateCheckOutDate(Long city, Date checkInDate, Date checkOutDate) throws ResourceNotFoundException {
         List<Product> productFoundByCityCheckInDateCheckOutDate = productRepository.searchProductByCityCheckInDateCheckOutDate(city, checkInDate, checkOutDate);
         if (productFoundByCityCheckInDateCheckOutDate.isEmpty()){
             logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city + "  en las fechas especificadas.");
-            return this.mapperService.mapList(productFoundByCityCheckInDateCheckOutDate, ProductViewDTO.class);
+            throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " en las fechas especificadas.");
         //return this.mapperService.mapList(productFoundByCityCheckInDateCheckOutDate, ProductViewDTO.class);
         return this.setProductViewDTO(productFoundByCityCheckInDateCheckOutDate);
     }
 
-    public List<ProductViewDTO> listProductByCityIdAndCategoryId(Long city_id, Long category_id) {
+    public List<ProductViewDTO> listProductByCityIdAndCategoryId(Long city_id, Long category_id) throws ResourceNotFoundException {
         List<Product> productFoundByCityIdAndCategoryId = productRepository.findByCityIdAndCategoryId(city_id, category_id);
         if (productFoundByCityIdAndCategoryId.isEmpty()){
             logger.error("No se encontraron los productos correspondientes a la Ciudad con ID " + city_id + " y a la Categoria con ID " + category_id);
+            throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes a la Ciudad con ID " + city_id + " y a la Categoria con ID " + category_id);
         //return this.mapperService.mapList(productFoundByCityIdAndCategoryId, ProductViewDTO.class);
         return this.setProductViewDTO(productFoundByCityIdAndCategoryId);
     }
 
-    public List<ProductViewDTO> listProductByCityIdAndCategoryIdAndGuests(Long city_id, Long category_id, Integer guests) {
+    public List<ProductViewDTO> listProductByCityIdAndCategoryIdAndGuests(Long city_id, Long category_id, Integer guests) throws ResourceNotFoundException {
         List<Product> productFoundByCityIdAndCategoryIdAndGuests = productRepository.findByCityIdAndCategoryIdAndGuests(city_id, category_id, guests);
         if (productFoundByCityIdAndCategoryIdAndGuests.isEmpty()){
             logger.error("No se encontraron los productos correspondientes a la Ciudad con ID " + city_id + ", a la Categoria con ID " + category_id + " y para " + guests + " inquilinos.");
+            throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes a la Ciudad con ID " + city_id + ", a la Categoria con ID " + category_id + " y para " + guests + " inquilinos.");
-        //return this.mapperService.mapList(productFoundByCityIdAndCategoryIdAndGuests, ProductViewDTO.class);
         return this.setProductViewDTO(productFoundByCityIdAndCategoryIdAndGuests);
     }
 
@@ -220,11 +223,9 @@ public class ProductService {
         }
         if (auxList.isEmpty()) {
             logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city + "  en las fechas especificadas.");
-            //return mapperService.mapList(auxList, ProductViewDTO.class);
             throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " en las fechas especificadas.");
-        //return mapperService.mapList(auxList, ProductViewDTO.class);
         return this.setProductViewDTO(auxList);
     }
 
@@ -242,11 +243,9 @@ public class ProductService {
         }
         if (auxList.isEmpty()) {
             logger.error("No se encontraron los productos correspondientes la Ciudad con ID " + city + " y Categoria con ID " + category + " en las fechas especificadas.");
-            //return mapperService.mapList(auxList, ProductViewDTO.class);
             throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " y Categoria con ID " + category + " en las fechas especificadas.");
-        //return mapperService.mapList(auxList, ProductViewDTO.class);
         return this.setProductViewDTO(auxList);
     }
     public List<ProductViewDTO> customProductFilter(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id,
@@ -284,8 +283,6 @@ public class ProductService {
             if (auxList.isEmpty()){
                 logger.error("No hay reservas disponibles para los filtros y fechas especificadas.");
                 throw new ResourceNotFoundException("No value present: ");
-//                logger.error("No hay reservas disponibles para los filtros y fechas especificadas.");
-//                return mapperService.mapList(auxList, ProductViewDTO.class);
             }
             logger.info("Se filtraron los productos disponibles en las fechas especificadas.");
             if (random){
@@ -298,14 +295,12 @@ public class ProductService {
         if (foundByCustomFilter.isEmpty()){
             logger.error("No se encontraron los productos correspondientes a los filtros utilizados.");
             throw new ResourceNotFoundException("No value present: ");
-            //return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
         }
         if (random){
             logger.info("Se mezclo la lista de productos.");
             Collections.shuffle(foundByCustomFilter);
         }
         logger.info("Se filtraron los productos sin filtrar por fechas.");
-        //return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
         return this.setProductViewDTO(foundByCustomFilter);
     }
 
