@@ -1,6 +1,11 @@
 package com.integrator.group2backend.controller;
 
+import com.integrator.group2backend.dto.ProductCreateDTO;
 import com.integrator.group2backend.entities.Image;
+import com.integrator.group2backend.entities.Product;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
+import com.integrator.group2backend.exception.ImageSizeTooLongException;
+import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +42,10 @@ public class ImageController {
     private ResponseEntity<List<Image>> addImageList(@RequestBody List<Image> imageList){
         return ResponseEntity.ok(this.imageService.addImageList(imageList));
     }
-
+    @PutMapping("/{id}")
+    public ResponseEntity<Image> updateImage(@PathVariable("id") Long imageId, @RequestPart(value = "file") MultipartFile file) throws ResourceNotFoundException, DataIntegrityViolationException, ImageSizeTooLongException {
+        return ResponseEntity.ok(imageService.updateImage(imageId, file));
+    }
     @GetMapping("/{id}")
     private ResponseEntity<Image> getImageById(@PathVariable Long id){
         Optional<Image> image = this.imageService.getImageById(id);
