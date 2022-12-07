@@ -1,13 +1,17 @@
 //package com.integrator.group2backend.service;
 //
+//import com.integrator.group2backend.dto.ProductCreateDTO;
 //import com.integrator.group2backend.dto.ProductViewDTO;
 //import com.integrator.group2backend.entities.*;
+//import com.integrator.group2backend.exception.ResourceNotFoundException;
 //import com.integrator.group2backend.repository.ProductRepository;
 //import com.integrator.group2backend.utils.MapperService;
 //import com.integrator.group2backend.utils.UpdateProductCompare;
+//import org.junit.Assert;
 //import org.junit.Before;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
+//import org.mockito.ArgumentCaptor;
 //import org.mockito.Mock;
 //import org.mockito.Mockito;
 //import org.mockito.junit.MockitoJUnitRunner;
@@ -39,16 +43,27 @@
 //    private ImageService imageService;
 //    private UpdateProductCompare updateProductCompare;
 //
+//    private PolicyService policyService;
+//
 //
 //    @Before
 //    public void setUp() {
-//        this.productService = new ProductService(this.productRepository, this.mapperService, this.updateProductCompare, categoryService, featureService, policyItemService, imageService, cityService);
+//        this.productService = new ProductService(this.productRepository, this.mapperService, this.updateProductCompare, categoryService, featureService, policyItemService, imageService, cityService, this.policyService);
 //    }
 //
 //
 //    @Test
-//    public void testSearchProductById() {
-//        Mockito.when(this.productRepository.findById(eq(1L))).thenReturn((Optional.empty()));
+//    public void testSearchProductById() throws ResourceNotFoundException {
+//        PolicyItem policyItem = new PolicyItem();
+//        policyItem.setId(1L);
+//        Set<PolicyItem> policyItemsList = new HashSet<>();
+//        policyItemsList.add(policyItem);
+//
+//        Product requestProduct = new Product();
+//        requestProduct.setTitle("Departamento");
+//        requestProduct.setPolicyItems(policyItemsList);
+//
+//        Mockito.when(this.productRepository.findById(eq(1L))).thenReturn((Optional.of(requestProduct)));
 //        this.productService.searchProductById(1L);
 //        Mockito.verify(this.productRepository, times(1)).findById(eq(1L));
 //    }
@@ -73,17 +88,19 @@
 //        requestProduct.setPolicyItems(policyItemsList);
 //        requestProduct.setCity(city);
 //
-//        /*ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+//
+//
+//        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
 //        Mockito.when(this.productRepository.save(productArgumentCaptor.capture())).thenReturn(null);
 //
-//        this.productService.addProduct(requestProduct);
+//        this.productService.addProduct(this.mapperService.convert(requestProduct, ProductCreateDTO.class));
 //
 //        Product capturedProduct = productArgumentCaptor.getValue();
 //
 //        Assert.assertNotNull(capturedProduct.getCity());
 //        Assert.assertNotNull(capturedProduct.getPolicyItems());
 //        Assert.assertEquals("Departamento", capturedProduct.getTitle());
-//        Assert.assertEquals(1L, capturedProduct.getCategory().getId(), 1);*/
+//        Assert.assertEquals(1L, capturedProduct.getCategory().getId(), 1);
 //    }
 //
 //    @Test
@@ -132,11 +149,11 @@
 //    }
 //
 //    @Test
-//    public void updateProduct() {
+//    public void updateProduct() throws ResourceNotFoundException {
 //        Product p = new Product();
 //        Mockito.when(this.productRepository.save(eq(p))).thenReturn(null);
 //
-//        this.productService.updateProduct(p);
+//        this.productService.updateProduct(1L, this.mapperService.convert(p, ProductCreateDTO.class));
 //
 //        Mockito.verify(this.productRepository, times(1)).save(eq(p));
 //    }
