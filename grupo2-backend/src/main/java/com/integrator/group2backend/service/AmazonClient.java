@@ -93,6 +93,7 @@ public class AmazonClient {
                     uploadFileTos3bucket(objectToUpdate.getKey(), newFile);
                     changeFileNameIns3bucket(objectToUpdate.getKey(), newFileName);
 
+                    newFile.delete();
                     String newFileUrl = endpointUrl + "/" + newFileName;
                     logger.info("Se actualizo una imagen en el bucket S3 con endpoint " + endpointUrl);
                     return newFileUrl;
