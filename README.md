@@ -12,6 +12,8 @@ Tambien nos tomamos la libertad de agregar la dependencia de Spring Boot Starter
 
 ### Testing
 
+Para el testeo de la aplicación se utilizaron varias herramientas y técnicas distintas. Podemos mencionar casos de prueba, tests no funcionales y funcionales, test exploratorio, smoke tests, test de regresión, pegadas a la API con Postman, tests automáticos con Selenium IDE y además se agregaron test unitarios en el back con Mokito. Se fue documentando cada sesión de test con una planilla de fallos y vale la pena mencionar que como estrategia de equipo, se decidió realizar los test al final de cada sprint para reducir la cantidad de sesiones de testing y de esta forma nos obligandonos a subir cambios previamente testeados y funcionando.
+
 ## Informacion necesaria para levantar el proyecto
 
 ## Integrantes: Mosca, Ignacio. Alamino, Francisco. Alloco, Patricio. Bernardin, Tomas.
