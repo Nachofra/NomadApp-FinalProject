@@ -1,6 +1,9 @@
 package com.integrator.group2backend.service;
 
 import com.integrator.group2backend.entities.Image;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
+import com.integrator.group2backend.exception.ImageSizeTooLongException;
+import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.repository.ImageRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +55,23 @@ public class ImageService {
         }
         logger.info("Se creo una nueva lista de imagenes.");
         return imageRepository.saveAll(newImages);
+    }
+    public Image updateImage(Long imageId, MultipartFile newFile) throws ResourceNotFoundException, DataIntegrityViolationException, ImageSizeTooLongException {
+        Optional<Image> imageToReplace = getImageById(imageId);
+        if(imageToReplace.isPresent()){
+            String fileUrl = amazonClient.updateFile(imageToReplace.get().getName(), newFile);
+
+            Image newImageCreated = imageToReplace.get();
+
+            newImageCreated.setName(fileUrl.substring(fileUrl.lastIndexOf("/") + 1));
+            newImageCreated.setExtension(fileUrl.substring(fileUrl.lastIndexOf(".") + 1));
+            newImageCreated.setURL(fileUrl);
+            logger.info("Se actualizo una nueva imagen.");
+
+            return imageRepository.save(newImageCreated);
+        }else{
+            throw new ResourceNotFoundException("No value present: ");
+        }
     }
     public List<Image> addImageList(List<Image> imagelist){
         return this.imageRepository.saveAll(imagelist);

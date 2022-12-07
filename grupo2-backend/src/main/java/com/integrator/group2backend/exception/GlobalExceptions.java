@@ -88,6 +88,11 @@ public class GlobalExceptions {
             data.put("description", "The dates entered occurs before the actual date or are chronologically invalid. Please try again with other dates.");
         }
 
+        if (exception.getMessage().equals("File name of old product doesn't exist")){
+            data.put("title", "We couldn't update your image");
+            data.put("description", "The name of the old file doesn't exist in the S3 Bucket, try with uploading a new image.");
+        }
+
         try {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(objectMapper.writeValueAsString(data));
         }
@@ -112,6 +117,22 @@ public class GlobalExceptions {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }
         // Handle IOException of objectMapper.writeValueAsString
+        catch (IOException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @ExceptionHandler(ImageSizeTooLongException.class)
+    public ResponseEntity<String> procesamientoImageSizeTooLongException(ImageSizeTooLongException exception){
+        Map<String, Object> data = new HashMap<>();
+
+        if(Objects.equals(exception.getMessage(), "The image size cannot be larger than 3 MB")) {
+            data.put("title", "We couldn't update your image");
+            data.put("description", "The uploaded image size cannot be larger than 3 MB");
+        }
+
+        try {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(objectMapper.writeValueAsString(data));
+        }
         catch (IOException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

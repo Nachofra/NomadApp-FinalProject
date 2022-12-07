@@ -4,10 +4,10 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import com.integrator.group2backend.controller.CategoryController;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
+import com.integrator.group2backend.exception.ImageSizeTooLongException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class AmazonClient {
         AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
         this.s3client = new AmazonS3Client(credentials);
     }
-    private File convertMultiPartToFile(MultipartFile file) throws IOException {
+    public File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
         FileOutputStream fos = new FileOutputStream(convFile);
         fos.write(file.getBytes());
@@ -53,6 +53,15 @@ public class AmazonClient {
         s3client.putObject(new PutObjectRequest(bucketName, fileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
+    private void changeFileNameIns3bucket(String oldFileName, String newFileName) {
+        CopyObjectRequest copyObjRequest = new CopyObjectRequest(bucketName,
+                oldFileName, bucketName, newFileName);
+        s3client.copyObject(copyObjRequest);
+        s3client.deleteObject(new DeleteObjectRequest(bucketName, oldFileName));
+    }
+    private S3Object getFileFroms3bucket(String fileName) {
+        return s3client.getObject(new GetObjectRequest(bucketName, fileName));
+    }
     public String uploadFile(MultipartFile multipartFile) {
         if (multipartFile.getSize() <= 3145728 ){
             String fileUrl = "";
@@ -62,14 +71,40 @@ public class AmazonClient {
                 fileUrl = endpointUrl + "/" + fileName;
                 uploadFileTos3bucket(fileName, file);
                 file.delete();
+                logger.info("Se cargo una imagen en el bucket S3 con endpoint " + endpointUrl);
+                return fileUrl;
             } catch (Exception e) {
+                logger.error("Hubo un error en la creacion del archivo");
                 e.printStackTrace();
+                return null;
             }
-            logger.info("Se cargo una imagen en el bucket S3 con endpoint " + endpointUrl);
-            return fileUrl;
         }
         logger.error("El archivo de imagen es demasiado pesado.");
         return null;
+    }
+    public String updateFile(String fileToReplaceName, MultipartFile newMultipartFile) throws DataIntegrityViolationException, ImageSizeTooLongException{
+        if (newMultipartFile.getSize() <= 3145728 ){
+            try {
+                S3Object objectToUpdate = getFileFroms3bucket(fileToReplaceName);
+                if(objectToUpdate != null){
+                    File newFile = convertMultiPartToFile(newMultipartFile);
+                    String newFileName = generateFileName(newMultipartFile);
+
+                    uploadFileTos3bucket(objectToUpdate.getKey(), newFile);
+                    changeFileNameIns3bucket(objectToUpdate.getKey(), newFileName);
+
+                    String newFileUrl = endpointUrl + "/" + newFileName;
+                    logger.info("Se actualizo una imagen en el bucket S3 con endpoint " + endpointUrl);
+                    return newFileUrl;
+                }
+            } catch (Exception e) {
+                logger.error("Hubo un error buscando el archivo viejo en el S3");
+                e.printStackTrace();
+                throw new DataIntegrityViolationException("File name of old product doesn't exist");
+            }
+        }
+        logger.error("El archivo de imagen es demasiado pesado.");
+        throw new ImageSizeTooLongException("The image size cannot be larger than 3 MB");
     }
     public String deleteFileFromS3Bucket(String fileUrl) {
         String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
