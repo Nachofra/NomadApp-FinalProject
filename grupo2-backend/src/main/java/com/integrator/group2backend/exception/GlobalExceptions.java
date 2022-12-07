@@ -21,8 +21,18 @@ public class GlobalExceptions {
     private final ObjectMapper objectMapper = new ObjectMapper();
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> procesamientoResourceNotFoundException(ResourceNotFoundException exception){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-    }
+        Map<String, Object> data = new HashMap<>();
+
+        if(exception.getMessage().equals("No value present: ")) {
+            data.put("title", "We couldn't find the resource");
+            data.put("description", "The requested resource does not exist.");
+        }
+        try {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).body(objectMapper.writeValueAsString(data));
+        }
+        catch (IOException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }    }
 
     @ExceptionHandler(MailSendException.class)
     public ResponseEntity<String> procesamientoMailSendException(MailSendException exception){

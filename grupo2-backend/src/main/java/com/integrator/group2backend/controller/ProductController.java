@@ -3,6 +3,7 @@ package com.integrator.group2backend.controller;
 import com.integrator.group2backend.dto.ProductCreateDTO;
 import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Product;
+import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.service.ProductService;
 import com.integrator.group2backend.utils.MapperService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
@@ -24,10 +24,12 @@ public class ProductController {
         this.productService = productService;
         this.mapperService = mapperService;
     }
+
     @PostMapping
     public ResponseEntity<ProductViewDTO> createProduct(@ModelAttribute ProductCreateDTO product) {
         return ResponseEntity.ok(productService.addProduct(product));
     }
+
     @GetMapping
     public ResponseEntity<List<ProductViewDTO>> listProducts(
             @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds,
@@ -39,38 +41,34 @@ public class ProductController {
         Boolean random = false;
         return ResponseEntity.ok(productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate, random));
     }
+
     @GetMapping("/random")
     public ResponseEntity<List<ProductViewDTO>> listRandomProducts(
             @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds,
             @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests,
             @RequestParam(required = false) Long city, @RequestParam(required = false) Long category,
             @RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice,
-            @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate) throws Exception{
+            @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate) throws Exception {
         Boolean random = true;
         return ResponseEntity.ok(productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate, random));
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId) {
-        Optional<Product> productFound = productService.searchProductById(productId);
-        if (productFound.isPresent()) {
-            return ResponseEntity.ok(this.mapperService.convert(productFound.get(), ProductViewDTO.class));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId) throws ResourceNotFoundException {
+        return ResponseEntity.ok(this.productService.searchProductById(productId));
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long productId, @RequestBody ProductCreateDTO productUpdate) {
-        boolean productExists = productService.searchProductById(productId).isPresent();
-        if (productExists) {
-            return ResponseEntity.ok(productService.updateProduct(productId, productUpdate));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ProductViewDTO> updateProduct(@PathVariable("id") Long productId, @RequestBody ProductCreateDTO productUpdate) throws ResourceNotFoundException {
+        return ResponseEntity.ok(this.productService.updateProduct(productId, productUpdate));
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId) {
-        boolean productExist = productService.searchProductById(productId).isPresent();
-        if (productExist) {
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId) throws ResourceNotFoundException {
+        //boolean productExist = productService.searchProductById(productId).isPresent();
+        ProductViewDTO productViewDTO = this.productService.searchProductById(productId);
+
+        if (productViewDTO.getId() != null) {
             productService.deleteProduct(productId);
             return ResponseEntity.ok("El producto con id " + productId + " ha sido borrado");
         }
