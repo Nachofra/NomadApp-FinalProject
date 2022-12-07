@@ -281,27 +281,41 @@ public class ProductService {
             System.out.println(auxList);*/
             if (auxList.isEmpty()){
                 logger.error("No hay reservas disponibles para los filtros y fechas especificadas.");
-                return mapperService.mapList(auxList, ProductViewDTO.class);
+                throw new ResourceNotFoundException("No value present: ");
+//                logger.error("No hay reservas disponibles para los filtros y fechas especificadas.");
+//                return mapperService.mapList(auxList, ProductViewDTO.class);
             }
             logger.info("Se filtraron los productos disponibles en las fechas especificadas.");
             if (random){
                 logger.info("Se mezclo la lista auxiliar de productos.");
                 Collections.shuffle(auxList);
             }
-            return mapperService.mapList(auxList, ProductViewDTO.class);
+            return this.setProductViewDTO(auxList);
         }
+
         if (foundByCustomFilter.isEmpty()){
             logger.error("No se encontraron los productos correspondientes a los filtros utilizados.");
-            return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
+            throw new ResourceNotFoundException("No value present: ");
+            //return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
         }
         if (random){
             logger.info("Se mezclo la lista de productos.");
             Collections.shuffle(foundByCustomFilter);
         }
         logger.info("Se filtraron los productos sin filtrar por fechas.");
-        return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
+        //return mapperService.mapList(foundByCustomFilter, ProductViewDTO.class);
+        return this.setProductViewDTO(foundByCustomFilter);
     }
 
+    public List<ProductViewDTO> setProductViewDTO(List<Product> products){
+        List<ProductViewDTO> listDTO = new ArrayList<>();
+        for (Product p : products) {
+            ProductViewDTO productViewDTO = this.mapperService.convert(p, ProductViewDTO.class);
+            productViewDTO.setPolicies(this.getPolicies(p.getPolicyItems()));
+            listDTO.add(productViewDTO);
+        }
+        return listDTO;
+    }
 
     public Set<PolicyDTO> getPolicies(Set<PolicyItem> policyItems){
         return this.policyService.converPolicyItems(policyItems);
