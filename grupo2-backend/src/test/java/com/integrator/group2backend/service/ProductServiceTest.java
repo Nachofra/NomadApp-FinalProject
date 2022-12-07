@@ -42,7 +42,7 @@
 //    private PolicyItemService policyItemService;
 //    private ImageService imageService;
 //    private UpdateProductCompare updateProductCompare;
-//
+//    @Mock
 //    private PolicyService policyService;
 //
 //
@@ -104,7 +104,7 @@
 //    }
 //
 //    @Test
-//    public void testListAllProductsWithNoEmptyList() {
+//    public void testListAllProductsWithNoEmptyList() throws ResourceNotFoundException {
 //        List<Product> list = Collections.singletonList(new Product());
 //        Mockito.when(this.productRepository.findAll()).thenReturn(list);
 //        Mockito.when(this.mapperService.mapList(eq(list), eq(ProductViewDTO.class))).thenReturn(Collections.singletonList(new ProductViewDTO()));
@@ -116,7 +116,7 @@
 //    }
 //
 //    @Test
-//    public void testListAllProductsWithEmptyList() {
+//    public void testListAllProductsWithEmptyList() throws ResourceNotFoundException {
 //        Mockito.when(this.productRepository.findAll()).thenReturn(Collections.emptyList());
 //
 //        this.productService.listAllProducts();
@@ -126,7 +126,7 @@
 //    }
 //
 //    @Test
-//    public void testListRandomAllProductsWithNoEmptyList() {
+//    public void testListRandomAllProductsWithNoEmptyList() throws ResourceNotFoundException {
 //        List<Product> productList = Collections.singletonList(new Product());
 //
 //        Mockito.when(this.productRepository.findAll()).thenReturn(productList);
@@ -139,7 +139,7 @@
 //    }
 //
 //    @Test
-//    public void testListRandomAllProductsWithEmptyList() {
+//    public void testListRandomAllProductsWithEmptyList() throws ResourceNotFoundException {
 //        Mockito.when(this.productRepository.findAll()).thenReturn(Collections.emptyList());
 //
 //        this.productService.listRandomAllProducts();
@@ -169,7 +169,7 @@
 //    }
 //
 //    @Test
-//    public void testListProductByCityIdWhenNoEmptyList() {
+//    public void testListProductByCityIdWhenNoEmptyList() throws ResourceNotFoundException {
 //        List<Product> productList = Collections.singletonList(new Product());
 //
 //        Mockito.when(this.productRepository.findByCityId(1L)).thenReturn(productList);
@@ -182,7 +182,7 @@
 //    }
 //
 //    @Test
-//    public void testListProductByCityIdWithEmptyList() {
+//    public void testListProductByCityIdWithEmptyList() throws ResourceNotFoundException {
 //        Mockito.when(this.productRepository.findByCityId(1L)).thenReturn(Collections.emptyList());
 //
 //        this.productService.listProductByCityId(1L);
@@ -192,7 +192,7 @@
 //    }
 //
 //    @Test
-//    public void testListProductByCategoryIdWhenNoEmptyList() {
+//    public void testListProductByCategoryIdWhenNoEmptyList() throws ResourceNotFoundException {
 //        List<Product> productList = Collections.singletonList(new Product());
 //
 //        Mockito.when(this.productRepository.findByCategoryId(1L)).thenReturn(productList);
@@ -205,7 +205,7 @@
 //    }
 //
 //    @Test
-//    public void testListProductByCategoryIdWithEmptyList() {
+//    public void testListProductByCategoryIdWithEmptyList() throws ResourceNotFoundException {
 //        Mockito.when(this.productRepository.findByCategoryId(1L)).thenReturn(Collections.emptyList());
 //
 //        this.productService.listProductByCategoryId(1L);
@@ -216,7 +216,7 @@
 //
 //
 //    @Test
-//    public void testSearchProductsByCityIdCheckInDateCheckOutDateWithEmptyList() {
+//    public void testSearchProductsByCityIdCheckInDateCheckOutDateWithEmptyList() throws ResourceNotFoundException {
 //        Date datefrom = new Date();
 //        Date dateTo = new Date();
 //        Mockito.when(this.productRepository.searchProductByCityCheckInDateCheckOutDate(eq(1L), eq(datefrom), eq(dateTo))).thenReturn(Collections.emptyList());
@@ -228,7 +228,7 @@
 //    }
 //
 //    @Test
-//    public void testSearchProductsByCityIdCheckInDateCheckOutDateWhenNoEmptyList() {
+//    public void testSearchProductsByCityIdCheckInDateCheckOutDateWhenNoEmptyList() throws ResourceNotFoundException {
 //        Date datefrom = new Date();
 //        Date dateTo = new Date();
 //        List<Product> productList = Collections.singletonList(new Product());
