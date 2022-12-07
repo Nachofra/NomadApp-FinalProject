@@ -34,8 +34,8 @@ public class Reservation {
     @Override
     public String toString() {
         return "Reservation{" +
-                "checkInDate=" + checkInDate +
-                ", checkOutDate=" + checkOutDate +
+                "checkInDate= " + checkInDate +
+                ", checkOutDate= " + checkOutDate +
                 '}';
     }
 }
