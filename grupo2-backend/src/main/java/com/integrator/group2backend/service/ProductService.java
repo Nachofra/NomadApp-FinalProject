@@ -4,12 +4,7 @@ import com.integrator.group2backend.dto.PolicyDTO;
 import com.integrator.group2backend.dto.ProductCreateDTO;
 import com.integrator.group2backend.dto.ProductUpdateDTO;
 import com.integrator.group2backend.dto.ProductViewDTO;
-import com.integrator.group2backend.entities.Category;
-import com.integrator.group2backend.entities.City;
-import com.integrator.group2backend.entities.Feature;
-import com.integrator.group2backend.entities.Image;
-import com.integrator.group2backend.entities.PolicyItem;
-import com.integrator.group2backend.entities.Product;
+import com.integrator.group2backend.entities.*;
 import com.integrator.group2backend.exception.DataIntegrityViolationException;
 import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.repository.ProductRepository;
@@ -175,6 +170,59 @@ public class ProductService {
         logger.error("El producto con id " + id + " no existe en la base de datos");
     }
 
+    public List<ProductViewDTO> customProductFilter(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id,
+                                                    Float minPrice, Float maxPrice, String checkInDate, String checkOutDate, Boolean random) throws Exception {
+
+        List<Product> foundByCustomFilter = productRepository.customDynamicQuery(rooms, beds, bathrooms, guests, city_id, category_id, minPrice, maxPrice);
+        List<Product> auxList = new ArrayList<>();
+        auxList.addAll(foundByCustomFilter);
+
+        if (checkInDate != null && checkOutDate != null) {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date formattedCheckInDate = dateFormatter.parse(checkInDate);
+            Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+            for (Product productFilter : foundByCustomFilter) {
+                for (Reservation reservation : productFilter.getReservations()) {
+                    if ((reservation.getCheckInDate().getTime() >= formattedCheckInDate.getTime() && reservation.getCheckInDate().getTime() <= formattedCheckOutDate.getTime())
+                            || (reservation.getCheckOutDate().getTime() >= formattedCheckInDate.getTime() && reservation.getCheckOutDate().getTime() <= formattedCheckOutDate.getTime())) {
+                        auxList.remove(productFilter);
+                    }
+                }
+            }
+            logger.info("Se filtraron los productos disponibles en las fechas especificadas.");
+        }
+        if (auxList.isEmpty()) {
+            logger.error("No hay reservas disponibles para los filtros especificados.");
+            throw new ResourceNotFoundException("No value present: ");
+        }
+        logger.info("Se aplicaron los filtros especificados.");
+        if (random) {
+            logger.info("Se mezclo la lista de productos.");
+            Collections.shuffle(auxList);
+        }
+        return this.setProductViewDTO(auxList);
+    }
+
+    public List<ProductViewDTO> setProductViewDTO(List<Product> products) {
+        List<ProductViewDTO> listDTO = new ArrayList<>();
+        for (Product p : products) {
+            ProductViewDTO productViewDTO = this.mapperService.convert(p, ProductViewDTO.class);
+            productViewDTO.setPolicies(this.getPolicies(p.getPolicyItems()));
+            listDTO.add(productViewDTO);
+        }
+        return listDTO;
+    }
+
+    public ProductViewDTO setProductViewDTOsingle(Product product) {
+        ProductViewDTO productViewDTO = this.mapperService.convert(product, ProductViewDTO.class);
+        productViewDTO.setPolicies(this.getPolicies(product.getPolicyItems()));
+        return productViewDTO;
+    }
+
+    public Set<PolicyDTO> getPolicies(Set<PolicyItem> policyItems) {
+        return this.policyService.converPolicyItems(policyItems);
+    }
+
     public List<ProductViewDTO> listProductByCityId(Long city_id) throws ResourceNotFoundException {
         List<Product> productFoundByCityId = productRepository.findByCityId(city_id);
         if (productFoundByCityId.isEmpty()) {
@@ -263,81 +311,5 @@ public class ProductService {
         }
         logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " y Categoria con ID " + category + " en las fechas especificadas.");
         return this.setProductViewDTO(auxList);
-    }
-
-    public List<ProductViewDTO> customProductFilter(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id,
-                                                    Float minPrice, Float maxPrice, String checkInDate, String checkOutDate, Boolean random) throws Exception {
-
-        List<Product> foundByCustomFilter = productRepository.customDynamicQuery(rooms, beds, bathrooms, guests, city_id, category_id, minPrice, maxPrice);
-
-        if (checkInDate != null && checkOutDate != null) {
-            //System.out.println("Filtramos por fechas");
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-            Date formattedCheckInDate = dateFormatter.parse(checkInDate);
-            Date formattedCheckOutDate = dateFormatter.parse(checkOutDate);
-
-            List<Product> foundByDates = productRepository.searchProductByCheckInDateCheckOutDate(formattedCheckInDate, formattedCheckOutDate);
-
-            List<Product> auxList = new ArrayList<>();
-            auxList.addAll(foundByCustomFilter);
-            /*System.out.println("Found by dates");
-            System.out.println(foundByDates);
-            System.out.println("Aux list before filter");
-            System.out.println(auxList);*/
-            for (Product productFilter : foundByCustomFilter) {
-                /*System.out.println("Buscamos en el custom filter");
-                System.out.println(productFilter.getReservations().toString());*/
-                for (Product productDate : foundByDates) {
-                    //System.out.println("Buscamos coincidencias con las fechas");
-                    if (productFilter.equals(productDate)) {
-                        //System.out.println("Encontramos coincidencias");
-                        auxList.remove(productFilter);
-                    }
-                }
-            }
-            /*System.out.println("Aux list after filter");
-            System.out.println(auxList);*/
-            if (auxList.isEmpty()) {
-                logger.error("No hay reservas disponibles para los filtros y fechas especificadas.");
-                throw new ResourceNotFoundException("No value present: ");
-            }
-            logger.info("Se filtraron los productos disponibles en las fechas especificadas.");
-            if (random) {
-                logger.info("Se mezclo la lista auxiliar de productos.");
-                Collections.shuffle(auxList);
-            }
-            return this.setProductViewDTO(auxList);
-        }
-
-        if (foundByCustomFilter.isEmpty()) {
-            logger.error("No se encontraron los productos correspondientes a los filtros utilizados.");
-            throw new ResourceNotFoundException("No value present: ");
-        }
-        if (random) {
-            logger.info("Se mezclo la lista de productos.");
-            Collections.shuffle(foundByCustomFilter);
-        }
-        logger.info("Se filtraron los productos sin filtrar por fechas.");
-        return this.setProductViewDTO(foundByCustomFilter);
-    }
-
-    public List<ProductViewDTO> setProductViewDTO(List<Product> products) {
-        List<ProductViewDTO> listDTO = new ArrayList<>();
-        for (Product p : products) {
-            ProductViewDTO productViewDTO = this.mapperService.convert(p, ProductViewDTO.class);
-            productViewDTO.setPolicies(this.getPolicies(p.getPolicyItems()));
-            listDTO.add(productViewDTO);
-        }
-        return listDTO;
-    }
-
-    public ProductViewDTO setProductViewDTOsingle(Product product) {
-        ProductViewDTO productViewDTO = this.mapperService.convert(product, ProductViewDTO.class);
-        productViewDTO.setPolicies(this.getPolicies(product.getPolicyItems()));
-        return productViewDTO;
-    }
-
-    public Set<PolicyDTO> getPolicies(Set<PolicyItem> policyItems) {
-        return this.policyService.converPolicyItems(policyItems);
     }
 }
