@@ -1,5 +1,6 @@
 package com.integrator.group2backend.controller;
 
+import com.integrator.group2backend.dto.FeatureDTO;
 import com.integrator.group2backend.entities.Feature;
 import com.integrator.group2backend.service.FeatureService;
 import org.apache.log4j.Logger;
@@ -20,11 +21,8 @@ public class FeatureController {
         this.featureService = featureService;
     }
     @PostMapping
-    public ResponseEntity<Feature> createFeature(@RequestBody Feature feature){
-        Feature addedFeature = featureService.addFeature(feature);
-        logger.info("Se agrego una feature");
-
-        return ResponseEntity.ok(addedFeature);
+    public ResponseEntity<Feature> createFeature(@RequestBody FeatureDTO feature){
+        return ResponseEntity.ok(featureService.addFeature(feature));
     }
     @PostMapping("/list")
     public ResponseEntity<List<Feature>> createFeatureList(@RequestBody List<Feature> featureList){
