@@ -16,8 +16,8 @@ export const PropertyCard = ({
             <img 
             className='w-full h-full object-cover transition-all duration-300
             group-hover:scale-110' 
-            src={property.images[0].url}
-            alt={property.images[0].name}
+            src={property.images[0]?.url}
+            alt={property.images[0]?.name}
             />
         </picture>
         <div className='p-1 flex flex-col items-start text-left'>
