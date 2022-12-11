@@ -29,20 +29,26 @@ public class UserService {
 
     private final MapperService mapperService;
 
+    private final CityService cityService;
+
     @Value("${fromAddress}")
     private String fromAddress;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender, MapperService mapperService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender, MapperService mapperService, CityService cityService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
         this.mapperService = mapperService;
+        this.cityService = cityService;
     }
 
     public User addUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException, DataIntegrityViolationException {
-
         if (user.getPassword().length() < 7){
             throw new DataIntegrityViolationException("The password length is less than 7");
+        }
+
+        if(cityService.getCityById(user.getCity().getId()).isEmpty()){
+            throw new DataIntegrityViolationException("The user city does not exist");
         }
 
         if(userRepository.findByEmail(user.getEmail()) == null){

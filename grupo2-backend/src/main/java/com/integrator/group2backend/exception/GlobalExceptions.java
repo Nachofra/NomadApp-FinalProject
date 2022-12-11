@@ -83,6 +83,11 @@ public class GlobalExceptions {
             data.put("description", "The password entered is less than 7 characters long. Please try again with a longer password.");
         }
 
+        if(exception.getMessage().equals("The user city does not exist")) {
+            data.put("title", "We couldn't create your account");
+            data.put("description", "The city entered does not exist. Please try again with another city");
+        }
+
         if(exception.getMessage().equals("The dates cannot be equal")) {
             data.put("title", "We couldn't create your reservation");
             data.put("description", "The dates entered cannot be the same. Please try again with other dates.");
