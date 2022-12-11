@@ -91,8 +91,8 @@ export const FormStep = ({title, initial = false, status = null, setStatus, chil
               }}
               className='w-full'
             >
-                <section className=' p-4 md:p-8
-                rounded-xl border-2 border-violet-500 bg-white'>
+                <section className={` p-4 md:p-8
+                rounded-xl border-2 ${ status === false ? 'border-red-400' : 'border-violet-500'} bg-white`}>
                     {children}
                     <div className='flex items-center justify-end ml-auto gap-4'>
                         <button className='w-32 py-3 rounded-lg 
