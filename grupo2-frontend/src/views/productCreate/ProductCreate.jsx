@@ -51,7 +51,6 @@ export const ProductCreate = () => {
           const { data : policiesList } = await axios.get(`${FetchRoutes.BASEURL}/policyitem`,
           { headers: { Authorization : user.authorization }})
           setPolicies(policiesList);
-          console.log(policiesList )
 
         } catch (error) {
           console.error(error.message);
@@ -121,8 +120,6 @@ export const ProductCreate = () => {
         }
         
         const {validation, error} = useProductValidation(bodyReq)
-        console.log(policies)
-        console.log(bodyReq)
 
     const postData = async () => {
         try {
@@ -144,21 +141,25 @@ export const ProductCreate = () => {
     }
 
     const postFeature = async () => {
+        const featureData = {
+            name: featureForm.name,
+            image_id: +featureForm.featureImage.featureImage.id
+          }
+        console.log(featureData)
         try {
           await axios.post(`${FetchRoutes.BASEURL}/feature`,
-          {
-            name: featureForm.name,
-            featureImage: featureForm.featureImage.id
-          },
+          featureData,
           { headers: { 
-            Authorization : user.authorization, 
-            'Content-Type': "multipart/form-data"
+            Authorization : user.authorization
         }})
+        setFeatureModal(false);
+
         } catch (error) {
           console.error(error.message);
+          setFeatureModal(false);
+
         // setErrorModal(true)
         } finally{ 
-            setFeatureModal(false);
             fetchData();
 
          };
@@ -475,7 +476,7 @@ export const ProductCreate = () => {
                 initial
                 setStatus={e => setValidated({...validated, images: e})}
                 validate={() => setValidated({...validated, images: validation.images()})}
-                title='Add images'>                
+                title='Add images'>
                 <p className='text-gray-400 mb-4'>Please, add at least three images:</p>
                 <input
                 name='product_photos'
@@ -492,7 +493,7 @@ export const ProductCreate = () => {
                     { 
                     images.map((item, i) => (
                         <div key={i}  
-                        className='w-64 h-64 rounded-xl overflow-hidden 
+                        className='w-48 h-48 rounded-xl overflow-hidden 
                         shrink-0 relative'>
                             <img src={item}
                             className="w-full h-full object-cover"
@@ -509,7 +510,7 @@ export const ProductCreate = () => {
                     images.length <= 10 &&
                         <label 
                         htmlFor='product_photos'
-                        className='w-64 h-64 border-4 border-gray-400
+                        className='w-48 h-48 border-2 border-gray-400
                         flex flex-col items-center justify-center cursor-pointer
                         bg-gray-50 text-gray-400 rounded-xl shrink-0 '>
                             <p className='font-medium text-lg'>Add files</p>
