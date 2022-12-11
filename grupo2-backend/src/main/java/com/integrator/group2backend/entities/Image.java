@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,9 +21,9 @@ public class Image {
     private String description;
     private String extension;
 
-    @OneToOne(mappedBy = "featureImage")
+    @OneToMany(mappedBy = "featureImage", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Feature feature;
+    private Set<Feature> features = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
