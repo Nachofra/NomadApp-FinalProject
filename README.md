@@ -18,8 +18,7 @@ Para el testeo de la aplicación se utilizaron varias herramientas y técnicas d
 
 Para levantar el proyecto se recomienda clonar el repositorio desde Gitlab y pararse en la rama develop para la producción. A nivel de front, abrir el preyecto con Visula Studio Code e instalar las dependencias de node y luego levantar con el comando npm run dev. 
 Para el back se recomienda abrir y correr el proyecto en IntelliJ. El mismo esta organizado en las carpetas configurations, controller, customFilters, dto, entities, exception, repository, security, service y utils. Además un apartado para los test unitarios. 
-Para la base de datos se armo la estructura en un mapa de relaciones y se creo gracias a jdbc y el mysql connector. 
-![image](uploads/90869fd8827b67ffcf56be9f49f3573a/image.png)
+Para la base de datos se armo la estructura en un mapa de relaciones y se creo gracias a jdbc y el mysql connector.
 
 **Infraestructura**
 
