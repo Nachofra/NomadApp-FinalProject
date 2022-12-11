@@ -16,6 +16,8 @@ export const Datalist = ({
   onChange,
   filterFunction,
   resultRenderer,
+  errorMessage,
+  error,
   ...props
 }) => {
   const [query, setQuery] = useState('')
@@ -35,11 +37,14 @@ export const Datalist = ({
       <Combobox value={value} onChange={onChange} >
         <div className="relative w-full">
           <div className="flex flex-col-reverse items-start w-full ">
+            {errorMessage && 
+            <p className='text-sm text-red-400 ml-2 mt-2'>{errorMessage}</p>}
             <Combobox.Input
               className={`w-full p-2 mt-2
               text-gray-700 placeholder-gray-500 
                bg-white border rounded-md focus:border-violet-700 focus:ring-opacity-40 
               focus:outline-none focus:ring focus:ring-violet-700
+              ${error && 'border-red-400'}
               ${className}`}
               displayValue={value ? value : query}
               onChange={(e) => setQuery(e.target.value)}
