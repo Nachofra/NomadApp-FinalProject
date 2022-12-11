@@ -11,6 +11,7 @@ export const Textarea = ({
     disabled,
     className,
     children,
+    errorMessage,
     error,
     ...props
 }) => {
@@ -18,6 +19,8 @@ export const Textarea = ({
   return (
     <div className={`flex flex-col-reverse items-start font-primary group w-full relative ${className}`}>
         {children}
+        {errorMessage && 
+        <p className='text-sm text-red-400 ml-2 mt-2'>{errorMessage}</p>}
         <textarea
         className={`peer block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 
         bg-white border rounded-md focus:border-violet-700 focus:ring-opacity-40 

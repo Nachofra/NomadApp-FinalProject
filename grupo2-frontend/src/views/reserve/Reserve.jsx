@@ -39,6 +39,7 @@ export const Reserve = () => {
     } = useLoadingViewContext()
 
   const [ data, setData ] = useState(state?.product)
+
   const [avoidDates, setAvoidDates ] = useState(state?.avoidDates)
 
   const excludeDatesHandler = excArr => excArr.map(range => ({ start: range.checkInDate, end :  range.checkOutDate}))
@@ -271,7 +272,7 @@ export const Reserve = () => {
       text-gray-700 font-medium'>Rent policies</h5>
 
       <div className='grid grid-cols-1 md:gird-cols-2 lg:grid-cols-3 gap-8 mt-4'>
-      { data.policies.map((item, i) => (
+      { data.policies?.map((item, i) => (
           <PolicyList key={i} title={item.name} list={item.policyItems} />
       ))} 
       </div>
@@ -309,7 +310,7 @@ export const Reserve = () => {
         onClick={() => { setErrorModal(false); fetchData(); }}
         className="py-3 w-32 text-white bg-violet-700
         rounded-md text-lg font-medium">
-          Awesome!
+          I understand
         </button>
       </div>
     </Modal>

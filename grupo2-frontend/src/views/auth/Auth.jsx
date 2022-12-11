@@ -1,7 +1,7 @@
 import { InformationCircleIcon, ShieldExclamationIcon } from '@heroicons/react/24/outline'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
-import { Link, Route, Routes, useLocation } from 'react-router-dom'
+import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { BaseLayout } from '../../components/layout/BaseLayout'
 import { LoadingSpinner } from '../../components/loadingSpinner/LoadingSpinner'
 import { HeaderNav } from '../../components/partials'
@@ -9,8 +9,12 @@ import { FetchRoutes, PublicRoutes } from '../../guard/Routes'
 import { SignIn } from './SignIn'
 import { SignUp } from './SignUp'
 import './auth.scss'
+import { useUserContext } from '../../context/UserContext'
 
 export const Auth = () => {
+
+  const { user } = useUserContext()
+  const navigate = useNavigate()
 
   const {state} = useLocation()
   const [message, setMessage] = useState(state)
@@ -18,6 +22,10 @@ export const Auth = () => {
   const [status, setStatus] = useState('IDLE');
 
   useEffect(() => {
+    if (user){
+      navigate('/')
+      return
+    }
     if (message === null) { setMessage(state) }
   }, [state])
     

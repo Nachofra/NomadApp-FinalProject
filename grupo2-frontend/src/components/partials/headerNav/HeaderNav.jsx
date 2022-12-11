@@ -55,6 +55,9 @@ export const HeaderNav = ({transparent}) => {
               <img src='/logo/logo_demo.svg' className='h-10' />
             </Link>
             <div className='flex items-center'>
+            <Link 
+            className='text-lg text-violet-700 mr-10'
+            to={PrivateRoutes.PRODUCTCREATE} >Be a host</Link>
             {
               user ?
               <>

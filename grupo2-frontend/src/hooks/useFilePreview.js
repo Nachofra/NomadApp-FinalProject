@@ -91,7 +91,7 @@ export const usePreviewImage = () => {
   }
 }, [imageFiles]);
 
-  return { images, changeHandler, removeHandler, addHandler }
+  return { images, imageFiles, changeHandler, removeHandler, addHandler }
 }
 
 // use preview image hook

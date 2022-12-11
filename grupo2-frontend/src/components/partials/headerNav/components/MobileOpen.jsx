@@ -98,6 +98,9 @@ export const MobileOpen = ({user, handleLogout}) => {
                     </DeskNavBarModal>
                 </div> 
             }
+            <Link 
+            className='text-xl text-violet-700'
+            to={PrivateRoutes.PRODUCTCREATE} >Be a host</Link>
         </div>
     </motion.nav>
   )
