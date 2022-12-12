@@ -89,7 +89,7 @@ public class ReservationService {
         if(findReservationsByCheckInDateAndCheckOutDateAndProductId(checkInDate, checkOutDate, reservation.getProduct().getId()).isEmpty()){
             Product p = this.productService.getProductById(reservation.getProduct().getId()).get();
             Double priceForDay = p.getDailyPrice().doubleValue();
-            Integer days = (int) (reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime()) / 86400000;
+            Integer days = (int) (reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime()) / 86400000 + 1;
             System.out.println("Reservation check in date "+ reservation.getCheckInDate().getTime());
             System.out.println("Reservation check in date "+ reservation.getCheckInDate());
             System.out.println("Reservation check out date " +reservation.getCheckOutDate().getTime());
