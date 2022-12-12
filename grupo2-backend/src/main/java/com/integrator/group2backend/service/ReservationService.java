@@ -64,40 +64,43 @@ public class ReservationService {
     }
     public ReservationDTO addReservation(Reservation reservation) throws DataIntegrityViolationException, DateParseException {
 
-        //Fixing date issues
-//        reservation.getCheckInDate().setDate(reservation.getCheckInDate().getDate() + 1);
-//        reservation.getCheckInDate().setHours(0);
-//        reservation.getCheckOutDate().setDate(reservation.getCheckOutDate().getDate() + 1);
-//        reservation.getCheckOutDate().setHours(0);
-
         String datePattern = "yyyy-MM-dd";
         DateFormat df = new SimpleDateFormat(datePattern);
         String checkInDate = df.format(reservation.getCheckInDate());
         String checkOutDate = df.format(reservation.getCheckOutDate());
-        Date todayDate = new Date();
+        Date todayDate;
+        try {
+            todayDate = df.parse(df.format(new Date()));
+        }catch (ParseException exception){
+            throw new DateParseException("An error ocurred parsing dates");
+        }
 
         if(checkInDate.equals(checkOutDate)){
             throw new DataIntegrityViolationException("The dates cannot be equal");
         }
         // If checkIn or checkOut date occurs before todayDate or checkout occurs before checkIn, throw an error
+        System.out.println(reservation.getCheckInDate());
+        System.out.println(todayDate);
+        System.out.println(reservation.getCheckInDate().compareTo(todayDate));
+        System.out.println(reservation.getCheckOutDate().compareTo(todayDate));
         if(reservation.getCheckInDate().compareTo(todayDate) < 0 || reservation.getCheckOutDate().compareTo(todayDate) < 0 || reservation.getCheckOutDate().compareTo(reservation.getCheckInDate()) < 0){
             throw new DataIntegrityViolationException("The dates are chronologically invalid");
         }
-
-//        if(findReservationsByCheckInDateAndCheckOutDate(checkInDate, checkOutDate).isEmpty()){
-        Product p = this.productService.getProductById(reservation.getProduct().getId()).get();
-        Double priceForDay = p.getDailyPrice().doubleValue();
-        Integer days = (int) (reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime()) / 86400000;
-        System.out.println("Reservation check in date "+ reservation.getCheckInDate().getTime());
-        System.out.println("Reservation check in date "+ reservation.getCheckInDate());
-        System.out.println("Reservation check out date " +reservation.getCheckOutDate().getTime());
-        System.out.println("Reservation check out date " +reservation.getCheckOutDate());
-        reservation.setFinalPrice(days * priceForDay);
-        logger.info("Se ha registrado una nueva reserva.");
-        return this.mapperService.convert(this.reservationRepository.save(reservation), ReservationDTO.class);
-//        }else {
-//            throw new DataIntegrityViolationException("The range of dates is already taken");
-//        }
+        if(findReservationsByCheckInDateAndCheckOutDateAndProductId(checkInDate, checkOutDate, reservation.getProduct().getId()).isEmpty()){
+            Product p = this.productService.getProductById(reservation.getProduct().getId()).get();
+            Double priceForDay = p.getDailyPrice().doubleValue();
+            Integer days = (int) (reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime()) / 86400000;
+            System.out.println("Reservation check in date "+ reservation.getCheckInDate().getTime());
+            System.out.println("Reservation check in date "+ reservation.getCheckInDate());
+            System.out.println("Reservation check out date " +reservation.getCheckOutDate().getTime());
+            System.out.println("Reservation check out date " +reservation.getCheckOutDate());
+            reservation.setFinalPrice(days * priceForDay);
+            logger.info("Se ha registrado una nueva reserva.");
+            return this.mapperService.convert(this.reservationRepository.save(reservation), ReservationDTO.class);
+        }else {
+            System.out.println(findReservationsByCheckInDateAndCheckOutDateAndProductId(checkInDate, checkOutDate, reservation.getProduct().getId()));
+            throw new DataIntegrityViolationException("The range of dates is already taken");
+        }
 
     }
     public List<ReservationSimpleDTO> findByProductId(Long productId) {
@@ -126,7 +129,30 @@ public class ReservationService {
         }
 
 
-        List<Reservation> reservationsByDate = this.reservationRepository.findReservationsByCheckInDateAndCheckOutDate(formattedCheckInDate, formattedCheckOutDate);
+        List<Reservation> reservationsByDate = this.reservationRepository.newFindReservationsByCheckInDateAndCheckOutDate(formattedCheckInDate, formattedCheckOutDate);
+        if (reservationsByDate.isEmpty()){
+            logger.error("Error al buscar reservas en el rango de fechas correspondiente.");
+        }else {
+            logger.info("Se encontraron reservas en el rango de fechas correspondiente.");
+        }
+        return this.mapperService.mapList(reservationsByDate, ReservationDTO.class);
+    }
+
+    public List<ReservationDTO> findReservationsByCheckInDateAndCheckOutDateAndProductId(String checkInDate, String checkOutDate, Long productId) throws DateParseException {
+        Date formattedCheckInDate = null;
+        Date formattedCheckOutDate = null;
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        try{
+            formattedCheckInDate = dateFormatter.parse(checkInDate);
+            formattedCheckOutDate = dateFormatter.parse(checkOutDate);
+        }
+        catch (ParseException e){
+            throw new DateParseException("An error ocurred parsing dates");
+        }
+
+
+        List<Reservation> reservationsByDate = this.reservationRepository.newFindReservationsByCheckInDateAndCheckOutDateAndProductId(formattedCheckInDate, formattedCheckOutDate, productId);
         if (reservationsByDate.isEmpty()){
             logger.error("Error al buscar reservas en el rango de fechas correspondiente.");
         }else {
