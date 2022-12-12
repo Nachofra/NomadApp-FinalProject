@@ -79,7 +79,7 @@ public class ProductService {
             product.setBeds(newProduct.getBeds());
             product.setBathrooms(newProduct.getBathrooms());
             product.setGuests(newProduct.getGuests());
-            product.setDailyPrice(Float.parseFloat(newProduct.getDailyPrice()));
+            product.setDailyPrice(newProduct.getDailyPrice());
             product.setAddress(newProduct.getAddress());
             product.setNumber(newProduct.getNumber());
             product.setFloor(newProduct.getFloor());

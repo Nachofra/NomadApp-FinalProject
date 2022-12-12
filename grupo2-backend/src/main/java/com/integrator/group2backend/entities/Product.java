@@ -21,7 +21,7 @@ public class Product {
     private Integer beds;
     private Integer bathrooms;
     private Integer guests;
-    private Float dailyPrice;
+    private Integer dailyPrice;
     private String address;
     private Integer number;
     private Integer floor;

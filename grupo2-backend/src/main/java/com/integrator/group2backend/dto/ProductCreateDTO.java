@@ -16,7 +16,7 @@ public class ProductCreateDTO {
     private Integer beds;
     private Integer bathrooms;
     private Integer guests;
-    private String dailyPrice;
+    private Integer dailyPrice;
     private String address;
     private Integer number;
     private Integer floor;
