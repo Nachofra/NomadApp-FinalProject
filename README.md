@@ -10,6 +10,21 @@ Tambien nos tomamos la libertad de agregar la dependencia de Spring Boot Starter
 
 ### Infraestructura
 
+Para la realizacion de la infraestructura, utilizamos las siguientes herramientas:
+
+- Gitlab Pipelines CI/CD
+- Gitlab CI/CD Variables
+- Gitlab Runners
+- Gitlab Terraform Remote State
+- Docker Containers, Docker Images, Docker Compose y Docker Hub
+- Terraform y Terraform Modules
+- AWS EC2, S3 Buckets y RDS (Endpoint brindado por Digital House)
+- Bash Scripts en Ubuntu
+- Nic.ar (Dominio personalizado)
+- Google Cloud DNS
+- Certbot (Certificado SSL para las instancias)
+- Google Workspace (Email personalizado)
+
 ### Testing
 
 Para el testeo de la aplicación se utilizaron varias herramientas y técnicas distintas. Podemos mencionar casos de prueba, tests no funcionales y funcionales, test exploratorio, smoke tests, test de regresión, pegadas a la API con Postman, tests automáticos con Selenium IDE y además se agregaron test unitarios en el back con Mokito. Se fue documentando cada sesión de test con una planilla de fallos y vale la pena mencionar que como estrategia de equipo, se decidió realizar los test al final de cada sprint para reducir la cantidad de sesiones de testing y de esta forma nos obligandonos a subir cambios previamente testeados y funcionando.
