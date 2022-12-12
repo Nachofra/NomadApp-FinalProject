@@ -68,8 +68,9 @@ public class AmazonClient {
             try {
                 File file = convertMultiPartToFile(multipartFile);
                 String fileName = generateFileName(multipartFile);
-                fileUrl = endpointUrl + "/" + fileName;
-                uploadFileTos3bucket(fileName, file);
+                String resultFileName = fileName.replaceAll("[\\-\\+\\.\\^:,]","");
+                fileUrl = endpointUrl + "/" + resultFileName;
+                uploadFileTos3bucket(resultFileName, file);
                 file.delete();
                 logger.info("Se cargo una imagen en el bucket S3 con endpoint " + endpointUrl);
                 return fileUrl;
