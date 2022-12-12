@@ -7,6 +7,7 @@ import {
   ArrowRightOnRectangleIcon,
   CalendarDaysIcon,
   Cog6ToothIcon,
+  HomeModernIcon,
   UserIcon
 } from '@heroicons/react/24/outline'
 import { useUserContext } from '../../../../context/UserContext';
@@ -67,9 +68,12 @@ export const MobileOpen = ({user, handleLogout}) => {
                             <p className='md:text-lg'>My reserves</p>
                             <CalendarDaysIcon className='w-4 h-4 md:w-6 md:h-6' />
                         </Link>
-                        <Link className='flex items-center gap-2'>
-                            <p className='md:text-lg'>Settings</p>
-                            <Cog6ToothIcon className='w-4 h-4 md:w-6 md:h-6' />
+                        <Link
+                        to={PrivateRoutes.USERPRODUCTSID(user.id)}
+                        className='flex items-center gap-2'
+                        >
+                            <p className='md:text-lg'>My places (host)</p>
+                            <HomeModernIcon className='w-4 h-4 md:w-6 md:h-6' />
                         </Link>
 
                         <Link 

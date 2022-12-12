@@ -11,6 +11,7 @@ import {
   ArrowRightOnRectangleIcon,
   CalendarDaysIcon,
   Cog6ToothIcon,
+  HomeModernIcon,
   UserIcon
 } from '@heroicons/react/24/outline'
 import { DropLink } from '../../drop-down/DropLink'
@@ -86,14 +87,15 @@ export const HeaderNav = ({transparent}) => {
                       My reservations
                     </DropLink>
                     <DropLink
+                      to={ PrivateRoutes.USERPRODUCTSID(user.id) }
                       activeClassName='bg-violet-500 text-white'
                       inactiveClassName='text-gray-600'
                     >
-                      <Cog6ToothIcon
+                      <HomeModernIcon
                         className='mr-2 h-5 w-5'
                         aria-hidden='true'
                       />
-                      Settings
+                      My places (host)
                     </DropLink>
                   </div>
 
