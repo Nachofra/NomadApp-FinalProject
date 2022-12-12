@@ -17,13 +17,15 @@ public class UpdateProductCompare {
     private final FeatureService featureService;
     private final PolicyItemService policyItemService;
     private final ImageService imageService;
+    private final UserService userService;
 
-    public UpdateProductCompare(CityService cityService, CategoryService categoryService, PolicyItemService policyItemService, FeatureService featureService, ImageService imageService) {
+    public UpdateProductCompare(CityService cityService, CategoryService categoryService, PolicyItemService policyItemService, FeatureService featureService, ImageService imageService, UserService userService) {
         this.cityService = cityService;
         this.categoryService = categoryService;
         this.policyItemService = policyItemService;
         this.featureService = featureService;
         this.imageService = imageService;
+        this.userService = userService;
     }
 
     public Product updateProductCompare (Product oldProduct, ProductUpdateDTO newProduct){
@@ -113,6 +115,11 @@ public class UpdateProductCompare {
             auxProduct.setLongitude(oldProduct.getLongitude());
         }else {
             auxProduct.setLongitude(newProduct.getLongitude());
+        }
+
+        if (oldProduct.getUser() != null){
+            System.out.println("No actualizo User");
+            auxProduct.setUser(oldProduct.getUser());
         }
 
         if (newProduct.getCity_id() == null){

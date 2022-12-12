@@ -28,4 +28,5 @@ public class ProductUpdateDTO {
     private ArrayList<Long> policyItems_id;
     private ArrayList<MultipartFile> addImages;
     private ArrayList<Long> removeImages;
+    private Long user_id;
 }
