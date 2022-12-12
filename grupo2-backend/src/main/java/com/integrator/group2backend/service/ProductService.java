@@ -4,7 +4,14 @@ import com.integrator.group2backend.dto.PolicyDTO;
 import com.integrator.group2backend.dto.ProductCreateDTO;
 import com.integrator.group2backend.dto.ProductUpdateDTO;
 import com.integrator.group2backend.dto.ProductViewDTO;
-import com.integrator.group2backend.entities.*;
+import com.integrator.group2backend.entities.Category;
+import com.integrator.group2backend.entities.City;
+import com.integrator.group2backend.entities.Feature;
+import com.integrator.group2backend.entities.Image;
+import com.integrator.group2backend.entities.PolicyItem;
+import com.integrator.group2backend.entities.Product;
+import com.integrator.group2backend.entities.Reservation;
+import com.integrator.group2backend.entities.User;
 import com.integrator.group2backend.exception.DataIntegrityViolationException;
 import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.repository.ProductRepository;
@@ -36,8 +43,11 @@ public class ProductService {
     private final ImageService imageService;
     private final CityService cityService;
     private final PolicyService policyService;
+    private final UserService userService;
 
-    public ProductService(ProductRepository productRepository, MapperService mapperService, UpdateProductCompare updateProductCompare, CategoryService categoryService, FeatureService featureService, PolicyItemService policyItemService, ImageService imageService, CityService cityService, PolicyService policyService) {
+    public ProductService(ProductRepository productRepository, MapperService mapperService, UpdateProductCompare updateProductCompare,
+                          CategoryService categoryService, FeatureService featureService, PolicyItemService policyItemService,
+                          ImageService imageService, CityService cityService, PolicyService policyService, UserService userService) {
         this.productRepository = productRepository;
         this.mapperService = mapperService;
         this.updateProductCompare = updateProductCompare;
@@ -47,14 +57,17 @@ public class ProductService {
         this.imageService = imageService;
         this.cityService = cityService;
         this.policyService = policyService;
+        this.userService = userService;
     }
 
     /*public Product addProduct(Product product) {
         logger.info("Se agrego un producto correctamente");
         return productRepository.save(product);
     }*/
-    public ProductViewDTO addProduct(ProductCreateDTO newProduct) throws DataIntegrityViolationException{
-        if(!(newProduct.getImage() == null || newProduct.getPolicyItems_id() == null || newProduct.getCategory_id() == null || newProduct.getFeatures_id() == null || newProduct.getCity_id() == null)){
+    public ProductViewDTO addProduct(ProductCreateDTO newProduct) throws DataIntegrityViolationException, ResourceNotFoundException {
+        if (!(newProduct.getImage() == null || newProduct.getPolicyItems_id() == null || newProduct.getCategory_id() == null || newProduct.getFeatures_id() == null || newProduct.getCity_id() == null || newProduct.getUser_id() == null)) {
+
+
             Product product = new Product();
             Set<Image> imageList = new HashSet<>();
             Set<Feature> featureList = new HashSet<>();
@@ -86,6 +99,12 @@ public class ProductService {
             }
             product.setImages(imageList);
 
+            Optional<User> user = this.userService.findById(newProduct.getUser_id());
+            if (user.isEmpty()) {
+                throw new ResourceNotFoundException("User not found");
+            }
+            product.setUser(user.get());
+
             Optional<Category> category = categoryService.searchCategoryById(newProduct.getCategory_id());
             product.setCategory(category.get());
 
@@ -99,7 +118,7 @@ public class ProductService {
             product.setFeatures(featureList);
 
 
-            for (Long policyItemId: newProduct.getPolicyItems_id()) {
+            for (Long policyItemId : newProduct.getPolicyItems_id()) {
                 Optional<PolicyItem> policyItem = policyItemService.getPolicyItemById(policyItemId);
                 policyItemsList.add(policyItem.get());
             }
@@ -109,8 +128,8 @@ public class ProductService {
             createdProduct = productRepository.save(createdProduct);
             logger.info("Se agrego un producto correctamente");
 
-            return this.setProductViewDTOsingle(createdProduct);
-        }else{
+            return this.getProductViewDTO(createdProduct);
+        } else {
             throw new DataIntegrityViolationException("Cannot create the product");
         }
     }
@@ -122,7 +141,7 @@ public class ProductService {
             throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se listaron todos los productos");
-        return ResponseEntity.ok(this.setProductViewDTO(searchedProducts));
+        return ResponseEntity.ok(this.getProductViewDTOList(searchedProducts));
     }
 
     public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts() throws ResourceNotFoundException {
@@ -134,7 +153,7 @@ public class ProductService {
         logger.info("Se listaron todos los productos aleatoriamente");
         Collections.shuffle(searchedProducts);
 
-        return ResponseEntity.ok(this.setProductViewDTO(searchedProducts));
+        return ResponseEntity.ok(this.getProductViewDTOList(searchedProducts));
     }
 
     public ProductViewDTO searchProductById(Long productId) throws ResourceNotFoundException {
@@ -143,7 +162,7 @@ public class ProductService {
             logger.error("El producto especificado no existe con id " + productId);
             throw new ResourceNotFoundException("No value present: ");
         }
-        return this.setProductViewDTOsingle(product.get());
+        return this.getProductViewDTO(product.get());
     }
 
     public Optional<Product> getProductById(Long id) {
@@ -158,7 +177,7 @@ public class ProductService {
         }
         Product updatedProduct = updateProductCompare.updateProductCompare(oldProduct.get(), productUpdate);
         productRepository.save(updatedProduct);
-        return this.setProductViewDTOsingle(updatedProduct);
+        return this.getProductViewDTO(updatedProduct);
     }
 
     public void deleteProduct(Long id) {
@@ -200,27 +219,7 @@ public class ProductService {
             logger.info("Se mezclo la lista de productos.");
             Collections.shuffle(auxList);
         }
-        return this.setProductViewDTO(auxList);
-    }
-
-    public List<ProductViewDTO> setProductViewDTO(List<Product> products) {
-        List<ProductViewDTO> listDTO = new ArrayList<>();
-        for (Product p : products) {
-            ProductViewDTO productViewDTO = this.mapperService.convert(p, ProductViewDTO.class);
-            productViewDTO.setPolicies(this.getPolicies(p.getPolicyItems()));
-            listDTO.add(productViewDTO);
-        }
-        return listDTO;
-    }
-
-    public ProductViewDTO setProductViewDTOsingle(Product product) {
-        ProductViewDTO productViewDTO = this.mapperService.convert(product, ProductViewDTO.class);
-        productViewDTO.setPolicies(this.getPolicies(product.getPolicyItems()));
-        return productViewDTO;
-    }
-
-    public Set<PolicyDTO> getPolicies(Set<PolicyItem> policyItems) {
-        return this.policyService.converPolicyItems(policyItems);
+        return this.getProductViewDTOList(auxList);
     }
 
     public List<ProductViewDTO> listProductByCityId(Long city_id) throws ResourceNotFoundException {
@@ -230,7 +229,7 @@ public class ProductService {
             throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes a la Ciudad con ID " + city_id);
-        return this.setProductViewDTO(productFoundByCityId);
+        return this.getProductViewDTOList(productFoundByCityId);
     }
 
     public List<ProductViewDTO> listProductByCategoryId(Long category_id) throws ResourceNotFoundException {
@@ -240,7 +239,7 @@ public class ProductService {
             throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes a la Categoria con ID " + category_id);
-        return this.setProductViewDTO(productFoundByCategoryId);
+        return this.getProductViewDTOList(productFoundByCategoryId);
     }
 
     public List<ProductViewDTO> searchProductsByCityCheckInDateCheckOutDate(Long city, Date checkInDate, Date checkOutDate) throws ResourceNotFoundException {
@@ -250,7 +249,7 @@ public class ProductService {
             throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " en las fechas especificadas.");
-        return this.setProductViewDTO(productFoundByCityCheckInDateCheckOutDate);
+        return this.getProductViewDTOList(productFoundByCityCheckInDateCheckOutDate);
     }
 
     public List<ProductViewDTO> listProductByCityIdAndCategoryId(Long city_id, Long category_id) throws ResourceNotFoundException {
@@ -260,7 +259,7 @@ public class ProductService {
             throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes a la Ciudad con ID " + city_id + " y a la Categoria con ID " + category_id);
-        return this.setProductViewDTO(productFoundByCityIdAndCategoryId);
+        return this.getProductViewDTOList(productFoundByCityIdAndCategoryId);
     }
 
     public List<ProductViewDTO> listProductByCityIdAndCategoryIdAndGuests(Long city_id, Long category_id, Integer guests) throws ResourceNotFoundException {
@@ -270,7 +269,7 @@ public class ProductService {
             throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes a la Ciudad con ID " + city_id + ", a la Categoria con ID " + category_id + " y para " + guests + " inquilinos.");
-        return this.setProductViewDTO(productFoundByCityIdAndCategoryIdAndGuests);
+        return this.getProductViewDTOList(productFoundByCityIdAndCategoryIdAndGuests);
     }
 
     public List<ProductViewDTO> searchProductsByCityExcludingDates(Long city, Date checkInDate, Date checkOutDate) throws ResourceNotFoundException {
@@ -290,7 +289,7 @@ public class ProductService {
             throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " en las fechas especificadas.");
-        return this.setProductViewDTO(auxList);
+        return this.getProductViewDTOList(auxList);
     }
 
     public List<ProductViewDTO> searchProductByCityCategoryCheckInDateCheckOutDate(Long city, Long category, Date checkInDate, Date checkOutDate) throws ResourceNotFoundException {
@@ -310,6 +309,36 @@ public class ProductService {
             throw new ResourceNotFoundException("No value present: ");
         }
         logger.info("Se encontraron los productos correspondientes la Ciudad con ID " + city + " y Categoria con ID " + category + " en las fechas especificadas.");
-        return this.setProductViewDTO(auxList);
+        return this.getProductViewDTOList(auxList);
+    }
+
+    public List<ProductViewDTO> findByUserId(Long id) throws ResourceNotFoundException {
+        List<Product> productList = this.productRepository.findByUserId(id);
+        if (productList.isEmpty()) {
+            logger.error("No se encontraron los productos correspondientes el usuario con ID " + id);
+            throw new ResourceNotFoundException("No value present: ");
+        }
+        logger.info("Se encontraron los productos correspondientes al usuario con ID " + id);
+        return this.getProductViewDTOList(productList);
+    }
+
+    private List<ProductViewDTO> getProductViewDTOList(List<Product> products) {
+        List<ProductViewDTO> listDTO = new ArrayList<>();
+        for (Product p : products) {
+            ProductViewDTO productViewDTO = this.mapperService.convert(p, ProductViewDTO.class);
+            productViewDTO.setPolicies(this.getPolicies(p.getPolicyItems()));
+            listDTO.add(productViewDTO);
+        }
+        return listDTO;
+    }
+
+    private ProductViewDTO getProductViewDTO(Product product) {
+        ProductViewDTO productViewDTO = this.mapperService.convert(product, ProductViewDTO.class);
+        productViewDTO.setPolicies(this.getPolicies(product.getPolicyItems()));
+        return productViewDTO;
+    }
+
+    private Set<PolicyDTO> getPolicies(Set<PolicyItem> policyItems) {
+        return this.policyService.converPolicyItems(policyItems);
     }
 }

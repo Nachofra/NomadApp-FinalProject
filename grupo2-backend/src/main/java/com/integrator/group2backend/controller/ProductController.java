@@ -28,7 +28,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductViewDTO> createProduct(@ModelAttribute ProductCreateDTO product) throws DataIntegrityViolationException {
+    public ResponseEntity<ProductViewDTO> createProduct(@ModelAttribute ProductCreateDTO product) throws DataIntegrityViolationException, ResourceNotFoundException {
         return ResponseEntity.ok(productService.addProduct(product));
     }
 
@@ -75,6 +75,11 @@ public class ProductController {
             return ResponseEntity.ok("El producto con id " + productId + " ha sido borrado");
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<ProductViewDTO>> getProductByUserId(@PathVariable Long id) throws ResourceNotFoundException {
+        return ResponseEntity.ok(this.productService.findByUserId(id));
     }
     /*@GetMapping("/city/{id}")
     public ResponseEntity<List<ProductViewDTO>> getProductByCityId(@PathVariable Long id) {

@@ -60,4 +60,7 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Reservation> reservations = new HashSet<>();
+
+    @ManyToOne
+    private User user;
 }

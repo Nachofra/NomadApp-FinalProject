@@ -28,4 +28,5 @@ public class ProductCreateDTO {
     private ArrayList<Long> features_id;
     private ArrayList<Long> policyItems_id;
     private Set<MultipartFile> image;
+    private Long user_id;
 }

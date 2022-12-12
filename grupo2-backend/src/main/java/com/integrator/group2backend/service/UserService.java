@@ -18,6 +18,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -116,5 +117,9 @@ public class UserService {
     public CurrentUserDTO getCurrentUser(String email) {
         User currentUser = this.userRepository.findByEmail(email);
         return this.mapperService.convert(currentUser, CurrentUserDTO.class);
+    }
+
+    public Optional<User> findById(Long id) {
+        return this.userRepository.findById(id);
     }
 }
