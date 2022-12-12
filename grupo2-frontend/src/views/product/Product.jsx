@@ -43,9 +43,9 @@ export const Product = () => {
     const [ data, setData ] = useState(state?.product)
     const [avoidDates, setAvoidDates ] = useState()
     
-    const excludeDatesHandler = excArr => excArr.map(range => ({ start: range.checkInDate, end :  range.checkOutDate}))
-    console.log(avoidDates)
+    var now = new Date();
     
+    const excludeDatesHandler = excArr => excArr.map(range => ({ start: range.checkInDate  + now.getTimezoneOffset() * 60000, end :  range.checkOutDate + now.getTimezoneOffset() * 60000}))    
     const {id} = useParams();
 
     const fetchData = async () =>{

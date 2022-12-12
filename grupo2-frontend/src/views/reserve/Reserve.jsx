@@ -25,9 +25,9 @@ export const Reserve = () => {
   const {state} = useLocation()
 
   Date.prototype.formatMMDDYYYYhypens = function(){
-    return this.getFullYear() + 
-    "-" +  ("0" + (this.getMonth() + 1)).slice(-2) +
-    "-" +  ("0" + this.getDate()).slice(-2);
+    return this.getUTCFullYear() + 
+    "-" +  ("0" + (this.getUTCMonth() + 1)).slice(-2) +
+    "-" +  ("0" + this.getUTCDate()).slice(-2);
   }
     
   const handleDateFormat = date => date.formatMMDDYYYYhypens();
@@ -42,7 +42,8 @@ export const Reserve = () => {
 
   const [avoidDates, setAvoidDates ] = useState(state?.avoidDates)
 
-  const excludeDatesHandler = excArr => excArr.map(range => ({ start: range.checkInDate, end :  range.checkOutDate}))
+  var now = new Date();
+  const excludeDatesHandler = excArr => excArr.map(range => ({ start: range.checkInDate  + now.getTimezoneOffset() * 60000, end :  range.checkOutDate + now.getTimezoneOffset() * 60000}))
 
   const {id} = useParams();
 

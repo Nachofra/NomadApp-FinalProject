@@ -3,9 +3,9 @@ import React from 'react'
 
 export const ReserveCard = ({data, dates, handleSubmit, days, fieldError}) => {
     Date.prototype.formatMMDDYYYY = function(){
-        return (this.getMonth() + 1) + 
-        "/" +  this.getDate() +
-        "/" +  this.getFullYear();
+        return (this.getUTCMonth() + 1) + 
+        "/" +  this.getUTCDate() +
+        "/" +  this.getUTCFullYear();
     }
 
     const handleDateFormat = date => date? date.formatMMDDYYYY() : 'Any';
@@ -72,7 +72,7 @@ export const ReserveCard = ({data, dates, handleSubmit, days, fieldError}) => {
                 <div className='flex items-center'>
                     <span className='text-sm font-thin mr-2'>{`(Daily ${priceFormatter.format(data.dailyPrice)})`}</span>   
                     <p className='text-lg font-medium'>
-                    {days ? priceFormatter.format(data.dailyPrice * days) : 'Select dates'}</p>
+                    {days ? priceFormatter.format(data.dailyPrice * (days +1)) : 'Select dates'}</p>
                 </div>
             </div>
         </div>
