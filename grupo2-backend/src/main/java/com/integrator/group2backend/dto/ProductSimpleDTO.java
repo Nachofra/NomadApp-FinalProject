@@ -1,9 +1,9 @@
 package com.integrator.group2backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.integrator.group2backend.entities.*;
 import lombok.Getter;
 import lombok.Setter;
+
 
 import javax.persistence.Id;
 import java.util.Set;
@@ -11,7 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class ProductSimpleDTO {
-
+    @Id
     private Long id;
     private String title;
     private String description;
@@ -19,7 +19,7 @@ public class ProductSimpleDTO {
     private Integer beds;
     private Integer bathrooms;
     private Integer guests;
-    private Integer dailyPrice;
+    private Float dailyPrice;
     private Float latitude;
     private Float longitude;
     private Category category;
