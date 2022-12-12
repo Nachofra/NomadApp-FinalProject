@@ -120,10 +120,6 @@ public class UpdateProductCompare {
         if (newProduct.getUser_id() == null){
             System.out.println("No actualizo User");
             auxProduct.setUser(oldProduct.getUser());
-        }else {
-            System.out.println("Actualizo User");
-            Optional<User> searchedUser = userService.getUserById(newProduct.getUser_id());
-            auxProduct.setUser(searchedUser.get());
         }
 
         if (newProduct.getCity_id() == null){
