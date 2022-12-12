@@ -178,29 +178,42 @@ public class UpdateProductCompare {
             modifiedImagesSet.addAll(modifiedImagesList);
         }
 
+        Integer imagesToAdd = 0;
+        Integer imagesToRemove = 0;
+        if (newProduct.getAddImages() != null){
+            imagesToAdd = newProduct.getAddImages().size();
+        }
+        if (newProduct.getRemoveImages() != null){
+            imagesToRemove = newProduct.getRemoveImages().size();
+        }
+
         // Adding and/or removing old images
-        if (newProduct.getRemoveImages() == null){
+        if (newProduct.getRemoveImages() != null){
             logger.info("No elimino imagenes");
             modifiedImagesSet.addAll(oldProduct.getImages());
         }else{
             //Search old selected images and delete them
-            for (Long imagesToRemoveId: newProduct.getRemoveImages()){
-                Optional<Image> searchedImage = imageService.getImageById(imagesToRemoveId);
-                if(searchedImage.isPresent() && searchedImage.get().getProduct().getId().equals(oldProduct.getId())){
-                    try {
-                        oldProduct.getImages().remove(searchedImage.get());
-                        imageService.deleteImage(imagesToRemoveId);
-                    }catch (ResourceNotFoundException e){
-                        logger.error(e.getMessage());
+            if (oldProduct.getImages().size() + imagesToAdd - imagesToRemove >= 3) {
+                for (Long imagesToRemoveId : newProduct.getRemoveImages()) {
+                    Optional<Image> searchedImage = imageService.getImageById(imagesToRemoveId);
+                    if (searchedImage.isPresent() && searchedImage.get().getProduct().getId().equals(oldProduct.getId())) {
+                        try {
+                            oldProduct.getImages().remove(searchedImage.get());
+                            imageService.deleteImage(imagesToRemoveId);
+                        } catch (ResourceNotFoundException e) {
+                            logger.error(e.getMessage());
+                        }
+                    } else {
+                        logger.info("The image to remove with ID " + imagesToRemoveId + " doesn't belong to this product");
                     }
-                }else {
-                    logger.info("The image to remove with ID " + imagesToRemoveId + " doesn't belong to this product");
                 }
             }
             modifiedImagesSet.addAll(oldProduct.getImages());
         }
+
         // Setting aux product with all the new modified images
         auxProduct.setImages(modifiedImagesSet);
+
         return auxProduct;
     }
 }
