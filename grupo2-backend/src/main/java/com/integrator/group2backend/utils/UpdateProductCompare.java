@@ -117,7 +117,7 @@ public class UpdateProductCompare {
             auxProduct.setLongitude(newProduct.getLongitude());
         }
 
-        if (newProduct.getUser_id() == null){
+        if (oldProduct.getUser() != null){
             System.out.println("No actualizo User");
             auxProduct.setUser(oldProduct.getUser());
         }
