@@ -121,7 +121,7 @@ export const useProductValidation = (data) => {
         },
         imagesEdit : () => {
             if (!fields.imagesEdit()) {
-                setError({...error, images : "Please, select at least three (3) features"});
+                setError({...error, images : "Please, keep at least three (3) images"});
                 return false
             } else { 
                 setError({...error, images : null });
@@ -139,7 +139,7 @@ export const useProductValidation = (data) => {
         features: () => data.features_id && data.features_id.length >= 3,
         policies: () => data.policyItems_id && data.policyItems_id.length >= 5,
         images: () => data.image && data.image.length >= 3,
-        imagesEdit: () => true,
+        imagesEdit: () => data.images.length - data.removeImages.length +  data.addImages.length >= 3,
         title : () => data.title && data.title.length >= 10 && data.title.length <= 40,
         city: () => data.city_id && (typeof data.city_id === 'number'),
         description: () => data.description && data.description.length >= 40 && data.description.length <= 360,
