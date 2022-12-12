@@ -10,6 +10,7 @@ import { DefaultError } from './views/defaultError/DefaultError'
 import { UserReservations } from './views/userProfile/userReservations/UserReservations'
 import { ProductCreate } from './views/productCreate/ProductCreate'
 import { UserProducts } from './views/userProfile/userProducts/UserProducts'
+import { ProductEdit } from './views/productEdit/ProductEdit'
 import './App.css'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
 
       <Route element={<AuthGuard />}>
         <Route path={PrivateRoutes.PRODUCTCREATE} element={<ProductCreate />} />
+        <Route path={PrivateRoutes.PRODUCTEDIT} element={<ProductEdit />} />
         <Route path={PrivateRoutes.RESERVE} element={<Reserve />} />
         <Route path={PrivateRoutes.USERRESERVATIONS} element={<UserReservations />} />
         <Route path={PrivateRoutes.USERPRODUCTS} element={<UserProducts />} />
