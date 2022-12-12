@@ -47,8 +47,8 @@ public class AmazonClient {
         return convFile;
     }
     private String generateFileName(MultipartFile multiPart) {
-        return new Date().getTime() + "-" + multiPart.getOriginalFilename().replaceAll("/^[ !@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]{2,20}$/","");
-        //return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
+        String name = new Date().getTime() + "-" + multiPart.getOriginalFilename().replaceAll("[\\-\\+\\ñ\\Ñ\\^:,]","");
+        return name.replace(" ", "_");
     }
     private void uploadFileTos3bucket(String fileName, File file) {
         s3client.putObject(new PutObjectRequest(bucketName, fileName, file)
