@@ -61,6 +61,7 @@ public class Product {
     @JsonIgnore
     private Set<Reservation> reservations = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 }
