@@ -19,11 +19,11 @@ public class Feature {
     private String name;
 
     @JsonIgnoreProperties(value = { "product" })
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image featureImage;
 
-    @ManyToMany(mappedBy = "features", cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "features", cascade = CascadeType.PERSIST)
     @JsonIgnore
     private Set<Product> products;
 }

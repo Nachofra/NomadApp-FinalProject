@@ -1,12 +1,12 @@
 package com.integrator.group2backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,11 +21,11 @@ public class Image {
     private String description;
     private String extension;
 
-    @OneToOne(mappedBy = "featureImage")
+    @OneToMany(mappedBy = "featureImage", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Feature feature;
+    private Set<Feature> features = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 }

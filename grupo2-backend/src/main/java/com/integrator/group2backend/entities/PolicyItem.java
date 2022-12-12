@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -16,7 +17,11 @@ public class PolicyItem {
     private Long id;
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "policy_id", referencedColumnName = "id")
     private Policy policy;
+
+    @ManyToMany(mappedBy = "policyItems", cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    private Set<Product> products;
 }

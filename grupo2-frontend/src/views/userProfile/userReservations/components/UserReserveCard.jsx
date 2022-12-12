@@ -6,14 +6,14 @@ import { FetchRoutes } from '../../../../guard/Routes';
 export const UserReserveCard = ({data}) => {
 
     Date.prototype.formatMMDDYYYY = function(){
-        return (this.getMonth() + 1) + 
-        "/" +  this.getDate() +
-        "/" +  this.getFullYear();
+        return (this.getUTCMonth() + 1) + 
+        "/" +  this.getUTCDate() +
+        "/" +  this.getUTCFullYear();
     }
 
     const handleDateFormat = date => {
-        console.log(date)
         const aux = new Date(date)
+        // console.log(first)
         return aux.formatMMDDYYYY()
     };
 

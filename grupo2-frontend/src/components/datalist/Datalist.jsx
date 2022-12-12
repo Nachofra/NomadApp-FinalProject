@@ -16,6 +16,8 @@ export const Datalist = ({
   onChange,
   filterFunction,
   resultRenderer,
+  errorMessage,
+  error,
   ...props
 }) => {
   const [query, setQuery] = useState('')
@@ -35,11 +37,14 @@ export const Datalist = ({
       <Combobox value={value} onChange={onChange} >
         <div className="relative w-full">
           <div className="flex flex-col-reverse items-start w-full ">
+            {errorMessage && 
+            <p className='text-sm text-red-400 ml-2 mt-2'>{errorMessage}</p>}
             <Combobox.Input
-              className={`w-full p-2 
-              text-gray-900 placeholder:text-gray-600
-              rounded-md  bg-white peer ring-1 ring-gray-300
-              focus:outline-none shadow-inner
+              className={`w-full p-2 mt-2
+              text-gray-700 placeholder-gray-500 
+               bg-white border rounded-md focus:border-violet-700 focus:ring-opacity-40 
+              focus:outline-none focus:ring focus:ring-violet-700
+              ${error && 'border-red-400'}
               ${className}`}
               displayValue={value ? value : query}
               onChange={(e) => setQuery(e.target.value)}
@@ -53,12 +58,11 @@ export const Datalist = ({
             </Combobox.Button>
             {label && 
               <label
-                htmlFor={id}
-                className={`${tag ? "ml-4 peer-focus:bg-devPink-600 bg-slate-500 rounded-t-lg px-4" : "mb-1.5" } 
-                py-1 text-white uppercase `}
-              >
-                {label}
-              </label>}
+              htmlFor={id}
+              className="ml-1 peer-focus:text-violet-700 text-gray-800 text-lg"
+            >
+              {label}
+            </label>}
           </div>
           <Transition
             as={Fragment}

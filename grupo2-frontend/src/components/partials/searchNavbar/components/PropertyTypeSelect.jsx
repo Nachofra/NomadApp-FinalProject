@@ -4,7 +4,7 @@ export const PropertyTypeSelect = ({selected, onClick, illustration, name}) => {
   return (
     <div 
     onClick={onClick}
-    className='flex items-center space-x-3 py-4 w-24 '
+    className='flex items-center space-x-3 py-4 w-24 shrink'
     >
         <div className='flex flex-col items-center justify-center space-y-2 snap-start'>
             <img 

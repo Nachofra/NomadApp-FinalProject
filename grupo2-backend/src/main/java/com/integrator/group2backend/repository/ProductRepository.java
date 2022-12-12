@@ -14,6 +14,7 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> , ProductRepositoryCustom {
     List<Product> findByCityId(Long id);
     List<Product> findByCategoryId(Long id);
+    List<Product> findByUserId(Long id);
     List<Product> findByCityIdAndCategoryId(Long city_id, Long category_id);
     List<Product> findByCityIdAndCategoryIdAndGuests(Long city_id, Long category_id, Integer guests);
     @Query(value = "SELECT * FROM product p INNER JOIN reservation r ON r.product_id = p.id WHERE ((r.check_in_date between :checkInDate and :checkOutDate) OR (r.check_out_date between :checkInDate and :checkOutDate));", nativeQuery = true)

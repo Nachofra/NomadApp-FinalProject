@@ -51,10 +51,10 @@ export const ImageGallery = ({images}) => {
 
   return (
     <>
-      <div className="h-[80vh] w-[80vw] relative rounded-2xl overflow-hidden shadow-xl">
+      <div className="h-[80vh] w-[80vw] relative overflow-hidde">
         <AnimatePresence initial={false} custom={direction}>
             <motion.img
-            className="absolute top-0 left-0 w-full h-full object-cover"
+            className="absolute top-0 left-0 w-full h-full object-contain"
             key={page}
             src={images[imageIndex].url}
             custom={direction}

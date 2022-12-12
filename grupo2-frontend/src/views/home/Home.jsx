@@ -61,7 +61,6 @@ export const Home = () => {
       (filters.guests.total > 0 ? `&guests=${filters.guests.total}` : '')+
       ((filters.date.from && filters.date.to) ? `&checkInDate=${handleDateFormat(filters.date.from)}&checkOutDate=${handleDateFormat(filters.date.to)}` : '')
 
-      console.log(query)
       const fetchData = async () => {
         startLoading();
           try {

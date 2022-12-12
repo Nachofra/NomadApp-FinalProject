@@ -11,6 +11,7 @@ import {
   ArrowRightOnRectangleIcon,
   CalendarDaysIcon,
   Cog6ToothIcon,
+  HomeModernIcon,
   UserIcon
 } from '@heroicons/react/24/outline'
 import { DropLink } from '../../drop-down/DropLink'
@@ -26,7 +27,7 @@ export const HeaderNav = ({transparent}) => {
     <section 
     className='top-0 fixed z-50
     w-screen flex items-center justify-between' >
-        <div className={`w-screen cursor-pointer min-h-[70px] lg:min-h-[96px] relative
+        <div className={`w-full cursor-pointer min-h-[70px] lg:min-h-[96px] relative
         flex justify-end items-end p-4 lg:p-6 transition-all
         ring-1 ring-violet-700 ring-opacity-5 
         ${transparent && !open ? '' : 'bg-white  shadow-md'}`} >
@@ -55,6 +56,9 @@ export const HeaderNav = ({transparent}) => {
               <img src='/logo/logo_demo.svg' className='h-10' />
             </Link>
             <div className='flex items-center'>
+            <Link 
+            className='text-lg text-violet-700 mr-10'
+            to={PrivateRoutes.PRODUCTCREATE} >Be a host</Link>
             {
               user ?
               <>
@@ -83,14 +87,15 @@ export const HeaderNav = ({transparent}) => {
                       My reservations
                     </DropLink>
                     <DropLink
+                      to={ PrivateRoutes.USERPRODUCTSID(user.id) }
                       activeClassName='bg-violet-500 text-white'
                       inactiveClassName='text-gray-600'
                     >
-                      <Cog6ToothIcon
+                      <HomeModernIcon
                         className='mr-2 h-5 w-5'
                         aria-hidden='true'
                       />
-                      Settings
+                      My places (host)
                     </DropLink>
                   </div>
 

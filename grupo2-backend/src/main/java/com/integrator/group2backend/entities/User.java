@@ -39,6 +39,10 @@ public class User implements UserDetails {
     @JsonIgnore
     private Set<Reservation> reservations = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<Product> products = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "roles_id", referencedColumnName = "id")
     private Roles roles;

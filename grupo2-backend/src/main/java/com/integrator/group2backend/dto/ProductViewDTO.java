@@ -20,14 +20,18 @@ public class ProductViewDTO {
     private Integer bathrooms;
     private Integer guests;
     private Float dailyPrice;
+    private String address;
+    private Integer number;
+    private Integer floor;
+    private String apartment;
     private Float latitude;
     private Float longitude;
     private Category category;
     private City city;
     private Set<Feature> features;
-    private Set<Policy> policies;
+    private Set<PolicyDTO> policies;
     @JsonIgnoreProperties(value = { "product" })
     private Set<Image> images;
-    @JsonIgnoreProperties(value = { "product" })
+    @JsonIgnoreProperties(value = { "product" , "user"})
     private Set<Reservation> reservations;
 }

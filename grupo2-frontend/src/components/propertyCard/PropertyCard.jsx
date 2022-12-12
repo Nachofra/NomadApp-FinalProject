@@ -16,8 +16,8 @@ export const PropertyCard = ({
             <img 
             className='w-full h-full object-cover transition-all duration-300
             group-hover:scale-110' 
-            src={property.images[0].url}
-            alt={property.images[0].name}
+            src={property.images[0]?.url}
+            alt={property.images[0]?.name}
             />
         </picture>
         <div className='p-1 flex flex-col items-start text-left'>
@@ -25,7 +25,7 @@ export const PropertyCard = ({
             max-w-[25ch] overflow-ellipsis whitespace-nowrap overflow-hidden'>{property.title}</p>
             <div className='flex items-center text-violet-700'>
                 <MapPinIcon className='w-6 h-6 mr-1'/>
-                <p className=''>{`${property.city.name}, ${property.city.country.name}`}</p>
+                <p className=''>{`${property.city?.name}, ${property.city?.country.name}`}</p>
             </div>
         </div>
         <div className='w-full flex justify-between items-center p-1 mt-4'>

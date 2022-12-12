@@ -11,6 +11,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @SpringBootApplication
 @ComponentScan({"com.integrator.group2backend"})
 public class Group2BackendApplication extends SpringBootServletInitializer {
@@ -18,7 +21,11 @@ public class Group2BackendApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(Group2BackendApplication.class, args);
 	}
-
+	@PostConstruct
+	public void init(){
+		// Setting Spring Boot SetTimeZone
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+	}
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder){
 		return builder.sources(Group2BackendApplication.class);

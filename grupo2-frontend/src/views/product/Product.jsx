@@ -43,8 +43,9 @@ export const Product = () => {
     const [ data, setData ] = useState(state?.product)
     const [avoidDates, setAvoidDates ] = useState()
     
-    const excludeDatesHandler = excArr => excArr.map(range => ({ start: range.checkInDate, end :  range.checkOutDate}))
+    var now = new Date();
     
+    const excludeDatesHandler = excArr => excArr.map(range => ({ start: range.checkInDate  + now.getTimezoneOffset() * 60000, end :  range.checkOutDate + now.getTimezoneOffset() * 60000}))    
     const {id} = useParams();
 
     const fetchData = async () =>{
@@ -53,6 +54,7 @@ export const Product = () => {
         const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
         setData(data);
         const { data :  dates} = await axios.get(`${FetchRoutes.BASEURL}/reservation/product/${id}`);
+        console.log(dates)
         setAvoidDates(excludeDatesHandler(dates));
         } catch (error) {
         console.error(error.message);
@@ -65,6 +67,8 @@ export const Product = () => {
           if ( !data || !avoidDates ) { fetchData() };
           if ( data && avoidDates ) { loadDone() };
     }, [])
+
+    // console.log(data)
 
     const [modal, setModal ] = useState(false);
 
@@ -244,7 +248,7 @@ export const Product = () => {
         text-gray-700 font-medium'>Rent policies</h5>
 
         <div className='grid grid-cols-1 md:gird-cols-2 lg:grid-cols-3 gap-8 mt-4'>
-        { data.policies.map((item, i) => (
+        { data.policies?.map((item, i) => (
             <PolicyList key={i} title={item.name} list={item.policyItems} />
         ))} 
         </div>

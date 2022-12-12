@@ -12,7 +12,12 @@ export const PrivateRoutes = {
     RESERVE : '/product/:id/reserve',
     RESERVEID: (id) => `/product/${id}/reserve`,
     USERRESERVATIONS: '/reservation/user/:id',
-    USERRESERVATIONSID: (id) => `/reservation/user/${id}`
+    USERRESERVATIONSID: (id) => `/reservation/user/${id}`,
+    PRODUCTCREATE: '/product/create',
+    PRODUCTEDIT: '/product/edit/:id',
+    PRODUCTEDITID: (id) => `/product/edit/${id}`,
+    USERPRODUCTS: '/product/user/:id',
+    USERPRODUCTSID: (id) => `/product/user/${id}`,
 }
 
 export const FetchRoutes = {

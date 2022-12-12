@@ -1,30 +1,22 @@
 package com.integrator.group2backend.controller;
 
+import com.integrator.group2backend.dto.ProductCreateDTO;
+import com.integrator.group2backend.dto.ProductUpdateDTO;
 import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Product;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
+import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.service.ProductService;
 import com.integrator.group2backend.utils.MapperService;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
-    public static final Logger logger = Logger.getLogger(ProductService.class);
-
     private final ProductService productService;
 
     private final MapperService mapperService;
@@ -34,63 +26,60 @@ public class ProductController {
         this.productService = productService;
         this.mapperService = mapperService;
     }
+
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<ProductViewDTO> createProduct(@ModelAttribute ProductCreateDTO product) throws DataIntegrityViolationException, ResourceNotFoundException {
         return ResponseEntity.ok(productService.addProduct(product));
     }
-    /*@GetMapping
-    public ResponseEntity<List<ProductViewDTO>> listAllProducts() {
-        return productService.listAllProducts();
-    }*/
-    @GetMapping("/random")
-    public ResponseEntity<List<ProductViewDTO>> listRandomAllProducts(
-            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds,
-            @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests,
-            @RequestParam(required = false) Long city, @RequestParam(required = false) Long category,
-            @RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice,
-            @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate) throws Exception{
-        Boolean random = true;
-        return ResponseEntity.ok(productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate, random));
-    }
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId) {
-        Optional<Product> productFound = productService.searchProductById(productId);
-        if (productFound.isPresent()) {
-            return ResponseEntity.ok(this.mapperService.convert(productFound.get(), ProductViewDTO.class));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product) {
-        boolean productExists = productService.searchProductById(productId).isPresent();
-        if (productExists) {
-            product.setId(productId);
-            Product updatedProduct = productService.updateProduct(product);
-            return ResponseEntity.ok(updatedProduct);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId) {
-        boolean productExist = productService.searchProductById(productId).isPresent();
-        if (productExist) {
-            productService.deleteProduct(productId);
-            return ResponseEntity.ok("El producto con id " + productId + " ha sido borrado");
-        }
-        return ResponseEntity.notFound().build();
-    }
-    @RequestMapping
-    public ResponseEntity<List<ProductViewDTO>> findProductsByCustomFilter(
+
+    @GetMapping
+    public ResponseEntity<List<ProductViewDTO>> listProducts(
             @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds,
             @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests,
             @RequestParam(required = false) Long city, @RequestParam(required = false) Long category,
             @RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice,
             @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate)
-            throws Exception{
+            throws Exception {
         Boolean random = false;
         return ResponseEntity.ok(productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate, random));
+    }
+
+    @GetMapping("/random")
+    public ResponseEntity<List<ProductViewDTO>> listRandomProducts(
+            @RequestParam(required = false) Integer rooms, @RequestParam(required = false) Integer beds,
+            @RequestParam(required = false) Integer bathrooms, @RequestParam(required = false) Integer guests,
+            @RequestParam(required = false) Long city, @RequestParam(required = false) Long category,
+            @RequestParam(required = false) Float minPrice, @RequestParam(required = false) Float maxPrice,
+            @RequestParam(required = false) String checkInDate, @RequestParam(required = false) String checkOutDate) throws Exception {
+        Boolean random = true;
+        return ResponseEntity.ok(productService.customProductFilter(rooms, beds, bathrooms, guests, city, category, minPrice, maxPrice, checkInDate, checkOutDate, random));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId) throws ResourceNotFoundException {
+        return ResponseEntity.ok(this.productService.searchProductById(productId));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductViewDTO> updateProduct(@PathVariable("id") Long productId, @ModelAttribute ProductUpdateDTO productUpdate) throws ResourceNotFoundException {
+        return ResponseEntity.ok(this.productService.updateProduct(productId, productUpdate));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId) throws ResourceNotFoundException {
+        //boolean productExist = productService.searchProductById(productId).isPresent();
+        ProductViewDTO productViewDTO = this.productService.searchProductById(productId);
+
+        if (productViewDTO.getId() != null) {
+            productService.deleteProduct(productId);
+            return ResponseEntity.ok("El producto con id " + productId + " ha sido borrado");
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<ProductViewDTO>> getProductByUserId(@PathVariable Long id) throws ResourceNotFoundException {
+        return ResponseEntity.ok(this.productService.findByUserId(id));
     }
     /*@GetMapping("/city/{id}")
     public ResponseEntity<List<ProductViewDTO>> getProductByCityId(@PathVariable Long id) {

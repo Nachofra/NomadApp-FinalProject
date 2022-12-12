@@ -3,8 +3,9 @@ package com.integrator.group2backend.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Date;
 import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Setter
 @Getter
