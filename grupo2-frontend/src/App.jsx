@@ -1,5 +1,4 @@
 // import { useState } from 'react'
-import { SearchProvider } from './context/SearchContext'
 import { Auth, Home, Product } from './views'
 import { RouteNotFound } from './utilities/RouteNotFound'
 import { AuthGuard } from './guard/AuthGuard'
@@ -7,10 +6,11 @@ import { Route } from 'react-router-dom'
 import { PrivateRoutes, PublicRoutes } from './guard/Routes'
 import { Reserve } from './views/reserve/Reserve'
 import { VerifyConfirmation } from './views/verify-confirmation/VerifyConfirmation'
-import './App.css'
 import { DefaultError } from './views/defaultError/DefaultError'
 import { UserReservations } from './views/userProfile/userReservations/UserReservations'
 import { ProductCreate } from './views/productCreate/ProductCreate'
+import { UserProducts } from './views/userProfile/userProducts/UserProducts'
+import './App.css'
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
         <Route path={PrivateRoutes.PRODUCTCREATE} element={<ProductCreate />} />
         <Route path={PrivateRoutes.RESERVE} element={<Reserve />} />
         <Route path={PrivateRoutes.USERRESERVATIONS} element={<UserReservations />} />
-
+        <Route path={PrivateRoutes.USERPRODUCTS} element={<UserProducts />} />
       </Route>
   </RouteNotFound>
   )
