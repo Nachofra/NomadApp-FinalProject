@@ -312,11 +312,11 @@ public class ProductService {
         return this.getProductViewDTOList(auxList);
     }
 
-    public List<ProductViewDTO> findByUserId(Long id) throws ResourceNotFoundException {
+    public List<ProductViewDTO> findByUserId(Long id) {
         List<Product> productList = this.productRepository.findByUserId(id);
         if (productList.isEmpty()) {
             logger.error("No se encontraron los productos correspondientes el usuario con ID " + id);
-            throw new ResourceNotFoundException("No value present: ");
+            return this.getProductViewDTOList(productList);
         }
         logger.info("Se encontraron los productos correspondientes al usuario con ID " + id);
         return this.getProductViewDTOList(productList);
