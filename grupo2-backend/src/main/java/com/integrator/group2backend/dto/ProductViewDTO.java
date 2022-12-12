@@ -19,7 +19,7 @@ public class ProductViewDTO {
     private Integer beds;
     private Integer bathrooms;
     private Integer guests;
-    private Integer dailyPrice;
+    private Float dailyPrice;
     private String address;
     private Integer number;
     private Integer floor;
@@ -32,6 +32,6 @@ public class ProductViewDTO {
     private Set<PolicyDTO> policies;
     @JsonIgnoreProperties(value = { "product" })
     private Set<Image> images;
-    @JsonIgnoreProperties(value = { "product" })
+    @JsonIgnoreProperties(value = { "product" , "user"})
     private Set<Reservation> reservations;
 }
