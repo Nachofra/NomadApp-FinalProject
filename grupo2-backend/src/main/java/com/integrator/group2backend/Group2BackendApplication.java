@@ -1,5 +1,6 @@
 package com.integrator.group2backend;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -34,7 +35,7 @@ public class Group2BackendApplication extends SpringBootServletInitializer {
 //		return new WebMvcConfigurer() {
 //			@Override
 //			public void addCorsMappings(CorsRegistry registry) {
-//				registry.addMapping("/**").allowedOrigins("http://18.217.21.141", "http://ec2-18-217-21-141.us-east-2.compute.amazonaws.com", "http://localhost:5173").allowedMethods("*").allowedHeaders("*");
+//				registry.addMapping("/**").allowedOrigins(frontendUrl).allowedMethods("*").allowedHeaders("*");
 //			}
 //		};
 //	}

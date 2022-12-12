@@ -18,9 +18,6 @@ public class CorsFilter implements Filter {
     public CorsFilter() {
     }
 
-    @Value("${frontendUrl}")
-    private String frontendUrl;
-
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
