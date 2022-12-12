@@ -5,6 +5,7 @@ import com.integrator.group2backend.dto.ProductUpdateDTO;
 import com.integrator.group2backend.entities.*;
 import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.service.*;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +19,8 @@ public class UpdateProductCompare {
     private final PolicyItemService policyItemService;
     private final ImageService imageService;
     private final UserService userService;
+    public static final Logger logger = Logger.getLogger(UpdateProductCompare.class);
+
 
     public UpdateProductCompare(CityService cityService, CategoryService categoryService, PolicyItemService policyItemService, FeatureService featureService, ImageService imageService, UserService userService) {
         this.cityService = cityService;
@@ -29,6 +32,7 @@ public class UpdateProductCompare {
     }
 
     public Product updateProductCompare (Product oldProduct, ProductUpdateDTO newProduct){
+
 
         Product auxProduct = new Product();
         Set<Feature> features = new HashSet<>();
@@ -176,7 +180,7 @@ public class UpdateProductCompare {
 
         // Adding and/or removing old images
         if (newProduct.getRemoveImages() == null){
-            System.out.println("No elimino imagenes");
+            logger.info("No elimino imagenes");
             modifiedImagesSet.addAll(oldProduct.getImages());
         }else{
             //Search old selected images and delete them
@@ -187,10 +191,10 @@ public class UpdateProductCompare {
                         imageService.deleteImage(imagesToRemoveId);
                         oldProduct.getImages().remove(searchedImage.get());
                     }catch (ResourceNotFoundException e){
-                        System.out.println(e.getMessage());
+                        logger.error(e.getMessage());
                     }
                 }else {
-                    System.out.println("The image to remove with ID " + imagesToRemoveId + " doesn't belong to this product");
+                    logger.info("The image to remove with ID " + imagesToRemoveId + " doesn't belong to this product");
                 }
             }
             modifiedImagesSet.addAll(oldProduct.getImages());
