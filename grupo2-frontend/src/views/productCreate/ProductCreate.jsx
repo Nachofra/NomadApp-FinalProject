@@ -108,6 +108,7 @@ export const ProductCreate = () => {
         const bodyReq = {
 
             ...form, 
+            user_id: user.id,
             dailyPrice: 20.00,
             image: imageFiles,
             features_id : form.features,
@@ -161,7 +162,6 @@ export const ProductCreate = () => {
         // setErrorModal(true)
         } finally{ 
             fetchData();
-
          };
     }
 
