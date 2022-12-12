@@ -20,6 +20,10 @@ public class ProductViewDTO {
     private Integer bathrooms;
     private Integer guests;
     private Float dailyPrice;
+    private String address;
+    private Integer number;
+    private Integer floor;
+    private String apartment;
     private Float latitude;
     private Float longitude;
     private Category category;
