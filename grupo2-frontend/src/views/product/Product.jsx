@@ -68,6 +68,8 @@ export const Product = () => {
           if ( data && avoidDates ) { loadDone() };
     }, [])
 
+    console.log(data)
+
     const [modal, setModal ] = useState(false);
 
     const { width } = useWindowDimensions();

@@ -13,7 +13,8 @@ export const useProductValidation = (data) => {
                 beds : null,
                 bathrooms : null,
                 guests: null,
-                rooms: null
+                rooms: null,
+                dailyPrice: null
             };
 
 
@@ -67,6 +68,10 @@ export const useProductValidation = (data) => {
                 errAux.address = "Please, enter a valid address";
                 valid = false;
             }
+            if (!fields.dailyPrice()) {
+                errAux.dailyPrice = "Please, enter a valid price";
+                valid = false;
+            }
             if (!fields.number()) {
                 errAux.number = "Number not valid";
                 valid = false;
@@ -80,7 +85,7 @@ export const useProductValidation = (data) => {
             //     valid = false;
             // }
             if (!fields.description()) {
-                errAux.description = "Description must be between 40 and 200 characters";
+                errAux.description = "Description must be between 40 and 360 characters";
                 valid = false;
             }
             setError({...error, ...errAux});
@@ -113,6 +118,15 @@ export const useProductValidation = (data) => {
                 setError({...error, images : null });
                 return true 
             }
+        },
+        imagesEdit : () => {
+            if (!fields.imagesEdit()) {
+                setError({...error, images : "Please, select at least three (3) features"});
+                return false
+            } else { 
+                setError({...error, images : null });
+                return true 
+            }
         }
     }
 
@@ -125,11 +139,14 @@ export const useProductValidation = (data) => {
         features: () => data.features_id && data.features_id.length >= 3,
         policies: () => data.policyItems_id && data.policyItems_id.length >= 5,
         images: () => data.image && data.image.length >= 3,
+        imagesEdit: () => true,
         title : () => data.title && data.title.length >= 10 && data.title.length <= 40,
         city: () => data.city_id && (typeof data.city_id === 'number'),
-        description: () => data.description && data.description.length >= 40 && data.description.length <= 200,
+        description: () => data.description && data.description.length >= 40 && data.description.length <= 360,
         address: () => data.address && data.address.length >= 3 && data.address.length <= 30,
         number: () => data.number && (typeof data.number === 'number'),
+        dailyPrice: () => data.dailyPrice && (typeof data.dailyPrice === 'number') && data.dailyPrice > 0 && data.dailyPrice < 9999,
+
     }
 
     return {validation, error};

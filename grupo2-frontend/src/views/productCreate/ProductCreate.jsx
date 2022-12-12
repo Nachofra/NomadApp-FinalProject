@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from 'react'
 import { ArrowLeftIcon, CheckCircleIcon, CheckIcon, ExclamationTriangleIcon, MapPinIcon, PaperClipIcon, PhotoIcon, PlusCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Datalist, DatalistItem } from '../../components/datalist';
 import { Input } from '../../components/input/Input';
@@ -10,14 +10,14 @@ import { Textarea } from '../../components/textarea/Texarea';
 import { useLoadingViewContext } from '../../context/LoadingViewContext';
 import { useSearchContext } from '../../context/SearchContext';
 import { useUserContext } from '../../context/UserContext';
-import { FetchRoutes } from '../../guard/Routes';
+import { FetchRoutes, PrivateRoutes } from '../../guard/Routes';
 import { usePreviewImage } from '../../hooks/useFilePreview';
 import { FormStep } from './components/FormStep';
 import { CountSelect } from '../../components/partials/searchNavbar/components/CountSelect';
 import { PropertyTypeSelect } from '../../components/partials/searchNavbar/components/PropertyTypeSelect';
 import { useProductValidation } from './utilities/useProductValidation';
-import './productCreate.css'
 import { Modal } from '../../components/modal/Modal';
+import './productCreate.css';
 
 export const ProductCreate = () => {
 
@@ -193,7 +193,8 @@ export const ProductCreate = () => {
         </BaseLayout>
         <BaseLayout
           padding='px-3 pt-4 md:pt-6'
-          className="relative mb-10 lg:grid lg:gap-8 product-create-container overflow-visible h-auto"
+          className="relative mb-10 flex flex-col-reverse 
+          lg:grid lg:gap-8 product-create-container overflow-visible h-auto"
         >
             <article className='lg:sticky lg:top-32 lg:self-start'>
                 <p className='font-semibold text-gray-900 text-xl my-4 '>
@@ -547,7 +548,7 @@ export const ProductCreate = () => {
             <p className='text-xl md:text-2xl font-medium mb-2 text-gray-800'>Product created</p>
             <p className='md:text-lg text-gray-600 mb-4'>We have sent you an email with all the details</p>
             <button
-            onClick={() => { navigate('/'); startLoading() }}
+            onClick={() => { navigate(PrivateRoutes.USERPRODUCTSID(user.id)); startLoading() }}
             className="py-3 w-32 text-white bg-violet-700
             rounded-md text-lg font-medium">
             Awesome!

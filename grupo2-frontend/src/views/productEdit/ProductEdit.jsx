@@ -56,7 +56,10 @@ export const ProductEdit = () => {
         guests: null,
         bathrooms: null,
         rooms: null,
-        beds: null
+        beds: null,
+        images: [],
+        addImages: [],
+        removeImages: []
     }
 
     const [ form, setForm ] = useState(initialState)
@@ -74,8 +77,15 @@ export const ProductEdit = () => {
           setPolicies(policiesList);
           const { data : product } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`,
           { headers: { Authorization : user.authorization }})
-          console.log(product);
-          setForm(product);
+          console.log(product)
+          setForm({
+            ...product,
+            policies: product.policies.flat(Infinity).map(p => p.policyItems).flat(Infinity).map(p => p.id),
+            features: product.features.map(p => p.id),
+            category: product.category.id,
+            addImages: [],
+            removeImages: []
+          });
 
         } catch (error) {
           console.error(error.message);
@@ -88,6 +98,7 @@ export const ProductEdit = () => {
         else{ loadDone() }
     }, [])
 
+    console.log(form)
 
 
     const [ validated, setValidated ] = useState({
@@ -109,6 +120,12 @@ export const ProductEdit = () => {
     const addPolicy = id => setForm({...form, policies: [...form.policies, id]});
 
     const removePolicy = id => setForm({...form, policies: form.policies.filter(item => item !== id)});
+
+    const imgIsRemoved = id => form.removeImages.includes(id);
+    const unremovedImages = form.images.filter(elm => !imgIsRemoved(elm.id))
+    console.log(unremovedImages)
+
+    const removeOriginalImage = id => setForm({...form, removeImages: [...form.removeImages, id]});
     
     const {images, imageFiles, changeHandler, removeHandler, addHandler} = usePreviewImage()
 
@@ -116,21 +133,24 @@ export const ProductEdit = () => {
             ...form, 
             user_id: user.id,
             dailyPrice: +form.dailyPrice,
-            image: imageFiles,
             features_id : form.features,
             category_id: form.category,
             city_id: form.city?.id,
             number: +form.number,
             floor: +form.floor,
-            policyItems_id: form.policies,     
+            policyItems_id: form.policies,
+            addImages : imageFiles,
+            removeImages: form.removeImages
         }
+
+        console.log(bodyReq)
         
         const {validation, error} = useProductValidation(bodyReq)
 
     const postData = async () => {
         try {
           startLoading();
-          await axios.post(`${FetchRoutes.BASEURL}/product`,
+          await axios.put(`${FetchRoutes.BASEURL}/product/${id}`,
           bodyReq,
           { headers: { 
             Authorization : user.authorization, 
@@ -175,7 +195,7 @@ export const ProductEdit = () => {
         validation.information() === true &&
         validation.features() === true &&
         validation.policies() === true &&
-        validation.images() === true 
+        validation.imagesEdit() === true 
         ) {
             postData()
         } else {
@@ -208,9 +228,9 @@ export const ProductEdit = () => {
                 <div className='w-[350px] rounded-xl
                 bg-white border-2 border-violet-700'>
                     <div className='flex items-center justify-center w-full h-60 p-3 overflow-hidden'>
-                        {images.length > 0 ?
+                        {unremovedImages?.length > 0 ?
                         <img
-                        src={images[0]}
+                        src={unremovedImages[0].url}
                         alt='preview-image'
                         className='w-full h-full object-cover rounded-xl'
                         />
@@ -492,7 +512,7 @@ export const ProductEdit = () => {
                 status={validated.images}
                 initial
                 setStatus={e => setValidated({...validated, images: e})}
-                validate={() => setValidated({...validated, images: validation.images()})}
+                validate={() => setValidated({...validated, images: validation.imagesEdit()})}
                 title='Add images'>
                 <p className='text-gray-400 mb-4'>Please, add at least three images:</p>
                 <input
@@ -502,12 +522,30 @@ export const ProductEdit = () => {
                 className='w-0 h-0 opacity-0'
                 type='file'
                 accept="image/*"
-                onChange={(e) => {images.length > 0 ? addHandler(e) : changeHandler(e); console.log(e) }}
+                onChange={(e) => {images.length > 0 ? addHandler(e) : changeHandler(e); }}
                 />
 
                 <div className='flex overflow-hidden grow-0'>
                     <div className='flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4'>
-                    { 
+                    {
+                    form.images?.map((item, i) => { return(
+                        imgIsRemoved(item.id) ?
+                        '' :
+                        <div key={i}  
+                        className='w-48 h-48 rounded-xl overflow-hidden 
+                        shrink-0 relative'>
+                            <img src={item.url}
+                            className="w-full h-full object-cover"
+                            alt='image-preview' />
+                            <button
+                            onClick={() => removeOriginalImage(item.id)}
+                            className='w-10 h-10 absolute top-3 right-3 rounded-full
+                            flex items-center justify-center bg-red-400'>
+                                <XMarkIcon className='w-6 h-6 text-white' />
+                            </button>
+                        </div>
+                    )})}
+                    {
                     images.map((item, i) => (
                         <div key={i}  
                         className='w-48 h-48 rounded-xl overflow-hidden 
@@ -540,7 +578,6 @@ export const ProductEdit = () => {
                 <p className='text-sm text-red-400 ml-2 mt-4'>{error.images}</p>}
                 </FormStep>
             </div>
-            
         </BaseLayout>
         <Modal
         isOpen={modal}
