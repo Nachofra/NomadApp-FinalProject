@@ -6,6 +6,7 @@
 
 Para la realizacion del BackEnd, utilizamos la herramienta de spring para crear nuestro proyecto.
 Principalmente instalamos las dependencias de Spring Boot para la creacion de una API y Log4j para loguear la misma asi tener un seguimiento en su funcionamiento; Json Web Token y Spring Boot Security para administrar la seguridad; Junit para el testing; y por ultimo H2, Hibernate y MySQL connector para la creacion de las bases de datos.
+Realizamos la conexion de la API con un Bucket S3 en AWS para que el usuario pueda subir imagenes a la hora de crear un producto.
 Tambien nos tomamos la libertad de agregar la dependencia de Spring Boot Starter Mail para realizar una conexion con un servidor SMTP para enviar correos de ser necesario.
 
 ### Infraestructura
