@@ -188,8 +188,8 @@ public class UpdateProductCompare {
                 Optional<Image> searchedImage = imageService.getImageById(imagesToRemoveId);
                 if(searchedImage.isPresent() && searchedImage.get().getProduct().getId().equals(oldProduct.getId())){
                     try {
-                        imageService.deleteImage(imagesToRemoveId);
                         oldProduct.getImages().remove(searchedImage.get());
+                        imageService.deleteImage(imagesToRemoveId);
                     }catch (ResourceNotFoundException e){
                         logger.error(e.getMessage());
                     }
