@@ -1,11 +1,16 @@
 package com.integrator.group2backend.service;
 
 import com.integrator.group2backend.dto.CurrentUserDTO;
+import com.integrator.group2backend.dto.ProductViewDTO;
+import com.integrator.group2backend.entities.PolicyItem;
+import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.entities.User;
 import com.integrator.group2backend.exception.DataIntegrityViolationException;
+import com.integrator.group2backend.exception.ResourceNotFoundException;
 import com.integrator.group2backend.repository.UserRepository;
 import com.integrator.group2backend.utils.MapperService;
 import net.bytebuddy.utility.RandomString;
+import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSendException;
@@ -22,6 +27,8 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
+    public static final Logger logger = Logger.getLogger(ProductService.class);
     private final UserRepository userRepository;
 
     PasswordEncoder passwordEncoder;
@@ -41,6 +48,10 @@ public class UserService {
         this.mailSender = mailSender;
         this.mapperService = mapperService;
         this.cityService = cityService;
+    }
+
+    public Optional<User> getUserById(Long id){
+        return userRepository.findById(id);
     }
 
     public User addUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException, DataIntegrityViolationException {

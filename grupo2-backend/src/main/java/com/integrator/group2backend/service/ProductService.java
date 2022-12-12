@@ -90,15 +90,6 @@ public class ProductService {
             // We create the product
             Product createdProduct = productRepository.save(product);
 
-            for (MultipartFile images : newProduct.getImage()) {
-                Image image = imageService.addImage(images);
-                if (image != null) {
-                    image.setProduct(createdProduct);
-                    imageList.add(image);
-                }
-            }
-            product.setImages(imageList);
-
             Optional<User> user = this.userService.findById(newProduct.getUser_id());
             if (user.isEmpty()) {
                 throw new ResourceNotFoundException("User not found");
@@ -123,6 +114,15 @@ public class ProductService {
                 policyItemsList.add(policyItem.get());
             }
             product.setPolicyItems(policyItemsList);
+
+            for (MultipartFile images : newProduct.getImage()) {
+                Image image = imageService.addImage(images);
+                if (image != null) {
+                    image.setProduct(createdProduct);
+                    imageList.add(image);
+                }
+            }
+            product.setImages(imageList);
 
             // We update the created product with its relationships
             createdProduct = productRepository.save(createdProduct);
