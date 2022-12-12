@@ -34,6 +34,10 @@ export const ProductCreate = () => {
       const [modal, setModal ] = useState(false);
       const [errorModal, setErrorModal ] = useState(false);
       const [featureModal, setFeatureModal ] = useState(false);
+      const [errorFeatureModal, setErrorFeatureModal] = useState({
+        name: null,
+        featureImage: null
+      });
 
       const [featureForm, setFeatureFrom ] = useState({
         name: '',
@@ -160,7 +164,24 @@ export const ProductCreate = () => {
         // setErrorModal(true)
         } finally{ 
             fetchData();
+            setFeatureFrom({
+                name: '',
+                featureImage: null
+            });
          };
+    }
+
+    const handleFeatureSubmit = () => {
+        if (!(featureForm.name.length > 2 && featureForm.name.length < 21)){
+            setErrorFeatureModal({...errorFeatureModal, name: 'Please, enter a name between 3 and 20 characters.'});
+            return;
+        } else { setErrorFeatureModal({...errorFeatureModal, name: null })}
+        if (!featureForm.featureImage){
+            setErrorFeatureModal({...errorFeatureModal, featureImage: 'Please, enter a valid icon.'});
+            return;
+        } else { setErrorFeatureModal({...errorFeatureModal, featureImage: null })}
+
+        postFeature();
     }
 
     const handleSubmit = () => {
@@ -194,7 +215,7 @@ export const ProductCreate = () => {
         <BaseLayout
           padding='px-3 pt-4 md:pt-6'
           className="relative mb-10 flex flex-col-reverse 
-          lg:grid lg:gap-8 product-create-container overflow-visible h-auto"
+          lg:grid lg:gap-8 min-h-screen product-create-container overflow-visible h-auto"
         >
             <article className='lg:sticky lg:top-32 lg:self-start'>
                 <p className='font-semibold text-gray-900 text-xl my-4 '>
@@ -539,7 +560,7 @@ export const ProductCreate = () => {
         </BaseLayout>
         <Modal
         isOpen={modal}
-        closeModal={() => {navigate('/'); startLoading()}}
+        closeModal={() => {navigate(PrivateRoutes.USERPRODUCTSID(user.id)); startLoading()}}
         >
         <div className='w-screen max-w-[90vw] md:max-w-lg max-h-96 
         bg-white rounded-lg flex flex-col items-center p-4 shadow-xl'>
@@ -586,8 +607,8 @@ export const ProductCreate = () => {
             id='feature_name'
             type='text'
             placeholder='Microwave...'
-            // error={error.title}
-            // errorMessage={error.title}
+            error={errorFeatureModal.name}
+            errorMessage={errorFeatureModal.name}
             value={featureForm.name}
             onChange={(e) =>
                 setFeatureFrom({ ...featureForm, name: e.target.value })
@@ -599,6 +620,8 @@ export const ProductCreate = () => {
             value={featureForm?.featureImage ? featureForm.featureImage.name : null}
             id='feature_icon'
             placeholder='Select one from the list...'
+            error={errorFeatureModal.featureImage}
+            errorMessage={errorFeatureModal.featureImage}
             onChange={(e) => setFeatureFrom({...featureForm, featureImage: e})}
             resultRenderer={(feature, i) => (
             <DatalistItem
@@ -610,7 +633,8 @@ export const ProductCreate = () => {
             />)}
             />
             <button
-            onClick={() => { () => setFeatureModal(false); postFeature() }}
+            disabled={status === 'LOADING'}
+            onClick={() => { () => setFeatureModal(false); handleFeatureSubmit() }}
             className="py-3 w-32 text-white bg-violet-700
             rounded-md text-lg font-medium">
                 Send

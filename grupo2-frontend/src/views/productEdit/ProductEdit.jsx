@@ -10,7 +10,7 @@ import { Textarea } from '../../components/textarea/Texarea';
 import { useLoadingViewContext } from '../../context/LoadingViewContext';
 import { useSearchContext } from '../../context/SearchContext';
 import { useUserContext } from '../../context/UserContext';
-import { FetchRoutes } from '../../guard/Routes';
+import { FetchRoutes, PrivateRoutes } from '../../guard/Routes';
 import { usePreviewImage } from '../../hooks/useFilePreview';
 import { CountSelect } from '../../components/partials/searchNavbar/components/CountSelect';
 import { PropertyTypeSelect } from '../../components/partials/searchNavbar/components/PropertyTypeSelect';
@@ -36,7 +36,10 @@ export const ProductEdit = () => {
       const [modal, setModal ] = useState(false);
       const [errorModal, setErrorModal ] = useState(false);
       const [featureModal, setFeatureModal ] = useState(false);
-
+      const [errorFeatureModal, setErrorFeatureModal] = useState({
+        name: null,
+        featureImage: null
+      });
       const [featureForm, setFeatureFrom ] = useState({
         name: '',
         featureImage: null
@@ -98,7 +101,6 @@ export const ProductEdit = () => {
         else{ loadDone() }
     }, [])
 
-    console.log(form)
 
 
     const [ validated, setValidated ] = useState({
@@ -171,7 +173,6 @@ export const ProductEdit = () => {
             name: featureForm.name,
             image_id: +featureForm.featureImage.featureImage.id
           }
-        console.log(featureData)
         try {
           await axios.post(`${FetchRoutes.BASEURL}/feature`,
           featureData,
@@ -187,7 +188,24 @@ export const ProductEdit = () => {
         // setErrorModal(true)
         } finally{ 
             fetchData();
+            setFeatureFrom({
+                name: '',
+                featureImage: null
+            });
          };
+    }
+
+    const handleFeatureSubmit = () => {
+        if (!(featureForm.name.length > 2 && featureForm.name.length < 21)){
+            setErrorFeatureModal({...errorFeatureModal, name: 'Please, enter a name between 3 and 20 characters.'});
+            return;
+        } else { setErrorFeatureModal({...errorFeatureModal, name: null })}
+        if (!featureForm.featureImage){
+            setErrorFeatureModal({...errorFeatureModal, featureImage: 'Please, enter a valid icon.'});
+            return;
+        } else { setErrorFeatureModal({...errorFeatureModal, featureImage: null })}
+
+        postFeature();
     }
 
     const handleSubmit = () => {
@@ -219,7 +237,7 @@ export const ProductEdit = () => {
         </BaseLayout>
         <BaseLayout
           padding='px-3 pt-4 md:pt-6'
-          className="relative mb-10 lg:grid lg:gap-8 product-edit-container overflow-visible h-auto"
+          className="relative mb-10 lg:grid lg:gap-8 min-h-screen product-edit-container overflow-visible h-auto"
         >
             <article className='lg:sticky lg:top-32 lg:self-start'>
                 <p className='font-semibold text-gray-900 text-xl my-4 '>
@@ -581,16 +599,16 @@ export const ProductEdit = () => {
         </BaseLayout>
         <Modal
         isOpen={modal}
-        closeModal={() => {navigate('/'); startLoading()}}
+        closeModal={() => {navigate(PrivateRoutes.USERPRODUCTSID(user.id)); startLoading()}}
         >
         <div className='w-screen max-w-[90vw] md:max-w-lg max-h-96 
         bg-white rounded-lg flex flex-col items-center p-4 shadow-xl'>
             <CheckCircleIcon className='w-20 h-20 mb-4 text-violet-700' />
 
-            <p className='text-xl md:text-2xl font-medium mb-2 text-gray-800'>Product created</p>
+            <p className='text-xl md:text-2xl font-medium mb-2 text-gray-800'>Changes applied</p>
             <p className='md:text-lg text-gray-600 mb-4'>We have sent you an email with all the details</p>
             <button
-            onClick={() => { navigate('/'); startLoading() }}
+            onClick={() => { navigate(PrivateRoutes.USERPRODUCTS); startLoading() }}
             className="py-3 w-32 text-white bg-violet-700
             rounded-md text-lg font-medium">
             Awesome!
@@ -628,8 +646,8 @@ export const ProductEdit = () => {
             id='feature_name'
             type='text'
             placeholder='Microwave...'
-            // error={error.title}
-            // errorMessage={error.title}
+            error={errorFeatureModal.name}
+            errorMessage={errorFeatureModal.name}
             value={featureForm.name}
             onChange={(e) =>
                 setFeatureFrom({ ...featureForm, name: e.target.value })
@@ -641,6 +659,8 @@ export const ProductEdit = () => {
             value={featureForm?.featureImage ? featureForm.featureImage.name : null}
             id='feature_icon'
             placeholder='Select one from the list...'
+            error={errorFeatureModal.featureImage}
+            errorMessage={errorFeatureModal.featureImage}
             onChange={(e) => setFeatureFrom({...featureForm, featureImage: e})}
             resultRenderer={(feature, i) => (
             <DatalistItem
@@ -652,7 +672,8 @@ export const ProductEdit = () => {
             />)}
             />
             <button
-            onClick={() => { () => setFeatureModal(false); postFeature() }}
+            disabled={status === 'LOADING'}
+            onClick={() => { () => setFeatureModal(false); handleFeatureSubmit() }}
             className="py-3 w-32 text-white bg-violet-700
             rounded-md text-lg font-medium">
                 Send
