@@ -77,7 +77,8 @@ export const ProductCreate = () => {
         guests: null,
         bathrooms: null,
         rooms: null,
-        beds: null
+        beds: null, 
+        dailyPrice : 0.00
     }
 
     const [ form, setForm ] = useState(initialState)
@@ -89,7 +90,6 @@ export const ProductCreate = () => {
         policies : null,
         images : null
     })
-
 
     const incluidesFeature = id => form.features.includes(id);
 
@@ -105,19 +105,18 @@ export const ProductCreate = () => {
     
     const {images, imageFiles, changeHandler, removeHandler, addHandler} = usePreviewImage()
 
-        const bodyReq = {
 
+        const bodyReq = {
             ...form, 
             user_id: user.id,
-            dailyPrice: 20.00,
+            dailyPrice: +form.dailyPrice,
             image: imageFiles,
             features_id : form.features,
             category_id: form.category,
             city_id: form.city?.id,
             number: +form.number,
             floor: +form.floor,
-            policyItems_id: form.policies
-            
+            policyItems_id: form.policies,     
         }
         
         const {validation, error} = useProductValidation(bodyReq)
@@ -146,7 +145,6 @@ export const ProductCreate = () => {
             name: featureForm.name,
             image_id: +featureForm.featureImage.featureImage.id
           }
-        console.log(featureData)
         try {
           await axios.post(`${FetchRoutes.BASEURL}/feature`,
           featureData,
@@ -177,7 +175,7 @@ export const ProductCreate = () => {
             setErrorModal(true);
         }
     }
-    console.log(featureForm)
+    console.log(bodyReq)
 
   return (
     <>
@@ -398,6 +396,19 @@ export const ProductCreate = () => {
                             setForm({ ...form, description: e.target.value })
                         }
                         />
+                        <Input
+                        label='Daily price'
+                        id='product_daily_price'
+                        type='number'
+                        placeholder='200'
+                        min={0}
+                        max={9999}
+                        error={error.dailyPrice}
+                        errorMessage={error.dailyPrice}
+                        value={ form.dailyPrice }
+                        onChange={(e) =>
+                            setForm({ ...form, dailyPrice: e.target.value })
+                        }/>
                     </div>
                     
                 </FormStep>
