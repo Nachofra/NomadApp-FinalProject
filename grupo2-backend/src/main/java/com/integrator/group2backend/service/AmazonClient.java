@@ -47,7 +47,8 @@ public class AmazonClient {
         return convFile;
     }
     private String generateFileName(MultipartFile multiPart) {
-        return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
+        return new Date().getTime() + "-" + multiPart.getOriginalFilename().replaceAll("/^[ !@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]{2,20}$/","");
+        //return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
     }
     private void uploadFileTos3bucket(String fileName, File file) {
         s3client.putObject(new PutObjectRequest(bucketName, fileName, file)
@@ -68,9 +69,8 @@ public class AmazonClient {
             try {
                 File file = convertMultiPartToFile(multipartFile);
                 String fileName = generateFileName(multipartFile);
-                String resultFileName = fileName.replaceAll("[\\-\\+\\.\\^:,]","");
-                fileUrl = endpointUrl + "/" + resultFileName;
-                uploadFileTos3bucket(resultFileName, file);
+                fileUrl = endpointUrl + "/" + fileName;
+                uploadFileTos3bucket(fileName, file);
                 file.delete();
                 logger.info("Se cargo una imagen en el bucket S3 con endpoint " + endpointUrl);
                 return fileUrl;
