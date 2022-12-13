@@ -157,46 +157,60 @@ public class ProductService {
         return ResponseEntity.ok(this.getProductViewDTOList(searchedProducts));
     }
 
-    public ProductViewDTO searchProductById(Long productId) throws ResourceNotFoundException, UnauthorizedProductException {
+    public ProductViewDTO searchProductById(Long productId) throws ResourceNotFoundException {
         Optional<Product> product = productRepository.findById(productId);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (product.isEmpty()) {
             logger.error("El producto especificado no existe con id " + productId);
             throw new ResourceNotFoundException("No value present: ");
         }
 
-        if (principal instanceof String) {
-            CurrentUserDTO currentUserDTO = this.userService.getCurrentUser((String) principal);
-            if(product.get().getUser().getId().equals(currentUserDTO.getId())){
-                return this.getProductViewDTO(product.get());
-            }
-        }
-        throw new UnauthorizedProductException("Unauthorized product");
+        return this.getProductViewDTO(product.get());
     }
 
     public Optional<Product> getProductById(Long id) {
         return this.productRepository.findById(id);
     }
 
-    public ProductViewDTO updateProduct(Long productId, ProductUpdateDTO productUpdate) throws ResourceNotFoundException {
+    public ProductViewDTO updateProduct(Long productId, ProductUpdateDTO productUpdate) throws ResourceNotFoundException, UnauthorizedProductException {
         Optional<Product> oldProduct = this.productRepository.findById(productId);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         if (oldProduct.isEmpty()) {
             logger.error("El producto especificado no existe con id " + productId);
             throw new ResourceNotFoundException("No value present: ");
         }
-        Product updatedProduct = updateProductCompare.updateProductCompare(oldProduct.get(), productUpdate);
-        productRepository.save(updatedProduct);
-        return this.getProductViewDTO(updatedProduct);
+
+        if (principal instanceof String) {
+            CurrentUserDTO currentUserDTO = this.userService.getCurrentUser((String) principal);
+            if(oldProduct.get().getUser().getId().equals(currentUserDTO.getId())){
+                Product updatedProduct = updateProductCompare.updateProductCompare(oldProduct.get(), productUpdate);
+                productRepository.save(updatedProduct);
+                return this.getProductViewDTO(updatedProduct);
+            }
+        }
+        throw new UnauthorizedProductException("Unauthorized product");
     }
 
-    public void deleteProduct(Long id) {
-        if (productRepository.findById(id).isPresent()) {
-            logger.info("El producto con id " + id + " ha sido borrado");
-            productRepository.deleteById(id);
-            return;
+    public void deleteProduct(Long id) throws ResourceNotFoundException, UnauthorizedProductException {
+        Optional<Product> product = productRepository.findById(id);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (product.isEmpty()) {
+            logger.error("El producto especificado no existe con id " + id);
+            throw new ResourceNotFoundException("No value present: ");
         }
-        logger.error("El producto con id " + id + " no existe en la base de datos");
+
+        if (principal instanceof String) {
+            CurrentUserDTO currentUserDTO = this.userService.getCurrentUser((String) principal);
+            if(product.get().getUser().getId().equals(currentUserDTO.getId())){
+                logger.info("El producto con id " + id + " ha sido borrado");
+                productRepository.deleteById(id);
+                return;
+            }
+        }
+
+        throw new UnauthorizedProductException("Unauthorized product");
     }
 
     public List<ProductViewDTO> customProductFilter(Integer rooms, Integer beds, Integer bathrooms, Integer guests, Long city_id, Long category_id,
@@ -345,6 +359,9 @@ public class ProductService {
     private ProductViewDTO getProductViewDTO(Product product) {
         ProductViewDTO productViewDTO = this.mapperService.convert(product, ProductViewDTO.class);
         productViewDTO.setPolicies(this.getPolicies(product.getPolicyItems()));
+        if(product.getUser().getId() != null){
+            productViewDTO.setUser_id(product.getUser().getId());
+        }
         return productViewDTO;
     }
 

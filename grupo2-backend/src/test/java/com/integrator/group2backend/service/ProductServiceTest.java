@@ -71,7 +71,7 @@ public class ProductServiceTest {
 
 
     @Test
-    public void testSearchProductByIdSuccess() throws ResourceNotFoundException, UnauthorizedProductException {
+    public void testSearchProductByIdSuccess() throws ResourceNotFoundException {
         Policy policy = new Policy();
         policy.setId(1L);
         policy.setName("policy name");
@@ -102,7 +102,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void testSearchProductByIdNotFound() throws UnauthorizedProductException {
+    public void testSearchProductByIdNotFound() {
 
         Mockito.when(this.productRepository.findById(eq(1L))).thenReturn((Optional.empty()));
 
@@ -258,7 +258,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void updateProduct() throws ResourceNotFoundException {
+    public void updateProduct() throws ResourceNotFoundException, UnauthorizedProductException {
         Product p = new Product();
         p.setId(1L);
         p.setBeds(1);
@@ -285,7 +285,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void testDeleteProduct() {
+    public void testDeleteProduct() throws UnauthorizedProductException, ResourceNotFoundException {
         Mockito.doNothing().when(this.productRepository).deleteById(eq(1L));
         Mockito.when(this.productRepository.findById(1L)).thenReturn(Optional.of(new Product()));
 
