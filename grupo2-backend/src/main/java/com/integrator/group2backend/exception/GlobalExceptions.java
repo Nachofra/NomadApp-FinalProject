@@ -157,4 +157,21 @@ public class GlobalExceptions {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @ExceptionHandler(UnauthorizedProductException.class)
+    public ResponseEntity<String> procesamientoUnauthorizedProductException(UnauthorizedProductException exception){
+        Map<String, Object> data = new HashMap<>();
+
+        if(Objects.equals(exception.getMessage(), "Unauthorized product")) {
+            data.put("title", "We couldn't obtain the product");
+            data.put("description", "The requested product does not belongs to your user");
+        }
+
+        try {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).contentType(MediaType.APPLICATION_JSON).body(objectMapper.writeValueAsString(data));
+        }
+        catch (IOException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }
