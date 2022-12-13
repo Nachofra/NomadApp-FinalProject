@@ -24,6 +24,7 @@ public class ProductViewDTO {
     private Integer number;
     private Integer floor;
     private String apartment;
+    private Long user_id;
     private Float latitude;
     private Float longitude;
     private Category category;
