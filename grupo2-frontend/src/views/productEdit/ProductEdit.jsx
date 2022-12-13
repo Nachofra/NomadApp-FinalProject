@@ -330,7 +330,7 @@ export const ProductEdit = () => {
                             <p className='text-sm text-red-400 ml-2'>{error.bathrooms}</p>}
                         </div>
                         <div>
-                            <h5 className='text-lg font-medium text-gray-600 px-2'>Maxium guest</h5>
+                            <h5 className='text-lg font-medium text-gray-600 px-2'>Maximum guest</h5>
                             <CountSelect
                                 value={form.guests}
                                 setValue={(value) => setForm({...form, guests: value})}
