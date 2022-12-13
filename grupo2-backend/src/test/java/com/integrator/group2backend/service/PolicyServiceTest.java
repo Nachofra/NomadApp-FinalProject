@@ -35,23 +35,6 @@ public class PolicyServiceTest {
         this.policyService = new PolicyService(this.policyRepository, this.mapperService);
     }
 
-
-    @Test
-    public void addPolicy() {
-    }
-
-    @Test
-    public void addPolicyList() {
-    }
-
-    @Test
-    public void getAllPolicy() {
-    }
-
-    @Test
-    public void getPolicyById() {
-    }
-
     @Test
     public void converPolicyItems() {
         Policy policy = new Policy();

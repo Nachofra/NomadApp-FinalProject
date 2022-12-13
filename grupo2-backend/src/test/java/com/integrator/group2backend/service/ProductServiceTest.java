@@ -1,5 +1,6 @@
 package com.integrator.group2backend.service;
 
+import com.integrator.group2backend.dto.CurrentUserDTO;
 import com.integrator.group2backend.dto.ProductCreateDTO;
 import com.integrator.group2backend.dto.ProductUpdateDTO;
 import com.integrator.group2backend.dto.ProductViewDTO;
@@ -23,6 +24,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,9 +95,25 @@ public class ProductServiceTest {
         ProductViewDTO p = new ProductViewDTO();
         p.setId(1L);
 
+        CurrentUserDTO currentUserDTO = new CurrentUserDTO();
+        currentUserDTO.setId(1L);
+        User user = new User();
+        user.setId(1L);
+
+        requestProduct.setUser(user);
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn("mail@mail.com");
+
+
         Mockito.when(this.productRepository.findById(eq(1L))).thenReturn((Optional.of(requestProduct)));
         Mockito.when(this.policyService.converPolicyItems(eq(policyItemsList))).thenReturn(null);
         Mockito.when(this.mapperService.convert(eq(requestProduct), eq(ProductViewDTO.class))).thenReturn(p);
+        Mockito.when(this.userService.getCurrentUser(eq("mail@mail.com"))).thenReturn(currentUserDTO);
+
 
         this.productService.searchProductById(1L);
         Mockito.verify(this.productRepository, times(1)).findById(eq(1L));
@@ -103,6 +123,11 @@ public class ProductServiceTest {
 
     @Test
     public void testSearchProductByIdNotFound() throws UnauthorizedProductException {
+        Authentication authentication = Mockito.mock(Authentication.class);
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn("mail@mail.com");
 
         Mockito.when(this.productRepository.findById(eq(1L))).thenReturn((Optional.empty()));
 

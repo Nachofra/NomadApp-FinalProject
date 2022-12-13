@@ -5,6 +5,8 @@ import com.integrator.group2backend.dto.ReservationSimpleDTO;
 import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.entities.User;
+import com.integrator.group2backend.exception.DataIntegrityViolationException;
+import com.integrator.group2backend.exception.DateParseException;
 import com.integrator.group2backend.repository.ReservationRepository;
 import com.integrator.group2backend.utils.MapperService;
 import org.junit.Assert;
@@ -100,7 +102,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    public void addReservation() {
+    public void addReservation() throws DateParseException, DataIntegrityViolationException {
         Product product = new Product();
         product.setId(10L);
         product.setDailyPrice(52.5f);
@@ -113,7 +115,7 @@ public class ReservationServiceTest {
         Calendar c1 = Calendar.getInstance();
         c1.set(Calendar.MONTH, 10);
         c1.set(Calendar.DATE, 23);
-        c1.set(Calendar.YEAR, 2022);
+        c1.set(Calendar.YEAR, 2029);
         Date checkin = c1.getTime();
 
         c1.set(Calendar.DATE, 26);
@@ -131,15 +133,15 @@ public class ReservationServiceTest {
         Mockito.when(this.productService.getProductById(eq(10L))).thenReturn(Optional.of(product));
         Mockito.when(this.mapperService.convert(any(), eq(ReservationDTO.class))).thenReturn(new ReservationDTO());
 
-//        This line now needs to be handled
-//        this.reservationService.addReservation(reservation);
+
+        this.reservationService.addReservation(reservation);
 
         Reservation capturedReservation = reservationArgumentCaptor.getValue();
 
         Assert.assertNotNull(capturedReservation.getCheckInDate());
         Assert.assertNotNull(capturedReservation.getUser());
         Assert.assertEquals(10L, capturedReservation.getProduct().getId(), 1);
-        Assert.assertEquals(157.5, capturedReservation.getFinalPrice(), 1);
+        Assert.assertEquals(210.5, capturedReservation.getFinalPrice(), 1);
 
     }
 
