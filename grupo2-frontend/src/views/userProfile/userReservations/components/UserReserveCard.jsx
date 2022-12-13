@@ -13,7 +13,6 @@ export const UserReserveCard = ({data}) => {
 
     const handleDateFormat = date => {
         const aux = new Date(date)
-        // console.log(first)
         return aux.formatMMDDYYYY()
     };
 

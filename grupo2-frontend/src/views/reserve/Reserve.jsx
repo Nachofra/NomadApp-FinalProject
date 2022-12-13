@@ -94,13 +94,7 @@ export const Reserve = () => {
   const postRequest = async () => {
 
       try {
-        console.log({
-          checkInTime: formFields.checkin?.time,
-          checkInDate: handleDateFormat(formFields.dateFrom),
-          checkOutDate: handleDateFormat(formFields.dateTo),
-          product: { id: id },
-          user: { id: user.id }
-        })
+        
         startLoading();
         await axios.post(`${FetchRoutes.BASEURL}/reservation`,
         {

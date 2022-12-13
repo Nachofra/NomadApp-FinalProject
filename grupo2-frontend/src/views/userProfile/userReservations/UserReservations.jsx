@@ -30,7 +30,6 @@ export const UserReservations = () => {
           { headers: { Authorization : user.authorization }})
 
           setData(reservations);
-          console.log(reservations)
             
         } catch (error) {
           console.error(error.message);

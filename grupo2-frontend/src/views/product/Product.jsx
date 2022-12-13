@@ -54,7 +54,6 @@ export const Product = () => {
         const { data } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`);
         setData(data);
         const { data :  dates} = await axios.get(`${FetchRoutes.BASEURL}/reservation/product/${id}`);
-        console.log(dates)
         setAvoidDates(excludeDatesHandler(dates));
         } catch (error) {
         console.error(error.message);
@@ -68,7 +67,6 @@ export const Product = () => {
           if ( data && avoidDates ) { loadDone() };
     }, [])
 
-    // console.log(data)
 
     const [modal, setModal ] = useState(false);
 

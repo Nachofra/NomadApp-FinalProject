@@ -196,7 +196,6 @@ export const ProductCreate = () => {
             setErrorModal(true);
         }
     }
-    console.log(bodyReq)
 
   return (
     <>
@@ -247,7 +246,7 @@ export const ProductCreate = () => {
                         </div>
                         <p className='ml-1 text-gray-500 max-h-40 
                         overflow-hidden overflow-ellipsis'>
-                            {form.description ? form.description : 'brief description about the place, with a maxium of 260 characters.'}
+                            {form.description ? form.description : 'brief description about the place, with a maximum of 260 characters.'}
                         </p>
                     </div>
                 </div>
@@ -312,7 +311,7 @@ export const ProductCreate = () => {
                             <p className='text-sm text-red-400 ml-2'>{error.bathrooms}</p>}
                         </div>
                         <div>
-                            <h5 className='text-lg font-medium text-gray-600 px-2'>Maxium guest</h5>
+                            <h5 className='text-lg font-medium text-gray-600 px-2'>Maximum guest</h5>
                             <CountSelect
                                 value={form.guests}
                                 setValue={(value) => setForm({...form, guests: value})}
@@ -518,7 +517,7 @@ export const ProductCreate = () => {
                 className='w-0 h-0 opacity-0'
                 type='file'
                 accept="image/*"
-                onChange={(e) => {images.length > 0 ? addHandler(e) : changeHandler(e); console.log(e) }}
+                onChange={(e) => {images.length > 0 ? addHandler(e) : changeHandler(e); }}
                 />
 
                 <div className='flex overflow-hidden grow-0'>

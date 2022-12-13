@@ -23,7 +23,6 @@ export const usePreviewImage = () => {
   };
 
   const addHandler = (e) => {
-    console.log('Added images')
     const { files } = e.target;
     const validImageFiles = [];
     for (let i = 0; i < files.length; i++) {
@@ -41,8 +40,6 @@ export const usePreviewImage = () => {
 
   const removeHandler = (i) => {
     setImageFiles(imageFiles.filter((_, index) => index !== i))
-
-    console.log(`se removio la imagen ${i}`)
     return
   }
   
@@ -77,7 +74,6 @@ export const usePreviewImage = () => {
         }
       })
       .catch(reason => {
-        console.log(reason);
       });
   } else { setImages([]) }; 
   

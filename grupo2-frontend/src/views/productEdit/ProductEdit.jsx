@@ -16,8 +16,8 @@ import { CountSelect } from '../../components/partials/searchNavbar/components/C
 import { PropertyTypeSelect } from '../../components/partials/searchNavbar/components/PropertyTypeSelect';
 import { useProductValidation } from '../productCreate/utilities/useProductValidation';
 import { Modal } from '../../components/modal/Modal';
-import './productEdit.css'
 import { FormStep } from '../productCreate/components/FormStep';
+import './productEdit.css'
 
 export const ProductEdit = () => {
 
@@ -80,7 +80,6 @@ export const ProductEdit = () => {
           setPolicies(policiesList);
           const { data : product } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`,
           { headers: { Authorization : user.authorization }})
-          console.log(product)
           setForm({
             ...product,
             policies: product.policies.flat(Infinity).map(p => p.policyItems).flat(Infinity).map(p => p.id),
@@ -125,7 +124,6 @@ export const ProductEdit = () => {
 
     const imgIsRemoved = id => form.removeImages.includes(id);
     const unremovedImages = form.images.filter(elm => !imgIsRemoved(elm.id))
-    console.log(unremovedImages)
 
     const removeOriginalImage = id => setForm({...form, removeImages: [...form.removeImages, id]});
     
@@ -144,8 +142,6 @@ export const ProductEdit = () => {
             addImages : imageFiles,
             removeImages: form.removeImages
         }
-
-        console.log(bodyReq)
         
         const {validation, error} = useProductValidation(bodyReq)
 
@@ -334,7 +330,7 @@ export const ProductEdit = () => {
                             <p className='text-sm text-red-400 ml-2'>{error.bathrooms}</p>}
                         </div>
                         <div>
-                            <h5 className='text-lg font-medium text-gray-600 px-2'>Maxium guest</h5>
+                            <h5 className='text-lg font-medium text-gray-600 px-2'>Maximum guest</h5>
                             <CountSelect
                                 value={form.guests}
                                 setValue={(value) => setForm({...form, guests: value})}

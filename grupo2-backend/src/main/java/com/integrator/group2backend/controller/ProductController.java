@@ -6,6 +6,7 @@ import com.integrator.group2backend.dto.ProductViewDTO;
 import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.exception.DataIntegrityViolationException;
 import com.integrator.group2backend.exception.ResourceNotFoundException;
+import com.integrator.group2backend.exception.UnauthorizedProductException;
 import com.integrator.group2backend.service.ProductService;
 import com.integrator.group2backend.utils.MapperService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId) throws ResourceNotFoundException {
+    public ResponseEntity<ProductViewDTO> searchProductById(@PathVariable("id") Long productId) throws ResourceNotFoundException, UnauthorizedProductException {
         return ResponseEntity.ok(this.productService.searchProductById(productId));
     }
 
@@ -66,7 +67,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId) throws ResourceNotFoundException {
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId) throws ResourceNotFoundException, UnauthorizedProductException {
         //boolean productExist = productService.searchProductById(productId).isPresent();
         ProductViewDTO productViewDTO = this.productService.searchProductById(productId);
 
