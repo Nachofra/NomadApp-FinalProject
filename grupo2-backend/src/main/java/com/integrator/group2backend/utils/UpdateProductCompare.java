@@ -188,7 +188,7 @@ public class UpdateProductCompare {
         }
 
         // Adding and/or removing old images
-        if (newProduct.getRemoveImages() != null){
+        if (newProduct.getRemoveImages() == null){
             logger.info("No elimino imagenes");
             modifiedImagesSet.addAll(oldProduct.getImages());
         }else{
