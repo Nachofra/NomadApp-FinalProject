@@ -133,7 +133,7 @@ export const useProductValidation = (data) => {
     const fields = {
         category : () => data.category !== null,
         rooms : () => data.rooms !== null && data.rooms > 0,
-        beds : () => data.beds !== null && data.beds > 0,
+        beds : () => data.beds !== null && data.beds > 0 ,
         guests : () => data.guests !== null && data.guests > 0,
         bathrooms : () => data.bathrooms !== null && data.bathrooms > 0,
         features: () => data.features_id && data.features_id.length >= 3,
@@ -144,7 +144,7 @@ export const useProductValidation = (data) => {
         city: () => data.city_id && (typeof data.city_id === 'number'),
         description: () => data.description && data.description.length >= 40 && data.description.length <= 360,
         address: () => data.address && data.address.length >= 3 && data.address.length <= 30,
-        number: () => data.number && (typeof data.number === 'number'),
+        number: () => data.number && (typeof data.number === 'number') && data.number < 99999,
         dailyPrice: () => data.dailyPrice && (typeof data.dailyPrice === 'number') && data.dailyPrice > 0 && data.dailyPrice < 9999,
 
     }
