@@ -11,6 +11,7 @@ import com.integrator.group2backend.entities.Product;
 import com.integrator.group2backend.entities.User;
 import com.integrator.group2backend.exception.DataIntegrityViolationException;
 import com.integrator.group2backend.exception.ResourceNotFoundException;
+import com.integrator.group2backend.exception.UnauthorizedProductException;
 import com.integrator.group2backend.repository.ProductRepository;
 import com.integrator.group2backend.utils.MapperService;
 import com.integrator.group2backend.utils.UpdateProductCompare;
@@ -70,7 +71,7 @@ public class ProductServiceTest {
 
 
     @Test
-    public void testSearchProductByIdSuccess() throws ResourceNotFoundException {
+    public void testSearchProductByIdSuccess() throws ResourceNotFoundException, UnauthorizedProductException {
         Policy policy = new Policy();
         policy.setId(1L);
         policy.setName("policy name");
@@ -101,7 +102,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void testSearchProductByIdNotFound() {
+    public void testSearchProductByIdNotFound() throws UnauthorizedProductException {
 
         Mockito.when(this.productRepository.findById(eq(1L))).thenReturn((Optional.empty()));
 

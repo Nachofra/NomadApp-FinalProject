@@ -1,9 +1,6 @@
 package com.integrator.group2backend.service;
 
-import com.integrator.group2backend.dto.PolicyDTO;
-import com.integrator.group2backend.dto.ProductCreateDTO;
-import com.integrator.group2backend.dto.ProductUpdateDTO;
-import com.integrator.group2backend.dto.ProductViewDTO;
+import com.integrator.group2backend.dto.*;
 import com.integrator.group2backend.entities.Category;
 import com.integrator.group2backend.entities.City;
 import com.integrator.group2backend.entities.Feature;
@@ -14,11 +11,15 @@ import com.integrator.group2backend.entities.Reservation;
 import com.integrator.group2backend.entities.User;
 import com.integrator.group2backend.exception.DataIntegrityViolationException;
 import com.integrator.group2backend.exception.ResourceNotFoundException;
+import com.integrator.group2backend.exception.UnauthorizedProductException;
 import com.integrator.group2backend.repository.ProductRepository;
 import com.integrator.group2backend.utils.MapperService;
 import com.integrator.group2backend.utils.UpdateProductCompare;
 import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -156,13 +157,22 @@ public class ProductService {
         return ResponseEntity.ok(this.getProductViewDTOList(searchedProducts));
     }
 
-    public ProductViewDTO searchProductById(Long productId) throws ResourceNotFoundException {
+    public ProductViewDTO searchProductById(Long productId) throws ResourceNotFoundException, UnauthorizedProductException {
         Optional<Product> product = productRepository.findById(productId);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         if (product.isEmpty()) {
             logger.error("El producto especificado no existe con id " + productId);
             throw new ResourceNotFoundException("No value present: ");
         }
-        return this.getProductViewDTO(product.get());
+
+        if (principal instanceof String) {
+            CurrentUserDTO currentUserDTO = this.userService.getCurrentUser((String) principal);
+            if(product.get().getUser().getId().equals(currentUserDTO.getId())){
+                return this.getProductViewDTO(product.get());
+            }
+        }
+        throw new UnauthorizedProductException("Unauthorized product");
     }
 
     public Optional<Product> getProductById(Long id) {
