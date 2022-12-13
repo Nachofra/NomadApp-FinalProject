@@ -196,7 +196,6 @@ export const ProductCreate = () => {
             setErrorModal(true);
         }
     }
-    console.log(bodyReq)
 
   return (
     <>
@@ -518,7 +517,7 @@ export const ProductCreate = () => {
                 className='w-0 h-0 opacity-0'
                 type='file'
                 accept="image/*"
-                onChange={(e) => {images.length > 0 ? addHandler(e) : changeHandler(e); console.log(e) }}
+                onChange={(e) => {images.length > 0 ? addHandler(e) : changeHandler(e); }}
                 />
 
                 <div className='flex overflow-hidden grow-0'>

@@ -65,7 +65,6 @@ export const Home = () => {
         startLoading();
           try {
             const { data : feed }  = await axios.get(query);  
-            console.log('load Done')
             setIndex(feed)
           } catch (error) {
             console.error(error.message);

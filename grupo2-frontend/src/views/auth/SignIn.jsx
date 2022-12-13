@@ -48,7 +48,7 @@ export const SignIn = ({setStatus, ...props}) => {
             description: 'Please verify your credentials and try again. If the problem persist, contact support.'
           }
         }});
-      } finally{ setStatus('IDLE'); console.log(user)};
+      } finally{ setStatus('IDLE') };
   }
 
   function verifyCredentials (){
