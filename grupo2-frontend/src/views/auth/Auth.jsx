@@ -32,9 +32,9 @@ export const Auth = () => {
   return (
     <>
       <div className="fixed inset-0 z-[-1]">
-        <video 
-        src={`${FetchRoutes.BUCKET}/media/nomad_login_bg_720.mp4`}
-        className="object-cover w-full h-full"
+        <img 
+        src={`${FetchRoutes.BUCKET}/media/nomad-login-bg-720-12FPS.gif`}
+        className="object-cover w-full h-full "
         autoPlay muted loop
         />
       </div>
