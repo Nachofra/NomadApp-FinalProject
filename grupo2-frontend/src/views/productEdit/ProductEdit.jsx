@@ -80,7 +80,8 @@ export const ProductEdit = () => {
           setPolicies(policiesList);
           const { data : product } = await axios.get(`${FetchRoutes.BASEURL}/product/${id}`,
           { headers: { Authorization : user.authorization }})
-          if (user.id !== product.user_id) { navigate('/bad-request') }
+          console.log(user.id, product.user_id);
+        //   if (user.id !== product.user_id) { navigate('/bad-request') }
           setForm({
             ...product,
             policies: product.policies.flat(Infinity).map(p => p.policyItems).flat(Infinity).map(p => p.id),

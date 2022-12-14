@@ -76,10 +76,10 @@ export const useProductValidation = (data) => {
                 errAux.number = "Number not valid";
                 valid = false;
             }
-            if (!fields.floor()) {
-                errAux.floor = "Please, choose a valid amount";
-                valid = false;
-            }
+            // if (!fields.floor()) {
+            //     errAux.floor = "Please, choose a valid amount";
+            //     valid = false;
+            // }
             // if (!fields.apartment()) {
             //     errAux.apartment = "Please, choose a valid amount";
             //     valid = false;
@@ -145,7 +145,7 @@ export const useProductValidation = (data) => {
         description: () => data.description && data.description.length >= 40 && data.description.length <= 360,
         address: () => data.address && data.address.length >= 3 && data.address.length <= 30,
         number: () => data.number && (typeof data.number === 'number') && data.number < 99999,
-        floor: () => data.floor && (typeof data.floor === 'number') && data.floor < 99999,
+        // floor: () => data.floor && (typeof data.floor === 'number') && data.floor < 99999,
         dailyPrice: () => data.dailyPrice && (typeof data.dailyPrice === 'number') && data.dailyPrice > 0 && data.dailyPrice < 9999,
 
     }
