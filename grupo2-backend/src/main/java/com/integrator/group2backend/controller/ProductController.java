@@ -62,7 +62,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductViewDTO> updateProduct(@PathVariable("id") Long productId, @ModelAttribute ProductUpdateDTO productUpdate) throws ResourceNotFoundException {
+    public ResponseEntity<ProductViewDTO> updateProduct(@PathVariable("id") Long productId, @ModelAttribute ProductUpdateDTO productUpdate) throws ResourceNotFoundException, UnauthorizedProductException {
         return ResponseEntity.ok(this.productService.updateProduct(productId, productUpdate));
     }
 

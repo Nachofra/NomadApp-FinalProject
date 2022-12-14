@@ -75,7 +75,7 @@ public class ProductServiceTest {
 
 
     @Test
-    public void testSearchProductByIdSuccess() throws ResourceNotFoundException, UnauthorizedProductException {
+    public void testSearchProductByIdSuccess() throws ResourceNotFoundException {
         Policy policy = new Policy();
         policy.setId(1L);
         policy.setName("policy name");
@@ -102,18 +102,9 @@ public class ProductServiceTest {
 
         requestProduct.setUser(user);
 
-        Authentication authentication = Mockito.mock(Authentication.class);
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-        Mockito.when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn("mail@mail.com");
-
-
         Mockito.when(this.productRepository.findById(eq(1L))).thenReturn((Optional.of(requestProduct)));
         Mockito.when(this.policyService.converPolicyItems(eq(policyItemsList))).thenReturn(null);
         Mockito.when(this.mapperService.convert(eq(requestProduct), eq(ProductViewDTO.class))).thenReturn(p);
-        Mockito.when(this.userService.getCurrentUser(eq("mail@mail.com"))).thenReturn(currentUserDTO);
-
 
         this.productService.searchProductById(1L);
         Mockito.verify(this.productRepository, times(1)).findById(eq(1L));
@@ -123,11 +114,6 @@ public class ProductServiceTest {
 
     @Test
     public void testSearchProductByIdNotFound() throws UnauthorizedProductException {
-        Authentication authentication = Mockito.mock(Authentication.class);
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-        Mockito.when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn("mail@mail.com");
 
         Mockito.when(this.productRepository.findById(eq(1L))).thenReturn((Optional.empty()));
 
@@ -201,13 +187,17 @@ public class ProductServiceTest {
         City city = new City();
         city.setId(1L);
 
+        Product product = new Product();
+        product.setUser(user);
+
+
         Mockito.when(this.userService.findById(eq(1L))).thenReturn(Optional.of(user));
         Mockito.when(this.categoryService.searchCategoryById(eq(1L))).thenReturn(Optional.of(category));
         Mockito.when(this.cityService.getCityById(eq(1L))).thenReturn(Optional.of(city));
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
-        Mockito.when(this.productRepository.save(productArgumentCaptor.capture())).thenReturn(new Product());
-        Mockito.when(this.mapperService.convert(any(), eq(ProductViewDTO.class))).thenReturn(new ProductViewDTO());
+        Mockito.when(this.productRepository.save(productArgumentCaptor.capture())).thenReturn(product);
+        Mockito.when(this.mapperService.convert(eq(product), eq(ProductViewDTO.class))).thenReturn(new ProductViewDTO());
 
         this.productService.addProduct(request);
 
@@ -283,17 +273,32 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void updateProduct() throws ResourceNotFoundException {
+    public void updateProduct() throws ResourceNotFoundException, UnauthorizedProductException {
+        User user = new User();
+        user.setId(1L);
+
         Product p = new Product();
         p.setId(1L);
         p.setBeds(1);
+        p.setUser(user);
+
+        CurrentUserDTO currentUserDTO = new CurrentUserDTO();
+        currentUserDTO.setId(1L);
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn("mail@mail.com");
 
         Mockito.when(this.productRepository.findById(eq(1L))).thenReturn(Optional.of(p));
         Mockito.when(this.mapperService.convert(any(), eq(ProductViewDTO.class))).thenReturn(new ProductViewDTO());
-        Mockito.when(this.updateProductCompare.updateProductCompare(any(), any())).thenReturn(new Product());
+        Mockito.when(this.updateProductCompare.updateProductCompare(any(), any())).thenReturn(p);
+        Mockito.when(this.userService.getCurrentUser(eq("mail@mail.com"))).thenReturn(currentUserDTO);
 
         ProductUpdateDTO productUpdate = new ProductUpdateDTO();
         productUpdate.setBeds(3);
+        productUpdate.setUser_id(1L);
 
         this.productService.updateProduct(1L, productUpdate);
 
@@ -310,9 +315,27 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void testDeleteProduct() {
+    public void testDeleteProduct() throws UnauthorizedProductException, ResourceNotFoundException {
+        User user = new User();
+        user.setId(1L);
+
+        Product p = new Product();
+        p.setId(1L);
+        p.setBeds(1);
+        p.setUser(user);
+
+        CurrentUserDTO currentUserDTO = new CurrentUserDTO();
+        currentUserDTO.setId(1L);
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn("mail@mail.com");
+
         Mockito.doNothing().when(this.productRepository).deleteById(eq(1L));
-        Mockito.when(this.productRepository.findById(1L)).thenReturn(Optional.of(new Product()));
+        Mockito.when(this.productRepository.findById(1L)).thenReturn(Optional.of(p));
+        Mockito.when(this.userService.getCurrentUser(eq("mail@mail.com"))).thenReturn(currentUserDTO);
 
         this.productService.deleteProduct(1L);
 
