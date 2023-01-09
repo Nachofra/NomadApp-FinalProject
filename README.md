@@ -1,8 +1,7 @@
 # Proyecto NOMAD
-
+## Proyecto final del primer año de la carrera de Certified Trech Developer en Digital House
 - [***Video Presentación Web***](https://www.youtube.com/watch?v=R22-HyfBnD8)
 
-## Proyecto final del primer año de la carrera de Certified Trech Developer en Digital House
 ### FrontEnd
 
 ### BackEnd
