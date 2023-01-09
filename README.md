@@ -2,8 +2,6 @@
 ## Proyecto final del primer año de la carrera de Certified Trech Developer en Digital House
 - [***Video Presentación Web***](https://www.youtube.com/watch?v=R22-HyfBnD8)
 
-### FrontEnd
-
 ### BackEnd
 
 Para la realizacion del BackEnd, utilizamos la herramienta de spring para crear nuestro proyecto.
